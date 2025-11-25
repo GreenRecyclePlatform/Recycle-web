@@ -1,3 +1,17 @@
 import { Routes } from '@angular/router';
+import { LandingPage } from './pages/landing-page/landing-page';
+import { LoginPage } from './features/auth/login-page/login-page';
+import { RegistrationPage } from './features/auth/registration-page/registration-page';
+import { ForgotPasswordPage } from './features/auth/forgot-password/forgot-password';
+import { ResetPassword } from './features/auth/reset-password/reset-password';
 
-export const routes: Routes = [];
+export const routes: Routes = [
+  { path: '', component: LandingPage },
+  { path: 'login', component: LoginPage },
+  { path: 'register', component: RegistrationPage },
+  { path: 'forgot-password', component: ForgotPasswordPage },
+  { path: 'reset-password', component: ResetPassword },
+
+  // Catch all
+  { path: '**', redirectTo: '' },
+];
