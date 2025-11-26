@@ -1,1 +1,241 @@
-/* You can add global styles to this file, and also import other style files */
+/* Bootstrap CSS */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Bootstrap Icons */
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+/* Angular Material theme customization */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* Custom CSS Variables */
+:root {
+  --primary-green: #2D6A4F;
+  --primary-green-dark: #1e4d38;
+  --primary-green-light: #40916c;
+  --white: #FFFFFF;
+  --light-gray: #F8F9FA;
+  --dark-gray: #212529;
+  --accent-blue: #0077B6;
+  --success-green: #52b788;
+  --warning-yellow: #ffd60a;
+  --error-red: #e63946;
+  --border-radius: 12px;
+  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Reset */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--light-gray);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Bootstrap Customization */
+.btn-primary {
+  background-color: var(--primary-green);
+  border-color: var(--primary-green);
+  border-radius: var(--border-radius);
+  padding: 12px 24px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-green-dark);
+  border-color: var(--primary-green-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.3);
+}
+
+.btn-outline-primary {
+  color: var(--primary-green);
+  border-color: var(--primary-green);
+  border-radius: var(--border-radius);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-green);
+  border-color: var(--primary-green);
+  color: white;
+}
+
+/* Utility Classes */
+.text-primary-green {
+  color: var(--primary-green) !important;
+}
+
+.bg-primary-green {
+  background-color: var(--primary-green) !important;
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+}
+
+/* Card Styles */
+.card {
+  border: none;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Form Styles */
+.form-control {
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  padding: 10px 16px;
+}
+
+.form-control:focus {
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 0.2rem rgba(45, 106, 79, 0.25);
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--dark-gray);
+  margin-bottom: 8px;
+}
+
+/* Badge Styles */
+.badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.badge-success {
+  background-color: var(--success-green);
+}
+
+.badge-warning {
+  background-color: var(--warning-yellow);
+  color: var(--dark-gray);
+}
+
+.badge-danger {
+  background-color: var(--error-red);
+}
+
+/* Star Rating Base Styles */
+.star-rating {
+  display: inline-flex;
+  gap: 4px;
+  font-size: 20px;
+}
+
+.star {
+  color: #ddd;
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
+  user-select: none;
+}
+
+.star.filled {
+  color: #ffd60a;
+}
+
+.star:hover {
+  transform: scale(1.1);
+  color: #ffea00;
+}
+
+/* Loading Spinner */
+.spinner-border-primary {
+  color: var(--primary-green);
+}
+
+/* Page Container */
+.page-container {
+  min-height: calc(100vh - 80px);
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in {
+  animation: slideIn 0.4s ease-out;
+}
+
+/* Alert Customization */
+.alert {
+  border-radius: var(--border-radius);
+  border: none;
+}
+
+.alert-info {
+  background-color: rgba(0, 119, 182, 0.1);
+  color: var(--accent-blue);
+}
+
+.alert-danger {
+  background-color: rgba(230, 57, 70, 0.1);
+  color: var(--error-red);
+}
+
+.alert-success {
+  background-color: rgba(82, 183, 136, 0.1);
+  color: var(--success-green);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-container {
+    padding: 16px;
+  }
+  
+  .btn-primary {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  .card {
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .page-container {
+    padding: 12px;
+  }
+}
