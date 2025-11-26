@@ -1,0 +1,234 @@
+<div class="registration-container">
+  <div class="registration-background">
+    <div class="registration-blur registration-blur-1"></div>
+    <div class="registration-blur registration-blur-2"></div>
+  </div>
+
+  <mat-card class="registration-card">
+    <mat-card-header class="text-center pb-4 d-flex flex-column">
+      <div>
+        <div class="d-flex justify-content-center mb-3">
+          <div
+            class="registration-icon-container bg-primary-green rounded d-flex align-items-center justify-content-center"
+          >
+            <lucide-icon [name]="Leaf" [size]="40" class="text-white"></lucide-icon>
+          </div>
+        </div>
+        <mat-card-title class="h3 text-dark">Create Your Account</mat-card-title>
+        <mat-card-subtitle>Join RecycleHub and start making a difference</mat-card-subtitle>
+      </div>
+
+      <div class="mt-4">
+        <div class="d-flex justify-content-between mb-2 small">
+          <span [class]="step >= 1 ? 'text-primary-green' : 'text-secondary'"
+            >Basic Info & Role</span
+          >
+          <span [class]="step >= 2 ? 'text-primary-green' : 'text-secondary'"
+            >Additional Details</span
+          >
+        </div>
+
+        <div class="registration-progress-bar-bg mb-1">
+          <div
+            class="registration-progress-bar-fill"
+            [style.width.%]="step === 1 ? 50 : step === 2 ? 100 : 0"
+          ></div>
+        </div>
+
+        <!-- <mat-progress-bar
+          mode="determinate"
+          [value]="progress"
+          class="registration-progress"
+        ></mat-progress-bar> -->
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="registrationForm" (ngSubmit)="handleSubmit()">
+        <!-- Step 1: Basic Info & Role Selection -->
+        @if(step === 1) {
+        <div class="registration-form-step">
+          <div class="row g-3 mb-3">
+            <div appearance="outline" class="col-md-6">
+              <label>first Name *</label>
+              <input placeholder="John Doe" formControlName="firstName" required />
+            </div>
+
+            <div appearance="outline" class="col-md-6">
+              <label>last Name *</label>
+              <input placeholder="Doe" formControlName="lastName" required />
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6" appearance="outline">
+              <label>Email Address *</label>
+              <input type="email" placeholder="you@example.com" formControlName="email" required />
+            </div>
+
+            <div class="col-md-6">
+              <label>User Name *</label>
+              <input placeholder="Joe-D77" formControlName="userName" required />
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label>Phone Number *</label>
+              <input placeholder="+123 456 7890" formControlName="phone" required />
+            </div>
+
+            <div class="col-md-6">
+              <label>Date of Birth *</label>
+              <input type="date" formControlName="birthDate" required />
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label>Password *</label>
+              <input type="password" placeholder="••••••••" formControlName="password" required />
+            </div>
+
+            <div class="col-md-6">
+              <label>Confirm Password *</label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                formControlName="confirmPassword"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Role Selection -->
+          <div class="registration-role-selection pt-3">
+            <label class="small fw-medium mb-3 d-block">Select Your Role *</label>
+            <div class="row g-3">
+              <div class="col-md-6" *ngFor="let role of roles">
+                <mat-card
+                  [class]="
+                    'registration-role-card cursor-pointer transition-all hover-shadow-lg ' +
+                    (selectedRole === role.id ? 'role-selected' : '')
+                  "
+                  (click)="selectRole(role.id)"
+                >
+                  <mat-card-content class="p-4 text-center">
+                    <div
+                      [class]="
+                        'registration-role-icon mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center ' +
+                        (selectedRole === role.id ? 'bg-primary-green' : 'bg-light')
+                      "
+                    >
+                      <lucide-icon
+                        [name]="role.icon"
+                        [size]="32"
+                        [class]="selectedRole === role.id ? 'text-white' : 'text-secondary'"
+                      ></lucide-icon>
+                    </div>
+                    <h3 class="h5 text-dark mb-2">{{ role.title }}</h3>
+                    <p class="small text-secondary mb-0">{{ role.description }}</p>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+
+        <!-- Step 2: Additional Details -->
+        @if(step === 2) {
+        <div class="registration-form-step">
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label>Street</label>
+              <input placeholder="Street" formControlName="street" />
+            </div>
+
+            <div class="col-md-6">
+              <label>Governorate</label>
+              <input placeholder="Governorate" formControlName="governorate" />
+            </div>
+
+            <div class="col-md-6">
+              <label>City</label>
+              <input placeholder="Mumbai" formControlName="city" />
+            </div>
+
+            <div class="col-md-6">
+              <label>Postalcode</label>
+              <input matInput placeholder="12345" formControlName="postalcode" />
+            </div>
+          </div>
+
+          @if(selectedRole === 'Driver') {
+          <div class="row g-3 mb-3">
+            <div class="col-md-12">
+              <label>ID Number</label>
+              <input placeholder="idNumber" formControlName="IDNumber" />
+            </div>
+
+            <!-- <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Vehicle Number</mat-label>
+                <input matInput placeholder="MH-01-AB-1234" formControlName="vehicleNumber" />
+              </mat-form-field>
+            </div> -->
+          </div>
+          }
+
+          <div class="mb-3">
+            <mat-checkbox formControlName="termsAccepted"
+              >I agree to the Terms and Conditions *</mat-checkbox
+            >
+          </div>
+        </div>
+        }
+
+        <!-- Navigation Buttons -->
+        <div class="d-flex justify-content-between gap-3 mt-4">
+          <button
+            *ngIf="step > 1"
+            type="button"
+            mat-stroked-button
+            (click)="handleBack()"
+            class="d-flex align-items-center"
+          >
+            <lucide-icon [name]="ChevronLeft" [size]="18" class="me-1"></lucide-icon>
+            Back
+          </button>
+          <div class="flex-grow-1"></div>
+          <button
+            *ngIf="step < 2"
+            type="button"
+            mat-raised-button
+            color="primary"
+            class="btn-primary d-flex align-items-center next"
+            (click)="handleNext()"
+          >
+            Next
+            <lucide-icon [name]="ChevronRight" [size]="18" class="ms-1"></lucide-icon>
+          </button>
+          @if(step === 2) {
+          <button
+            type="submit"
+            mat-raised-button
+            color="primary"
+            class="btn-primary create"
+            [disabled]="!registrationForm.valid"
+          >
+            Create Account
+          </button>
+          }
+        </div>
+
+        <div class="text-center mt-4">
+          <p class="small text-secondary mb-0">
+            Already have an account?
+            <a routerLink="/login" class="text-primary-green text-decoration-none"> Sign in</a>
+          </p>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

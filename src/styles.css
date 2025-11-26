@@ -1,4 +1,51 @@
 /* You can add global styles to this file, and also import other style files */
 
+
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+:root {
+  --primary-green: #2d6a4f;
+  --primary-green-dark: #1e4d38;
+  --white: #ffffff;
+  --light-gray: #f8f9fa;
+  --dark-gray: #212529;
+  --accent-blue: #0077b6;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+}
+
+/* Bootstrap Customization */
+.btn-primary {
+  background-color: var(--primary-green);
+  border-color: var(--primary-green);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-green-dark);
+  border-color: var(--primary-green-dark);
+}
+
+.text-primary-green {
+  color: var(--primary-green) !important;
+}
+
+.bg-primary-green {
+  background-color: var(--primary-green) !important;
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(to bottom right, var(--primary-green), var(--primary-green-dark));
+}
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

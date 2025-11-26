@@ -1,11 +1,16 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  provideBrowserGlobalErrorListeners,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpInterceptorFn } from '@angular/common/http';
 
 import { routes } from './app.routes';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './core/interceptors/auth';
 
-// Interceptor لإضافة الـ Token في كل الطلبات (اختياري)
+/* Interceptor لإضافة الـ Token في كل الطلبات (اختياري)
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // لو عندك توكن في localStorage
   const token = localStorage.getItem('auth_token');
@@ -22,6 +27,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   
   return next(req);
 };
+*/
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -31,8 +37,10 @@ export const appConfig: ApplicationConfig = {
     
     // ✅ ده المهم: إضافة HttpClient
    // provideHttpClient(withInterceptors([authInterceptor]))
-    
+        provideHttpClient(withInterceptors([authInterceptor])),
+
     // ⚠️ لو مش محتاجة Interceptor (مش محتاجة توكن)، استخدمي ده بدل اللي فوق:
-    provideHttpClient()
+   // provideHttpClient()
   ]
 };
+
