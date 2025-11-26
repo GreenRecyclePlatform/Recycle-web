@@ -1,0 +1,275 @@
+<!-- driver-dashboard.component.html -->
+
+<div class="dashboard-container">
+  <div class="page-content">
+    
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h1>My Pickups</h1>
+        <p>View and manage all your pickup assignments</p>
+      </div>
+      <button class="btn btn-outline" (click)="refreshData()" [disabled]="isLoading">
+        <i class="bi bi-arrow-clockwise" [class.spin]="isLoading"></i>
+        Refresh
+      </button>
+    </div>
+
+    <!-- Success Alert -->
+    @if (successMessage) {
+      <div class="alert alert-success">
+        <i class="bi bi-check-circle"></i>
+        <span>{{ successMessage }}</span>
+        <button class="alert-close" (click)="successMessage = ''">×</button>
+      </div>
+    }
+
+    <!-- Error Alert -->
+    @if (errorMessage) {
+      <div class="alert alert-error">
+        <i class="bi bi-exclamation-circle"></i>
+        <span>{{ errorMessage }}</span>
+        <button class="alert-close" (click)="errorMessage = ''">×</button>
+      </div>
+    }
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      @for (stat of getStatCards(); track stat.key) {
+        <button
+          class="stat-card"
+          [class.active]="isActiveFilter(stat.status)"
+          (click)="setActiveFilter(stat.status)">
+          <div class="stat-count" [attr.data-color]="stat.color">{{ stat.count }}</div>
+          <div class="stat-label">{{ stat.label }}</div>
+        </button>
+      }
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+      <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input
+          type="text"
+          placeholder="Search by ID, address..."
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearchChange()">
+      </div>
+  
+    </div>
+
+    <!-- Loading -->
+    @if (isLoading) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Loading assignments...</p>
+      </div>
+    }
+
+    <!-- Pickup Cards -->
+    @if (!isLoading) {
+      <div class="pickups-list">
+        @for (pickup of filteredPickups; track trackByPickupId($index, pickup)) {
+          <div class="pickup-card">
+            
+            <!-- Card Header -->
+            <div class="card-header">
+              <div class="request-info">
+                <div class="request-icon">
+                  <i class="bi bi-box-seam"></i>
+                </div>
+                <div>
+                  <span class="label">Assignment ID</span>
+                  <span class="value">{{ pickup.assignmentId | slice:0:8 }}...</span>
+                </div>
+              </div>
+              <span class="status-badge" [ngClass]="getStatusClass(pickup.status)">
+                {{ getStatusLabel(pickup.status) }}
+              </span>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body">
+              <div class="info-grid">
+                
+                <!-- Left Column -->
+                <div class="info-column">
+                  <div class="info-item">
+                    <i class="bi bi-geo-alt"></i>
+                    <div>
+                      <span class="label">Pickup Address</span>
+                      <span class="value">{{ pickup.pickupAddress }}</span>
+                    </div>
+                  </div>
+                  
+                  <div class="info-item">
+                    <i class="bi bi-clock"></i>
+                    <div>
+                      <span class="label">Assigned At</span>
+                      <span class="value">{{ formatDate(pickup.assignedAt) }}</span>
+                    </div>
+                  </div>
+
+                  @if (pickup.acceptedAt) {
+                    <div class="info-item">
+                      <i class="bi bi-check2-circle"></i>
+                      <div>
+                        <span class="label">Accepted At</span>
+                        <span class="value">{{ formatDate(pickup.acceptedAt) }}</span>
+                      </div>
+                    </div>
+                  }
+
+                  @if (pickup.completedAt) {
+                    <div class="info-item">
+                      <i class="bi bi-flag"></i>
+                      <div>
+                        <span class="label">Completed At</span>
+                        <span class="value">{{ formatDate(pickup.completedAt) }}</span>
+                      </div>
+                    </div>
+                  }
+                </div>
+
+                <!-- Right Column -->
+                <div class="info-column">
+                  <div class="info-item">
+                    <i class="bi bi-person"></i>
+                    <div>
+                      <span class="label">Driver</span>
+                      <span class="value">{{ pickup.driverName }}</span>
+                    </div>
+                  </div>
+
+                  <div class="info-item">
+                    <i class="bi bi-person-badge"></i>
+                    <div>
+                      <span class="label">Assigned By</span>
+                      <span class="value">{{ pickup.adminName }}</span>
+                    </div>
+                  </div>
+
+                  @if (pickup.driverNotes) {
+                    <div class="info-item">
+                      <i class="bi bi-chat-text"></i>
+                      <div>
+                        <span class="label">Notes</span>
+                        <span class="value">{{ pickup.driverNotes }}</span>
+                      </div>
+                    </div>
+                  }
+
+                  @if (pickup.rejectReason) {
+                    <div class="info-item">
+                      <i class="bi bi-x-circle"></i>
+                      <div>
+                        <span class="label">Reject Reason</span>
+                        <span class="value text-danger">{{ pickup.rejectReason }}</span>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Actions -->
+            <div class="card-actions">
+              <button class="btn btn-outline" (click)="openDirections(pickup.pickupAddress)">
+                <i class="bi bi-compass"></i>
+                Directions
+              </button>
+
+              <!-- Pending: Accept / Reject -->
+              @if (pickup.status === PickupStatus.Pending) {
+                <button
+                  class="btn btn-reject"
+                  (click)="openRejectModal(pickup.assignmentId)"
+                  [disabled]="isProcessing">
+                  <i class="bi bi-x-circle"></i>
+                  Reject
+                </button>
+                <button
+                  class="btn btn-primary"
+                  (click)="acceptPickup(pickup.assignmentId)"
+                  [disabled]="isProcessing">
+                  <i class="bi bi-check-circle"></i>
+                  Accept
+                </button>
+              }
+
+              <!-- In Progress: Complete -->
+              @if (pickup.status === PickupStatus.InProgress) {
+                <button
+                  class="btn btn-primary"
+                  (click)="openCompleteModal(pickup.assignmentId)"
+                  [disabled]="isProcessing">
+                  <i class="bi bi-check-circle"></i>
+                  Complete
+                </button>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Empty State -->
+        @if (filteredPickups.length === 0) {
+          <div class="empty-state">
+            <i class="bi bi-inbox"></i>
+            <p>No assignments found</p>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Reject Modal -->
+  @if (showRejectModal) {
+    <div class="modal-overlay" (click)="closeRejectModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <h3>Reject Assignment</h3>
+        <p>Please provide a reason for rejecting:</p>
+        <textarea
+          [(ngModel)]="rejectReason"
+          placeholder="Enter reason..."
+          rows="4">
+        </textarea>
+        <div class="modal-actions">
+          <button class="btn btn-outline" (click)="closeRejectModal()">Cancel</button>
+          <button
+            class="btn btn-danger"
+            (click)="confirmReject()"
+            [disabled]="!rejectReason.trim() || isProcessing">
+            @if (isProcessing) { <span class="spinner-sm"></span> }
+            Confirm Rejection
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Complete Modal -->
+  @if (showCompleteModal) {
+    <div class="modal-overlay" (click)="closeCompleteModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <h3>Complete Assignment</h3>
+        <p>Add any notes (optional):</p>
+        <textarea
+          [(ngModel)]="completeNotes"
+          placeholder="Enter notes..."
+          rows="4">
+        </textarea>
+        <div class="modal-actions">
+          <button class="btn btn-outline" (click)="closeCompleteModal()">Cancel</button>
+          <button
+            class="btn btn-primary"
+            (click)="confirmComplete()"
+            [disabled]="isProcessing">
+            @if (isProcessing) { <span class="spinner-sm"></span> }
+            Complete Pickup
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

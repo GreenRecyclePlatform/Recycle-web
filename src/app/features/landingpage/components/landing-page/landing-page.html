@@ -1,0 +1,363 @@
+<div class="landing-page">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark transparent-navbar">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <div class="logo-icon">
+          🌿
+        </div>
+        <span class="ms-2 fw-bold">RecycleHub</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item">
+            <a class="nav-link" href="#home">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#how-it-works">How it Works</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#materials">Materials</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#contact">Contact</a>
+          </li>
+          <li class="nav-item ms-3">
+            <button class="btn btn-outline-light me-2">Login</button>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-success" (click)="navigateToRegister()">Get Started</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section" id="home">
+    <div class="hero-bg-effects">
+      <div class="hero-circle-1"></div>
+      <div class="hero-circle-2"></div>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <div class="hero-badge mb-4">
+            <span class="badge-icon">🌿</span>
+            <span>Eco-Friendly • Sustainable • Profitable</span>
+          </div>
+          <h1 class="hero-title mb-4">Turn Your Waste Into Cash</h1>
+          <p class="hero-subtitle mb-4">
+            Join Egyption's largest recycling marketplace. Sell your recyclables, 
+            contribute to a cleaner planet, and earn money—all with just a few clicks.
+          </p>
+          <div class="d-flex flex-wrap gap-3">
+            <button class="btn btn-light btn-lg" (click)="navigateToRegister()">
+              Get Started
+              <span class="ms-2">›</span>
+            </button>
+            <button class="btn btn-outline-light btn-lg" (click)="scrollToSection('how-it-works')">
+              Learn More
+            </button>
+          </div>
+        </div>
+        <div class="col-lg-6 d-none d-lg-block">
+                      <img src="https://static.vecteezy.com/system/resources/thumbnails/053/633/645/small_2x/colorful-recycling-bins-in-a-lush-garden-with-bright-sunlight-free-photo.jpg"
+
+
+               alt="Recycling" 
+               class="hero-image img-fluid rounded-4 shadow-lg">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="how-it-works-section py-5" id="how-it-works">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-title mb-3">How It Works</h2>
+        <p class="section-subtitle">Simple, fast, and rewarding</p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card h-100 text-center border-0 shadow-sm hover-card">
+            <div class="card-body p-4">
+              <div class="step-icon step-icon-1 mx-auto mb-4">
+                <span class="icon-text">📤</span>
+              </div>
+              <h3 class="card-title h5 mb-3">1. Submit Materials</h3>
+              <p class="card-text text-muted">
+                Upload photos of your recyclables and get an instant price estimate
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card h-100 text-center border-0 shadow-sm hover-card">
+            <div class="card-body p-4">
+              <div class="step-icon step-icon-2 mx-auto mb-4">
+                <span class="icon-text">📅</span>
+              </div>
+              <h3 class="card-title h5 mb-3">2. Schedule Pickup</h3>
+              <p class="card-text text-muted">
+                Choose a convenient time slot and our driver will collect from your doorstep
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card h-100 text-center border-0 shadow-sm hover-card">
+            <div class="card-body p-4">
+              <div class="step-icon step-icon-3 mx-auto mb-4">
+                <span class="icon-text">💰</span>
+              </div>
+              <h3 class="card-title h5 mb-3">3. Get Paid</h3>
+              <p class="card-text text-muted">
+                Receive instant payment after verification directly to your account
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Materials Section -->
+  <section class="materials-section py-5" id="materials">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-title mb-3">Material Price List</h2>
+        <p class="section-subtitle">Competitive rates for all recyclable materials</p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-sm-6 col-lg-3" *ngFor="let material of materials">
+          <div class="card h-100 border-0 shadow-sm material-card">
+            <div class="material-image-wrapper">
+              <img [src]="material.image" [alt]="material.name" class="card-img-top" onerror="this.src='https://via.placeholder.com/400x300?text=Material+Image'">
+            </div>
+            <div class="card-body p-3">
+              <div class="material-icon mb-2">{{ material.icon }}</div>
+              <h5 class="card-title mb-2">{{ material.name }}</h5>
+              <p class="material-price mb-0">{{ material.price }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-5">
+        <button class="btn btn-primary btn-lg" (click)="navigateToRegister()">
+          Start Recycling Now
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Statistics Section -->
+  <section class="stats-section py-5">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-4 mb-4 mb-md-0">
+          <div class="stat-icon mx-auto mb-3">
+            <span class="icon-text">♻️</span>
+          </div>
+          <p class="stat-number mb-2">5,000+</p>
+          <p class="stat-label">Tons Recycled</p>
+        </div>
+        <div class="col-md-4 mb-4 mb-md-0">
+          <div class="stat-icon mx-auto mb-3">
+            <span class="icon-text">👥</span>
+          </div>
+          <p class="stat-number mb-2">15,000+</p>
+          <p class="stat-label">Happy Users</p>
+        </div>
+        <div class="col-md-4">
+          <div class="stat-icon mx-auto mb-3">
+            <span class="icon-text">📈</span>
+          </div>
+          <p class="stat-number mb-2">25,000+</p>
+          <p class="stat-label">Trees Saved</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="testimonials-section py-5">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-title mb-3">What Our Users Say</h2>
+        <p class="section-subtitle">Join thousands of satisfied recyclers</p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-4" *ngFor="let testimonial of testimonials">
+          <div class="card h-100 border-0 shadow-sm testimonial-card">
+            <div class="card-body p-4">
+              <div class="rating mb-3">
+                <span class="star-icon" *ngFor="let star of getStarArray(testimonial.rating)">⭐</span>
+              </div>
+              <p class="testimonial-text mb-4">"{{ testimonial.content }}"</p>
+              <div class="d-flex align-items-center">
+                <img [src]="testimonial.avatar" [alt]="testimonial.name" class="testimonial-avatar rounded-circle me-3" onerror="this.src='https://via.placeholder.com/100x100?text=User'">
+                <div>
+                  <p class="testimonial-name mb-0">{{ testimonial.name }}</p>
+                  <p class="testimonial-role text-muted mb-0">{{ testimonial.role }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq-section py-5">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-title mb-3">Frequently Asked Questions</h2>
+        <p class="section-subtitle">Everything you need to know</p>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="accordion" id="faqAccordion">
+            <div class="accordion-item mb-3 border rounded" *ngFor="let faq of faqs; let i = index">
+              <h2 class="accordion-header">
+                <button 
+                  class="accordion-button" 
+                  [class.collapsed]="!faq.isOpen"
+                  type="button" 
+                  (click)="toggleFaq(i)">
+                  {{ faq.question }}
+                </button>
+              </h2>
+              <div class="accordion-collapse collapse" [class.show]="faq.isOpen">
+                <div class="accordion-body text-muted">
+                  {{ faq.answer }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section py-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+          <h2 class="cta-title mb-4">Ready to Make a Difference?</h2>
+          <p class="cta-subtitle mb-4">
+            Join RecycleHub today and start earning while saving the planet
+          </p>
+          <button class="btn btn-light btn-lg" (click)="navigateToRegister()">
+            Create Free Account
+            <span class="ms-2">›</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer-section py-5" id="contact">
+    <div class="container">
+      <div class="row g-4 mb-4">
+        <div class="col-md-3">
+          <div class="d-flex align-items-center mb-3">
+            <div class="footer-logo-icon">
+              🌿
+            </div>
+            <span class="footer-logo-text ms-2">RecycleHub</span>
+          </div>
+          <p class="footer-text">
+            Making recycling easy, profitable, and sustainable for everyone.
+          </p>
+        </div>
+
+        <div class="col-md-3">
+          <h4 class="footer-heading mb-3">Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">How It Works</a></li>
+            <li><a href="#">Materials</a></li>
+            <li><a href="#">Pricing</a></li>
+          </ul>
+        </div>
+
+        <div class="col-md-3">
+          <h4 class="footer-heading mb-3">Support</h4>
+          <ul class="footer-links">
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div class="col-md-3">
+          <h4 class="footer-heading mb-3">Contact</h4>
+          <ul class="footer-contact">
+            <li>
+              <span class="contact-icon">✉️</span>
+              <span>support@recyclehub.com</span>
+            </li>
+            <li>
+              <span class="contact-icon">📞</span>
+              <span>+0201064899632</span>
+            </li>
+            <li>
+              <span class="contact-icon">📍</span>
+              <span>Giza, Egypt</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom pt-4 border-top">
+        <div class="row align-items-center">
+          <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+            <p class="footer-copyright mb-0">
+              © 2025 RecycleHub. All rights reserved.
+            </p>
+          </div>
+          <div class="col-md-6">
+            <div class="social-links text-center text-md-end">
+              <a href="#" class="social-link">
+                <span class="social-icon">f</span>
+              </a>
+              <a href="#" class="social-link">
+                <span class="social-icon">𝕏</span>
+              </a>
+              <a href="#" class="social-link">
+                <span class="social-icon">📷</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- <img src="https://static.vecteezy.com/system/resources/thumbnails/035/781/395/small_2x/ai-generated-recycle-bin-that-emphasizes-cleanliness-and-order-generative-ai-photo.jpg" 
+                              https://img.freepik.com/premium-photo/recycle-symbol-ecofriendly-symbol-green-waste-basket_485374-11584.jpg
+                              img src="https://static.vecteezy.com/system/resources/thumbnails/035/315/465/small_2x/ai-generated-green-recycling-bin-on-wooden-table-generative-ai-photo.jpg"
+                                                    https://static.vecteezy.com/system/resources/thumbnails/035/315/465/small_2x/ai-generated-green-recycling-bin-on-wooden-table-generative-ai-photo.jpg"
+                                                    https://static.vecteezy.com/system/resources/thumbnails/035/315/465/small_2x/ai-generated-green-recycling-bin-on-wooden-table-generative-ai-photo.jpg
+                                                    https://static.vecteezy.com/system/resources/thumbnails/053/633/645/small_2x/colorful-recycling-bins-in-a-lush-garden-with-bright-sunlight-free-photo.jpg
+                                                                          https://img.houseui.com/media/blog-img/Managing_Clutter_Disposal.webp/"
+
+
+-->>

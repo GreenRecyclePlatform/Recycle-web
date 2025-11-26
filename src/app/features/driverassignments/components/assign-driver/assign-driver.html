@@ -1,0 +1,89 @@
+<div class="assign-driver-container">
+  <!-- Header -->
+  <div class="page-header">
+    <h1 class="page-title"> 🚛Assign Drivers</h1>
+    <p class="page-subtitle">Assign approved requests to available drivers</p>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content-grid">
+    <!-- Approved Requests Section -->
+    <div class="requests-section">
+      <h2 class="section-title">Approved Requests</h2>
+      
+      <div class="requests-list">
+        <div 
+          *ngFor="let request of approvedRequests" 
+          class="request-card"
+          [class.selected]="selectedRequest?.id === request.id"
+          (click)="selectRequest(request)">
+          
+          <div class="request-header">
+            <div class="request-id-wrapper">
+              <span class="label">Request ID</span>
+              <span class="request-id">{{ request.id }}</span>
+            </div>
+            <span class="status-badge">{{ request.status }}</span>
+          </div>
+
+          <div class="request-details">
+            <div class="detail-item">
+              <i class="icon icon-user"></i>
+              <span>{{ request.customerName }}</span>
+            </div>
+            <div class="detail-item">
+              <i class="icon icon-location"></i>
+              <span>{{ request.address }}</span>
+            </div>
+            <div class="detail-item">
+              <i class="icon icon-box"></i>
+              <span>{{ request.material }} - {{ request.weight }} kg</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Available Drivers Section -->
+    <div class="drivers-section">
+      <h2 class="section-title">Available Drivers</h2>
+      
+      <div class="drivers-list">
+        <div *ngFor="let driver of availableDrivers" class="driver-card">
+          <div class="driver-header">
+            <div class="driver-avatar">{{ driver.initials }}</div>
+            <div class="driver-info">
+              <h3 class="driver-name">{{ driver.name }}</h3>
+              <div class="driver-rating">
+                <i class="icon icon-star"></i>
+                <span>{{ driver.rating }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="driver-details">
+            <div class="detail-item">
+              <i class="icon icon-location"></i>
+              <span>Current: {{ driver.currentLocation }}</span>
+            </div>
+            <div class="detail-item">
+              <i class="icon icon-phone"></i>
+              <span>{{ driver.phone }}</span>
+            </div>
+            <div class="detail-item">
+              <i class="icon icon-calendar"></i>
+              <span>Today's Pickups: {{ driver.todayPickups }}</span>
+            </div>
+          </div>
+
+          <button 
+            class="btn-assign"
+            [disabled]="!selectedRequest"
+            (click)="assignToDriver(driver)">
+            Assign to This Driver
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
