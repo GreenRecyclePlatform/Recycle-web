@@ -1,0 +1,228 @@
+
+<div class="review-list-container page-container">
+  <div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h2 class="text-primary-green mb-2">My Reviews</h2>
+        <p class="text-muted mb-0">View and manage your driver reviews (Static Test Data)</p>
+      </div>
+      <button class="btn btn-primary" (click)="navigateToAddReview()">
+        <i class="bi bi-plus-circle me-2"></i>
+        Add Review
+      </button>
+    </div>
+  </div>
+
+  <!-- Success Message -->
+  @if (successMessage) {
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <i class="bi bi-check-circle-fill me-2"></i>
+      {{ successMessage }}
+      <button type="button" class="btn-close" (click)="successMessage = ''"></button>
+    </div>
+  }
+
+  <!-- Loading State -->
+  @if (loading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary-green" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-3 text-muted">Loading your reviews...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error && !loading) {
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      {{ error }}
+      <button type="button" class="btn-close" (click)="error = ''"></button>
+    </div>
+  }
+
+  <!-- Reviews List -->
+  @if (!loading && !error) {
+    <!-- Empty State -->
+    @if (reviews.length === 0) {
+      <div class="empty-state card p-5 text-center fade-in">
+        <i class="bi bi-star display-1 text-muted mb-3"></i>
+        <h4>No Reviews Yet</h4>
+        <p class="text-muted">You haven't written any reviews yet.</p>
+        <button class="btn btn-primary mt-3" (click)="navigateToAddReview()">
+          <i class="bi bi-plus-circle me-2"></i>
+          Write Your First Review
+        </button>
+      </div>
+    }
+
+    <!-- Review Cards -->
+    @if (reviews.length > 0) {
+      <div class="reviews-grid">
+        @for (review of reviews; track review.reviewId) {
+          <div class="review-card card fade-in">
+            <div class="card-body">
+              <!-- View Mode -->
+              @if (!isEditing(review.reviewId)) {
+                <div class="review-header">
+                  <div class="driver-info">
+                    <div class="driver-avatar-circle">
+                      {{ review.driverName.charAt(0) }}
+                    </div>
+                    <div>
+                      <h5 class="mb-1">{{ review.driverName }}</h5>
+                      <small class="text-muted">
+                        <i class="bi bi-calendar3 me-1"></i>
+                        {{ formatDate(review.createdAt) }}
+                      </small>
+                    </div>
+                  </div>
+                  <div class="review-actions">
+                    <button 
+                      class="btn btn-sm btn-outline-primary"
+                      (click)="startEdit(review)"
+                      title="Edit review"
+                    >
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button 
+                      class="btn btn-sm btn-outline-danger"
+                      (click)="onDeleteReview(review.reviewId)"
+                      title="Delete review"
+                    >
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="review-rating my-3">
+                  <div class="star-rating-display">
+                    @for (filled of getStarArray(review.rating); track $index) {
+                      <i class="bi" [class.bi-star-fill]="filled" [class.bi-star]="!filled" [class.filled]="filled"></i>
+                    }
+                  </div>
+                  <span class="ms-2 text-muted">({{ review.rating }}/5 - {{ getRatingDescription(review.rating) }})</span>
+                </div>
+
+                <p class="review-comment">{{ review.comment }}</p>
+
+                <div class="review-footer">
+                  <span class="badge bg-light text-dark">
+                    <i class="bi bi-box-seam me-1"></i>
+                    Request #{{ review.requestId.substring(0, 8) }}
+                  </span>
+                </div>
+              }
+
+              <!-- Edit Mode -->
+              @if (isEditing(review.reviewId)) {
+                <form [formGroup]="editForm" (ngSubmit)="onUpdateReview(review.reviewId)">
+                  <div class="edit-header mb-3">
+                    <h5 class="text-primary-green">
+                      <i class="bi bi-pencil me-2"></i>
+                      Editing Review for {{ review.driverName }}
+                    </h5>
+                  </div>
+
+                  <!-- Rating -->
+                  <div class="mb-3">
+                    <label class="form-label">
+                      <i class="bi bi-star-fill text-warning me-2"></i>
+                      Rating <span class="text-danger">*</span>
+                    </label>
+                    <div class="rating-container-edit">
+                      <div class="star-rating">
+                        @for (star of [1,2,3,4,5]; track star) {
+                          <button 
+                            type="button"
+                            class="star-btn"
+                            [class.filled]="star <= editForm.value.rating"
+                            [class.empty]="star > editForm.value.rating"
+                            (click)="onRatingChange(star)"
+                          >
+                            <i class="bi bi-star-fill"></i>
+                          </button>
+                        }
+                      </div>
+                      @if (editForm.value.rating > 0) {
+                        <div class="rating-info-edit ms-3">
+                          <div class="rating-value">{{ editForm.value.rating }}/5</div>
+                          <div class="rating-description">{{ getRatingDescription(editForm.value.rating) }}</div>
+                        </div>
+                      }
+                    </div>
+                    @if (ratingControl?.touched && ratingControl?.errors?.['required']) {
+                      <div class="text-danger small mt-1">
+                        <i class="bi bi-exclamation-circle me-1"></i>
+                        Please select a rating
+                      </div>
+                    }
+                  </div>
+
+                  <!-- Comment -->
+                  <div class="mb-3">
+                    <label for="editComment" class="form-label">
+                      <i class="bi bi-chat-left-text me-2"></i>
+                      Your Review <span class="text-danger">*</span>
+                    </label>
+                    <textarea
+                      id="editComment"
+                      formControlName="comment"
+                      class="form-control"
+                      rows="5"
+                      placeholder="Update your review..."
+                      maxlength="500"
+                    ></textarea>
+                    <div class="d-flex justify-content-between mt-1">
+                      @if (commentControl?.touched && commentControl?.errors) {
+                        <div class="text-danger small">
+                          <i class="bi bi-exclamation-circle me-1"></i>
+                          @if (commentControl?.errors?.['required']) {
+                            <span>Comment is required</span>
+                          }
+                          @if (commentControl?.errors?.['minlength']) {
+                            <span>Comment must be at least 10 characters</span>
+                          }
+                        </div>
+                      }
+                      <small class="text-muted ms-auto">
+                        {{ getCharacterCount() }}/500 characters
+                      </small>
+                    </div>
+                  </div>
+
+                  <!-- Action Buttons -->
+                  <div class="d-grid gap-2">
+                    <button 
+                      type="submit" 
+                      class="btn btn-primary"
+                      [disabled]="updating || editForm.invalid"
+                    >
+                      @if (!updating) {
+                        <i class="bi bi-check-circle me-2"></i>
+                        Save Changes
+                      }
+                      @if (updating) {
+                        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                        Updating...
+                      }
+                    </button>
+                    <button 
+                      type="button" 
+                      class="btn btn-outline-secondary"
+                      (click)="cancelEdit()"
+                      [disabled]="updating"
+                    >
+                      <i class="bi bi-x-circle me-2"></i>
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

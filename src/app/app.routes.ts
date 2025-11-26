@@ -1,3 +1,24 @@
+// import { Routes } from '@angular/router';
+
+// export const routes: Routes = [
+//   {
+//     path: 'reviews',
+//     loadChildren: () => import('./features/reviews/reviews.routes').then((m) => m.REVIEW_ROUTES),
+//   },
+//   {
+//     path: '',
+//     redirectTo: '/reviews',
+//     pathMatch: 'full',
+//   },
+//   {
+//     path: '**',
+//     redirectTo: '/reviews',
+//   },
+// ];
+// //
+
+// reviews.routes.ts
+// app.routes.ts
 import { Routes } from '@angular/router';
 import { LandingPage } from './pages/landing-page/landing-page';
 import { LoginPage } from './features/auth/login-page/login-page';
