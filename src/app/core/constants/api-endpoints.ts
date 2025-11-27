@@ -14,4 +14,7 @@ export const API_ENDPOINTS = {
     update: (id: string) => `/Addresses/${id}`,
     delete: (id: string) => `/Addresses/${id}`,
   },
+  DRIVERPROFILE: {
+    Create: '/DriverProfiles',
+  },
 };
