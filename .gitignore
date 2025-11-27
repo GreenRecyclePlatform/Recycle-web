@@ -40,3 +40,14 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+
+
+# Environment files
+src/environments/*.ts
+
+# interceptor files
+src/app/core/interceptors/*.ts
+
+#auth files
+src/app/core/services/auth.service.ts

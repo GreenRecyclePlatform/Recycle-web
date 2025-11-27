@@ -1,0 +1,301 @@
+<div class="admin-container">
+  <!-- Header -->
+  <div class="header-section">
+    <div>
+      <h1 class="page-title">Payout Review</h1>
+      <p class="page-subtitle">Review and approve pending payout requests</p>
+    </div>
+    <button class="refresh-btn" (click)="loadPayments()" [disabled]="loading">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="23 4 23 10 17 10"/>
+        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+      </svg>
+      Refresh
+    </button>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
+    <div class="stat-card pending">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-content">
+        <span class="stat-label">Pending Review</span>
+        <span class="stat-value">{{ stats.totalPending }}</span>
+      </div>
+    </div>
+    <div class="stat-card amount">
+      <div class="stat-icon">💰</div>
+      <div class="stat-content">
+        <span class="stat-label">Total Amount</span>
+        <span class="stat-value">{{ formatAmount(stats.totalAmount, 'usd') }}</span>
+      </div>
+    </div>
+    <div class="stat-card avg">
+      <div class="stat-icon">📊</div>
+      <div class="stat-content">
+        <span class="stat-label">Average Payout</span>
+        <span class="stat-value">{{ formatAmount(stats.avgAmount, 'usd') }}</span>
+      </div>
+    </div>
+    <div class="stat-card oldest">
+      <div class="stat-icon">📅</div>
+      <div class="stat-content">
+        <span class="stat-label">Oldest Request</span>
+        <span class="stat-value">{{ stats.oldestRequest || 'N/A' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters and Actions -->
+  <div class="controls-section">
+    <div class="filters">
+      <!-- Search -->
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input 
+          type="text" 
+          class="search-input"
+          [(ngModel)]="searchQuery"
+          (input)="applyFilters()"
+          placeholder="Search by name, email, or ID..."
+        />
+      </div>
+
+      <!-- Status Filter -->
+      <select class="filter-select" [(ngModel)]="filterStatus" (change)="applyFilters()">
+        <option value="all">All Status</option>
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="cancelled">Rejected</option>
+      </select>
+
+      <!-- Sort -->
+      <select class="filter-select" [(ngModel)]="sortBy" (change)="applyFilters()">
+        <option value="date">Sort by Date</option>
+        <option value="amount">Sort by Amount</option>
+      </select>
+
+      <button class="sort-order-btn" (click)="sortOrder = sortOrder === 'asc' ? 'desc' : 'asc'; applyFilters()">
+        <svg *ngIf="sortOrder === 'desc'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M19 12l-7 7-7-7"/>
+        </svg>
+        <svg *ngIf="sortOrder === 'asc'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Bulk Actions -->
+    <div class="bulk-actions">
+      <button 
+        class="bulk-toggle-btn" 
+        [class.active]="bulkSelectMode"
+        (click)="toggleBulkSelect()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 11 12 14 22 4"/>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+        {{ bulkSelectMode ? 'Cancel' : 'Bulk Select' }}
+      </button>
+
+      <div *ngIf="bulkSelectMode" class="bulk-actions-group">
+        <button class="action-btn small" (click)="selectAll()">Select All</button>
+        <button class="action-btn small" (click)="deselectAll()">Deselect All</button>
+        <button 
+          class="action-btn small approve" 
+          (click)="bulkApprove()"
+          [disabled]="selectedPayments.size === 0">
+          Approve ({{ selectedPayments.size }})
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading payout requests...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-state">
+    <div class="error-icon">⚠️</div>
+    <p class="error-message">{{ error }}</p>
+    <button class="retry-button" (click)="retry()">Try Again</button>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && filteredPayments.length === 0" class="empty-state">
+    <div class="empty-icon">📭</div>
+    <h3>No payout requests found</h3>
+    <p *ngIf="searchQuery || filterStatus !== 'all'">Try adjusting your filters</p>
+    <p *ngIf="!searchQuery && filterStatus === 'all'">All payout requests have been processed!</p>
+  </div>
+
+  <!-- Payments Table -->
+  <div *ngIf="!loading && !error && filteredPayments.length > 0" class="payments-table-container">
+    <table class="payments-table">
+      <thead>
+        <tr>
+          <th *ngIf="bulkSelectMode" class="checkbox-col">
+            <input type="checkbox" (change)="$event.target.checked ? selectAll() : deselectAll()">
+          </th>
+          <th>User</th>
+          <th>Pickup ID</th>
+          <th>Material</th>
+          <th>Amount</th>
+          <th>Requested</th>
+          <th>Status</th>
+          <th class="actions-col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let payment of filteredPayments" class="payment-row">
+          <td *ngIf="bulkSelectMode" class="checkbox-col">
+            <input 
+              type="checkbox" 
+              [checked]="selectedPayments.has(payment.paymentId)"
+              (change)="togglePaymentSelect(payment.paymentId)"
+              [disabled]="payment.paymentStatus !== 'pending'">
+          </td>
+          <td class="user-cell">
+            <div class="user-info">
+              <div class="user-avatar">{{ payment.userName?.charAt(0) || 'U' }}</div>
+              <div class="user-details">
+                <span class="user-name">{{ payment.userName || 'Unknown User' }}</span>
+                <span class="user-email">{{ payment.userEmail || 'No email' }}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span class="pickup-id">{{ payment.pickupRequestId }}</span>
+          </td>
+          <td>
+            <div class="material-info">
+              <span class="material-type">{{ payment.materialType }}</span>
+              <span class="material-weight">{{ payment.weight }}</span>
+            </div>
+          </td>
+          <td class="amount-cell">{{ formatAmount(payment.amount, payment.currency) }}</td>
+          <td>
+            <div class="date-info">
+              <span class="date">{{ formatDate(payment.requestedAt) }}</span>
+              <span class="days-ago">{{ getDaysAgo(payment.requestedAt) }} days ago</span>
+            </div>
+          </td>
+          <td>
+            <span class="status-badge" [ngClass]="getStatusClass(payment.paymentStatus)">
+              {{ payment.paymentStatus | titlecase }}
+            </span>
+          </td>
+          <td class="actions-col">
+            <div class="action-buttons">
+              <button 
+                class="action-btn approve"
+                *ngIf="payment.paymentStatus === 'pending'"
+                (click)="openReviewModal(payment, 'approve')"
+                title="Approve">
+                ✓
+              </button>
+              <button 
+                class="action-btn reject"
+                *ngIf="payment.paymentStatus === 'pending'"
+                (click)="openReviewModal(payment, 'reject')"
+                title="Reject">
+                ✗
+              </button>
+              <button 
+                class="action-btn view"
+                (click)="viewPaymentDetails(payment.paymentId)"
+                title="View Details">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Review Modal -->
+  <div *ngIf="showReviewModal" class="modal-overlay" (click)="closeReviewModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          {{ reviewAction === 'approve' ? 'Approve' : 'Reject' }} Payout Request
+        </h2>
+        <button class="modal-close" (click)="closeReviewModal()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Payment Info -->
+        <div class="review-info">
+          <div class="info-row">
+            <span class="info-label">User:</span>
+            <span class="info-value">{{ selectedPayment?.userName }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Amount:</span>
+            <span class="info-value amount">{{ formatAmount(selectedPayment?.amount || 0, selectedPayment?.currency || 'usd') }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Material:</span>
+            <span class="info-value">{{ selectedPayment?.materialType }} ({{ selectedPayment?.weight }})</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Pickup ID:</span>
+            <span class="info-value">{{ selectedPayment?.pickupRequestId }}</span>
+          </div>
+        </div>
+
+        <!-- Review Form -->
+        <div class="review-form">
+          <div class="form-group">
+            <label class="form-label">Admin Notes</label>
+            <textarea 
+              class="form-textarea"
+              [(ngModel)]="reviewNotes"
+              placeholder="Add notes about this review..."
+              rows="3"></textarea>
+          </div>
+
+          <div class="form-group" *ngIf="reviewAction === 'reject'">
+            <label class="form-label">Rejection Reason *</label>
+            <textarea 
+              class="form-textarea"
+              [(ngModel)]="failureReason"
+              placeholder="Explain why this payout is being rejected..."
+              rows="3"
+              required></textarea>
+            <p class="form-hint">This will be visible to the user</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="modal-btn cancel" (click)="closeReviewModal()" [disabled]="submitting">
+          Cancel
+        </button>
+        <button 
+          class="modal-btn"
+          [ngClass]="reviewAction === 'approve' ? 'approve' : 'reject'"
+          (click)="submitReview()"
+          [disabled]="submitting || (reviewAction === 'reject' && !failureReason)">
+          <span *ngIf="!submitting">
+            {{ reviewAction === 'approve' ? 'Approve Payout' : 'Reject Payout' }}
+          </span>
+          <span *ngIf="submitting" class="submitting">
+            <div class="btn-spinner"></div>
+            Processing...
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

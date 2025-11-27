@@ -1,0 +1,230 @@
+<div class="payout-container">
+  <!-- Header -->
+  <div class="header-section">
+    <div>
+      <h1 class="page-title">Request Payout</h1>
+      <p class="page-subtitle">Withdraw your recycling earnings to your bank account</p>
+    </div>
+  </div>
+
+  <!-- Account Status Badge - MOST IMPORTANT -->
+  <div class="account-status-section">
+    <app-account-status-badge
+      [status]="accountStatus"
+      [size]="'large'"
+      [showActions]="true"
+      [requirementsCount]="requirementsNeeded.length"
+      (onAction)="handleAccountAction($event)">
+    </app-account-status-badge>
+  </div>
+
+  <!-- Stripe Account Warning (if not verified) - KEEP AS FALLBACK -->
+  <div *ngIf="!stripeAccountVerified && !loadingBalance && accountStatus !== 'loading'" class="warning-banner-simple">
+    <!-- This is now redundant but kept as fallback - badge above is primary UI -->
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loadingBalance" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading your balance...</p>
+  </div>
+
+  <!-- Success State -->
+  <div *ngIf="success && !loadingBalance" class="success-state">
+    <div class="success-icon">✓</div>
+    <h2 class="success-title">Payout Request Submitted!</h2>
+    <p class="success-message">
+      Your payout request of <strong>{{ formatAmount(requestAmount, currency) }}</strong> has been submitted successfully.
+      <br>It will be reviewed by our team and processed within 1-2 business days.
+    </p>
+    <button class="view-btn" routerLink="/payments">View Payment History</button>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!loadingBalance && !success" class="content-wrapper">
+    <!-- Balance Cards -->
+    <div class="balance-grid">
+      <div class="balance-card available">
+        <div class="balance-header">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
+          </svg>
+          <span class="balance-label">Available Balance</span>
+        </div>
+        <div class="balance-amount">{{ formatAmount(availableBalance, currency) }}</div>
+        <p class="balance-info">Ready to withdraw</p>
+      </div>
+
+      <div class="balance-card pending">
+        <div class="balance-header">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <span class="balance-label">Pending Payouts</span>
+        </div>
+        <div class="balance-amount">{{ formatAmount(pendingPayouts, currency) }}</div>
+        <p class="balance-info">Being processed</p>
+      </div>
+    </div>
+
+    <!-- Payout Form -->
+    <div class="form-card">
+      <div class="form-header">
+        <h2 class="form-title">Withdrawal Amount</h2>
+        <p class="form-subtitle">
+          Minimum payout: <strong>{{ formatAmount(minimumPayout, currency) }}</strong>
+        </p>
+      </div>
+
+      <div class="form-content">
+        <!-- Amount Input -->
+        <div class="input-group">
+          <label class="input-label">Amount to Withdraw</label>
+          <div class="amount-input-wrapper">
+            <span class="currency-symbol">$</span>
+            <input 
+              type="number" 
+              class="amount-input"
+              [(ngModel)]="requestAmount"
+              [disabled]="!stripeAccountVerified || submitting"
+              placeholder="0.00"
+              step="0.01"
+              min="0"
+              [max]="availableBalance"
+              (input)="validateAmount()"
+            />
+            <button 
+              class="max-btn" 
+              (click)="setMaxAmount()"
+              [disabled]="!stripeAccountVerified || submitting">
+              Max
+            </button>
+          </div>
+          <p class="input-hint" *ngIf="!error">
+            Available: {{ formatAmount(availableBalance, currency) }}
+          </p>
+          <p class="input-error" *ngIf="error">{{ error }}</p>
+        </div>
+
+        <!-- Quick Amount Buttons -->
+        <div class="quick-amounts">
+          <button 
+            class="quick-btn" 
+            *ngFor="let amount of [25, 50, 100]"
+            (click)="setQuickAmount(amount)"
+            [disabled]="!stripeAccountVerified || submitting || amount > availableBalance">
+            {{ formatAmount(amount, currency) }}
+          </button>
+        </div>
+
+        <!-- Description (Optional) -->
+        <div class="input-group">
+          <label class="input-label">
+            Note (Optional)
+            <span class="label-optional">Optional</span>
+          </label>
+          <textarea 
+            class="description-input"
+            [(ngModel)]="description"
+            [disabled]="!stripeAccountVerified || submitting"
+            placeholder="Add a note about this withdrawal..."
+            rows="3"
+            maxlength="200"></textarea>
+          <p class="input-hint">{{ description.length }}/200 characters</p>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary-box" *ngIf="requestAmount > 0">
+          <h3 class="summary-title">Payout Summary</h3>
+          <div class="summary-row">
+            <span class="summary-label">Withdrawal Amount</span>
+            <span class="summary-value">{{ formatAmount(requestAmount, currency) }}</span>
+          </div>
+          <div class="summary-row" *ngIf="calculateFee() > 0">
+            <span class="summary-label">Processing Fee</span>
+            <span class="summary-value">{{ formatAmount(calculateFee(), currency) }}</span>
+          </div>
+          <div class="summary-row total">
+            <span class="summary-label">You Will Receive</span>
+            <span class="summary-value">{{ formatAmount(getNetAmount(), currency) }}</span>
+          </div>
+          <div class="summary-info">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <span>Estimated arrival: {{ getEstimatedArrival() }}</span>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button 
+          class="submit-btn"
+          (click)="submitRequest()"
+          [disabled]="!stripeAccountVerified || submitting || !requestAmount || requestAmount <= 0">
+          <span *ngIf="!submitting">Request Payout</span>
+          <span *ngIf="submitting" class="submitting">
+            <div class="btn-spinner"></div>
+            Processing...
+          </span>
+        </button>
+
+        <!-- Info Note -->
+        <div class="info-note">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0077B6" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="16" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>
+          <div class="note-content">
+            <p class="note-title">How payouts work</p>
+            <ul class="note-list">
+              <li>Payout requests are reviewed by our team within 1-2 business days</li>
+              <li>Once approved, funds are transferred via Stripe to your bank account</li>
+              <li>Bank transfers typically arrive in 2-3 business days</li>
+              <li>You'll receive email notifications at each step</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="activity-card">
+      <div class="activity-header">
+        <h3 class="activity-title">Recent Activity</h3>
+        <a routerLink="/payments" class="view-all-link">View All →</a>
+      </div>
+      <div class="activity-list">
+        <div class="activity-item">
+          <div class="activity-icon completed">✓</div>
+          <div class="activity-content">
+            <span class="activity-text">Payout completed</span>
+            <span class="activity-date">Nov 20, 2025</span>
+          </div>
+          <span class="activity-amount">+{{ formatAmount(42.50, currency) }}</span>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon pending">⏳</div>
+          <div class="activity-content">
+            <span class="activity-text">Payout pending approval</span>
+            <span class="activity-date">Nov 18, 2025</span>
+          </div>
+          <span class="activity-amount">{{ formatAmount(45.75, currency) }}</span>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon completed">✓</div>
+          <div class="activity-content">
+            <span class="activity-text">Payout completed</span>
+            <span class="activity-date">Nov 10, 2025</span>
+          </div>
+          <span class="activity-amount">+{{ formatAmount(68.25, currency) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

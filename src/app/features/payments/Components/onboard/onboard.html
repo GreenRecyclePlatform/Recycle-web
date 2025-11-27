@@ -1,0 +1,280 @@
+<div class="onboard-container">
+  
+  <!-- Loading State -->
+  <div *ngIf="accountStatus === 'loading'" class="loading-state">
+    <div class="spinner-large"></div>
+    <p class="loading-text">Checking your account status...</p>
+  </div>
+
+  <!-- Return Success State -->
+  <div *ngIf="isReturn && returnSuccess && accountStatus !== 'loading'" class="success-state">
+    <div class="success-animation">
+      <div class="success-checkmark">
+        <svg width="80" height="80" viewBox="0 0 52 52">
+          <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+          <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+        </svg>
+      </div>
+    </div>
+    <h1 class="success-title">Setup Complete!</h1>
+    <p class="success-message">
+      Your bank account has been successfully connected. You can now receive payouts from your recycling activities!
+    </p>
+    <div class="success-actions">
+      <button class="primary-btn" (click)="goToDashboard()">
+        Go to Dashboard
+      </button>
+      <button class="secondary-btn" (click)="openStripeDashboard()">
+        View Stripe Account
+      </button>
+    </div>
+  </div>
+
+  <!-- Return Error State -->
+  <div *ngIf="isReturn && !returnSuccess && accountStatus !== 'loading'" class="error-banner-large">
+    <div class="error-icon-large">⚠️</div>
+    <h2 class="error-title">Setup Not Complete</h2>
+    <p class="error-message">
+      It looks like you didn't complete the Stripe account setup. Don't worry, you can continue where you left off!
+    </p>
+    <button class="retry-btn-large" (click)="continueOnboarding()">
+      Continue Setup
+    </button>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!isReturn && accountStatus !== 'loading'">
+    
+    <!-- Not Started State -->
+    <div *ngIf="accountStatus === 'none'" class="onboard-content">
+      <div class="hero-section">
+        <div class="hero-icon">
+          <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="1.5">
+            <rect x="2" y="5" width="20" height="14" rx="2"/>
+            <path d="M2 10h20"/>
+            <circle cx="7" cy="15" r="1"/>
+            <circle cx="12" cy="15" r="1"/>
+          </svg>
+        </div>
+        <h1 class="hero-title">Connect Your Bank Account</h1>
+        <p class="hero-subtitle">
+          Start receiving payments for your recycling contributions. 
+          Setup takes just 2-3 minutes and is completely secure.
+        </p>
+      </div>
+
+      <!-- Benefits Grid -->
+      <div class="benefits-grid">
+        <div class="benefit-card">
+          <div class="benefit-icon secure">🔒</div>
+          <h3 class="benefit-title">Secure & Safe</h3>
+          <p class="benefit-text">Bank-level security powered by Stripe. Your financial data is never stored on our servers.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon fast">⚡</div>
+          <h3 class="benefit-title">Fast Payouts</h3>
+          <p class="benefit-text">Receive your earnings in 2-3 business days directly to your bank account.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon easy">✨</div>
+          <h3 class="benefit-title">Easy Setup</h3>
+          <p class="benefit-text">Simple step-by-step process. No complicated forms or paperwork required.</p>
+        </div>
+      </div>
+
+      <!-- How It Works -->
+      <div class="how-it-works">
+        <h2 class="section-title">How It Works</h2>
+        <div class="steps-container">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h3 class="step-title">Click "Connect Bank Account"</h3>
+              <p class="step-text">You'll be securely redirected to Stripe's platform</p>
+            </div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h3 class="step-title">Provide Your Information</h3>
+              <p class="step-text">Enter your business or personal details and bank account</p>
+            </div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h3 class="step-title">Start Earning!</h3>
+              <p class="step-text">Once verified, you can immediately receive payouts</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA Section -->
+      <div class="cta-section">
+        <button 
+          class="cta-button" 
+          (click)="startOnboarding()"
+          [disabled]="generatingLink">
+          <span *ngIf="!generatingLink" class="cta-content">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="5" width="20" height="14" rx="2"/>
+              <path d="M2 10h20"/>
+            </svg>
+            Connect Bank Account
+          </span>
+          <span *ngIf="generatingLink" class="cta-loading">
+            <div class="btn-spinner"></div>
+            Preparing Secure Connection...
+          </span>
+        </button>
+        <p class="cta-note">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          Protected by Stripe - trusted by millions of businesses worldwide
+        </p>
+      </div>
+
+      <!-- Stripe Link Display (when generated) -->
+      <div *ngIf="accountLink && !generatingLink" class="link-display-card">
+        <div class="link-header">
+          <div class="link-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="2">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="link-title">Your Secure Connection Link</h3>
+            <p class="link-subtitle">Click below to continue to Stripe</p>
+          </div>
+        </div>
+        <div class="link-display">
+          <input 
+            type="text" 
+            class="link-input" 
+            [value]="accountLink" 
+            readonly
+          />
+          <button class="copy-btn" (click)="copyLink()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+          </button>
+        </div>
+        <button class="redirect-btn" (click)="redirectToStripe()">
+          <span>Continue to Stripe</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- FAQ Section -->
+      <div class="faq-section">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h4 class="faq-question">Is my information secure?</h4>
+            <p class="faq-answer">Yes! We use Stripe Connect, the same payment infrastructure used by companies like Amazon and Google. Your bank details are encrypted and never stored on our servers.</p>
+          </div>
+          <div class="faq-item">
+            <h4 class="faq-question">How long does verification take?</h4>
+            <p class="faq-answer">Most accounts are verified instantly. In some cases, Stripe may require additional information, which typically takes 1-2 business days to review.</p>
+          </div>
+          <div class="faq-item">
+            <h4 class="faq-question">What information do I need?</h4>
+            <p class="faq-answer">You'll need your legal name, date of birth, address, and bank account details. Business accounts may require additional documentation.</p>
+          </div>
+          <div class="faq-item">
+            <h4 class="faq-question">Can I change my bank account later?</h4>
+            <p class="faq-answer">Yes! You can update your bank account information anytime through your Stripe dashboard.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pending/Restricted State -->
+    <div *ngIf="accountStatus === 'pending' || accountStatus === 'restricted'" class="pending-content">
+      <div class="status-icon pending-icon">
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </div>
+      <h1 class="status-title">Account Setup In Progress</h1>
+      <p class="status-message">
+        Your Stripe account is being set up. You may need to complete additional steps to start receiving payouts.
+      </p>
+      
+      <div *ngIf="requirementsNeeded.length > 0" class="requirements-card">
+        <h3 class="requirements-title">Required Information:</h3>
+        <ul class="requirements-list">
+          <li *ngFor="let requirement of requirementsNeeded">{{ requirement | titlecase }}</li>
+        </ul>
+      </div>
+
+      <div class="status-actions">
+        <button class="primary-btn" (click)="continueOnboarding()">
+          Complete Setup
+        </button>
+        <button class="secondary-btn" (click)="checkAccountStatus()">
+          Refresh Status
+        </button>
+      </div>
+    </div>
+
+    <!-- Verified State -->
+    <div *ngIf="accountStatus === 'verified'" class="verified-content">
+      <div class="verified-badge">
+        <svg width="100" height="100" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" fill="#2D6A4F"/>
+          <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1 class="verified-title">Account Verified! ✓</h1>
+      <p class="verified-message">
+        Your bank account is connected and verified. You're all set to receive payouts!
+      </p>
+      
+      <div class="verified-info-grid">
+        <div class="info-box">
+          <div class="info-icon">💰</div>
+          <div class="info-content">
+            <span class="info-label">Status</span>
+            <span class="info-value">Active & Verified</span>
+          </div>
+        </div>
+        <div class="info-box">
+          <div class="info-icon">⚡</div>
+          <div class="info-content">
+            <span class="info-label">Payout Speed</span>
+            <span class="info-value">2-3 Business Days</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="verified-actions">
+        <button class="primary-btn" routerLink="/payments/request">
+          Request Payout
+        </button>
+        <button class="secondary-btn" (click)="openStripeDashboard()">
+          Manage Stripe Account
+        </button>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error" class="error-banner">
+      <div class="error-icon">⚠️</div>
+      <div class="error-content">
+        <p class="error-text">{{ error }}</p>
+        <button class="retry-btn" (click)="retry()">Try Again</button>
+      </div>
+    </div>
+  </div>
+</div>

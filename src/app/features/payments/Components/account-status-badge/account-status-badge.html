@@ -1,0 +1,98 @@
+<div 
+  class="status-badge-container"
+  [ngClass]="{
+    'size-small': size === 'small',
+    'size-medium': size === 'medium',
+    'size-large': size === 'large',
+    'clickable': clickable
+  }"
+  (click)="handleClick()">
+  
+  <!-- Compact Badge (Small) -->
+  <div *ngIf="size === 'small'" class="badge-compact" [ngClass]="getStatusConfig().class">
+    <span class="badge-icon">{{ getStatusConfig().icon }}</span>
+    <span class="badge-label">{{ getStatusConfig().label }}</span>
+  </div>
+
+  <!-- Standard Badge (Medium) -->
+  <div *ngIf="size === 'medium'" class="badge-standard" [ngClass]="getStatusConfig().class">
+    <div class="badge-icon-wrapper">
+      <span class="badge-icon">{{ getStatusConfig().icon }}</span>
+    </div>
+    <div class="badge-content">
+      <span class="badge-label">{{ getStatusConfig().label }}</span>
+      <span class="badge-description">{{ getStatusConfig().description }}</span>
+    </div>
+    <button 
+      *ngIf="showActions && getStatusConfig().actionText" 
+      class="badge-action-btn"
+      (click)="handleActionClick($event)">
+      {{ getStatusConfig().actionText }}
+    </button>
+  </div>
+
+  <!-- Detailed Badge (Large) -->
+  <div *ngIf="size === 'large'" class="badge-large" [ngClass]="getStatusConfig().class">
+    <div class="badge-header">
+      <div class="badge-icon-large">
+        <span>{{ getStatusConfig().icon }}</span>
+      </div>
+      <div class="badge-info">
+        <h3 class="badge-title">{{ getStatusConfig().label }}</h3>
+        <p class="badge-subtitle">{{ getStatusConfig().description }}</p>
+      </div>
+    </div>
+    
+    <!-- Additional details for specific statuses -->
+    <div *ngIf="status === 'verified'" class="badge-details">
+      <div class="detail-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        <span>Payouts Enabled</span>
+      </div>
+      <div class="detail-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        <span>Identity Verified</span>
+      </div>
+    </div>
+
+    <div *ngIf="status === 'action_required' && requirementsCount > 0" class="badge-details warning">
+      <div class="detail-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span>{{ requirementsCount }} requirement{{ requirementsCount !== 1 ? 's' : '' }} pending</span>
+      </div>
+    </div>
+
+    <div *ngIf="status === 'pending'" class="badge-details info">
+      <div class="detail-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <span>Verification in progress</span>
+      </div>
+    </div>
+
+    <button 
+      *ngIf="showActions && getStatusConfig().actionText" 
+      class="badge-large-action-btn"
+      (click)="handleActionClick($event)">
+      {{ getStatusConfig().actionText }}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Loading Animation -->
+  <div *ngIf="status === 'loading' && size !== 'small'" class="loading-indicator">
+    <div class="spinner"></div>
+  </div>
+</div>
