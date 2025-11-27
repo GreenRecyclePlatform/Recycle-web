@@ -11,7 +11,7 @@ import { Material } from '../../core/models/material.model';
   templateUrl: './manage-materials.html',
   styleUrl: './manage-materials.css',
 })
-export class ManageMaterialsComponent implements OnInit {
+export class ManageMaterials implements OnInit {
   materials: Material[] = [];
   selectedMaterial: Material | null = null;
   isEditMode = false;
@@ -208,9 +208,7 @@ saveMaterial(): void {
     return;
   }
 
-  // ⭐ AUTO-CALCULATE pricePerKg before sending
-  this.materialForm.pricePerKg = (this.materialForm.buyingPrice + this.materialForm.sellingPrice) / 2;
-
+  // Log what we're about to send
   console.log('Material Form Data:', this.materialForm);
 
   if (this.isEditMode && this.selectedMaterial) {
