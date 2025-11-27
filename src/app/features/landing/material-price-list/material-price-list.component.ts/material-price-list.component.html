@@ -1,0 +1,30 @@
+<section id="materials" class="materials-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Material Price List</h2>
+      <p class="section-subtitle">Competitive rates for all recyclable materials</p>
+    </div>
+
+    <div class="price-grid">
+      <div class="price-card" *ngFor="let material of materials">
+        <div class="price-image-container">
+          <img [src]="material.image"
+               [alt]="material.name"
+               class="price-image"
+               (error)="$event.target.src='assets/placeholder.png'">
+        </div>
+        <div class="price-content">
+          <div class="price-icon">{{ material.icon }}</div>
+          <h3 class="price-name">{{ material.name }}</h3>
+          <p class="price-value">₹{{ material.buyingPrice }}/kg</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-container">
+      <button class="btn btn-cta" (click)="startRecycling()">
+        Start Recycling Now
+      </button>
+    </div>
+  </div>
+</section>
