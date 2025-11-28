@@ -11,7 +11,7 @@
 // import { AdminRequestsDashboard } from './components/admin-requests-dashboard/admin-requests-dashboard';
 
 // @NgModule({
-//   declarations: [],  // ✅ EMPTY - no declarations for standalone components!
+//   declarations: [],  //  EMPTY - no declarations for standalone components!
 //   imports: [
 //     CommonModule,
 //     PickupRequestsRoutingModule,

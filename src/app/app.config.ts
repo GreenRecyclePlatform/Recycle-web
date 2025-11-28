@@ -1,27 +1,38 @@
-// import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+// import {
+//   ApplicationConfig,
+//   provideBrowserGlobalErrorListeners,
+//   provideZoneChangeDetection,
+// } from '@angular/core';
 // import { provideRouter } from '@angular/router';
+
+// import { routes } from './app.routes';
 // import { provideHttpClient, withInterceptors } from '@angular/common/http';
-// import { routes } from './app.routes';  // ✅ Now it's exported!
+// import { authInterceptor } from './core/interceptors/auth';
 
 // export const appConfig: ApplicationConfig = {
 //   providers: [
+//     provideBrowserGlobalErrorListeners(),
 //     provideZoneChangeDetection({ eventCoalescing: true }),
 //     provideRouter(routes),
-//     provideHttpClient()
-//   ]
+//     provideHttpClient(withInterceptors([authInterceptor])),
+//   ],
 // };
+// src/app/app.config.ts
+
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { routes } from './app.routes';
-import { authInterceptor } from './core/interceptors/auth.interceptor'; // ✅ Add this
+import { authInterceptor } from './core/interceptors/auth';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([authInterceptor]) // ✅ Add interceptor
-    )
+      withInterceptors([authInterceptor])
+    ),
+    provideAnimationsAsync()
   ]
 };

@@ -17,8 +17,8 @@ import {
   providedIn: 'root'
 })
 export class PickupRequestService {
-  private readonly baseUrl = `${environment.apiUrl}/pickuprequests`;
-
+  // private readonly baseUrl = `${environment.apiUrl}/pickuprequests`;
+  private readonly baseUrl = `${environment.apiUrl}/PickupRequests`;
   constructor(private http: HttpClient) { }
 
   /**
