@@ -1,17 +1,24 @@
-// review-list.component.ts
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router'; // Import RouterLink directive
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ReviewService, Review, UpdateReviewDto } from '../../../../core/services/review.service';
-import { SharedModule } from '../../../../shared/shared.module';
+import { Navbar } from '../../../../shared/components/navbar/navbar';
+import { LucideAngularModule } from "lucide-angular";
 
 @Component({
   selector: 'app-review-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, SharedModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink, // Use RouterLink instead of RouterModule
+    Navbar,
+    LucideAngularModule
+],
   templateUrl: './review-list.html',
   styleUrls: ['./review-list.css'],
 })
@@ -22,16 +29,15 @@ export class ReviewListComponent implements OnInit, OnDestroy {
   successMessage: string = '';
   private destroy$ = new Subject<void>();
 
-  // Edit mode
   editingReviewId: string | null = null;
   editForm: FormGroup;
   updating: boolean = false;
 
-  constructor(
-    private router: Router,
-    private fb: FormBuilder,
-    private reviewService: ReviewService
-  ) {
+  private router = inject(Router);
+  private fb = inject(FormBuilder);
+  private reviewService = inject(ReviewService);
+
+  constructor() {
     this.editForm = this.fb.group({
       rating: [0, [Validators.required, Validators.min(1), Validators.max(5)]],
       comment: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
@@ -47,9 +53,6 @@ export class ReviewListComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  /**
-   * Load reviews from backend
-   */
   loadReviews(): void {
     this.loading = true;
     this.error = '';
@@ -70,9 +73,6 @@ export class ReviewListComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Start editing a review
-   */
   startEdit(review: Review): void {
     this.editingReviewId = review.reviewId;
     this.editForm.patchValue({
@@ -83,25 +83,16 @@ export class ReviewListComponent implements OnInit, OnDestroy {
     this.successMessage = '';
   }
 
-  /**
-   * Cancel editing
-   */
   cancelEdit(): void {
     this.editingReviewId = null;
     this.editForm.reset();
     this.error = '';
   }
 
-  /**
-   * Check if a review is being edited
-   */
   isEditing(reviewId: string): boolean {
     return this.editingReviewId === reviewId;
   }
 
-  /**
-   * Update a review via backend API
-   */
   onUpdateReview(reviewId: string): void {
     if (this.editForm.invalid) {
       this.editForm.markAllAsTouched();
@@ -122,7 +113,6 @@ export class ReviewListComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (updatedReview) => {
-          // Update the review in the local array
           const index = this.reviews.findIndex((r) => r.reviewId === reviewId);
           if (index !== -1) {
             this.reviews[index] = updatedReview;
@@ -142,9 +132,6 @@ export class ReviewListComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Delete a review via backend API
-   */
   onDeleteReview(reviewId: string): void {
     if (!confirm('Are you sure you want to delete this review?')) {
       return;
@@ -155,7 +142,6 @@ export class ReviewListComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
-          // Remove from local array
           this.reviews = this.reviews.filter((r) => r.reviewId !== reviewId);
           this.successMessage = 'Review deleted successfully! 🗑️';
           setTimeout(() => (this.successMessage = ''), 3000);
@@ -167,16 +153,10 @@ export class ReviewListComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Navigate to add review page
-   */
   navigateToAddReview(): void {
     this.router.navigate(['/reviews/add']);
   }
 
-  /**
-   * Format date for display
-   */
   formatDate(date: Date | string): string {
     const dateObj = typeof date === 'string' ? new Date(date) : date;
     return dateObj.toLocaleDateString('en-US', {
@@ -186,25 +166,16 @@ export class ReviewListComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Get star array for rating display
-   */
   getStarArray(rating: number): boolean[] {
     return Array(5)
       .fill(false)
       .map((_, index) => index < rating);
   }
 
-  /**
-   * Handle rating change in edit mode
-   */
   onRatingChange(rating: number): void {
     this.editForm.patchValue({ rating });
   }
 
-  /**
-   * Get rating description
-   */
   getRatingDescription(rating: number): string {
     const descriptions: { [key: number]: string } = {
       1: 'Poor',
@@ -216,16 +187,10 @@ export class ReviewListComponent implements OnInit, OnDestroy {
     return descriptions[rating] || '';
   }
 
-  /**
-   * Get character count for comment
-   */
   getCharacterCount(): number {
     return this.editForm.value.comment?.length || 0;
   }
 
-  /**
-   * Get form control
-   */
   get ratingControl() {
     return this.editForm.get('rating');
   }

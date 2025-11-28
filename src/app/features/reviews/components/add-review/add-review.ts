@@ -1,7 +1,13 @@
+// ============================================
+// SOLUTION: Remove RouterModule from imports
+// Use RouterLink directive instead
+// ============================================
+
 // add-review.component.ts
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router'; // Import RouterLink directive
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
@@ -10,12 +16,19 @@ import {
   CreateReviewDto,
 } from '../../../../core/services/review.service';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from '../../../../shared/shared.module';
+import { Navbar } from '../../../../shared/components/navbar/navbar';
+import { LucideAngularModule } from "lucide-angular";
 
 @Component({
   selector: 'app-add-review',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, SharedModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink, // Use RouterLink instead of RouterModule
+    Navbar,
+    LucideAngularModule
+],
   templateUrl: './add-review.html',
   styleUrls: ['./add-review.css'],
 })
@@ -29,11 +42,11 @@ export class AddReviewComponent implements OnInit, OnDestroy {
   successMessage: string = '';
   private destroy$ = new Subject<void>();
 
-  constructor(
-    private fb: FormBuilder,
-    private reviewService: ReviewService,
-    private router: Router
-  ) {
+  private fb = inject(FormBuilder);
+  private reviewService = inject(ReviewService);
+  private router = inject(Router);
+
+  constructor() {
     this.reviewForm = this.fb.group({
       rating: [0, [Validators.required, Validators.min(1), Validators.max(5)]],
       comment: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
@@ -49,9 +62,6 @@ export class AddReviewComponent implements OnInit, OnDestroy {
     this.loadPendingReviews();
   }
 
-  /**
-   * Load pending reviews from backend
-   */
   loadPendingReviews(): void {
     this.loading = true;
     this.error = '';
@@ -64,7 +74,6 @@ export class AddReviewComponent implements OnInit, OnDestroy {
           this.pendingReviews = reviews;
           this.loading = false;
 
-          // Auto-select if only one review is pending
           if (reviews.length === 1) {
             this.selectRequest(reviews[0]);
           }
@@ -77,9 +86,6 @@ export class AddReviewComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Select a request to review
-   */
   selectRequest(request: PendingReviewDto): void {
     this.selectedRequest = request;
     this.reviewForm.reset({ rating: 0, comment: '' });
@@ -87,16 +93,10 @@ export class AddReviewComponent implements OnInit, OnDestroy {
     this.successMessage = '';
   }
 
-  /**
-   * Handle rating change
-   */
   onRatingChange(rating: number): void {
     this.reviewForm.patchValue({ rating });
   }
 
-  /**
-   * Submit the review
-   */
   onSubmit(): void {
     if (this.reviewForm.invalid || !this.selectedRequest) {
       this.reviewForm.markAllAsTouched();
@@ -106,9 +106,6 @@ export class AddReviewComponent implements OnInit, OnDestroy {
     this.submitReview();
   }
 
-  /**
-   * Submit review to backend
-   */
   private submitReview(): void {
     if (!this.selectedRequest) return;
 
@@ -131,7 +128,6 @@ export class AddReviewComponent implements OnInit, OnDestroy {
           this.submitting = false;
           this.successMessage = 'Review submitted successfully! 🎉';
 
-          // Navigate back to reviews list after 2 seconds
           setTimeout(() => {
             this.router.navigate(['/reviews']);
           }, 2000);
@@ -144,9 +140,6 @@ export class AddReviewComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Form control getters
-   */
   get ratingControl() {
     return this.reviewForm.get('rating');
   }
@@ -155,16 +148,10 @@ export class AddReviewComponent implements OnInit, OnDestroy {
     return this.reviewForm.get('comment');
   }
 
-  /**
-   * Get character count for comment
-   */
   getCharacterCount(): number {
     return this.reviewForm.value.comment?.length || 0;
   }
 
-  /**
-   * Get rating description text
-   */
   getRatingDescription(rating: number): string {
     const descriptions: { [key: number]: string } = {
       1: 'Poor',
@@ -176,9 +163,6 @@ export class AddReviewComponent implements OnInit, OnDestroy {
     return descriptions[rating] || '';
   }
 
-  /**
-   * Format date for display
-   */
   formatDate(date: Date | string): string {
     const dateObj = typeof date === 'string' ? new Date(date) : date;
     return dateObj.toLocaleDateString('en-US', {

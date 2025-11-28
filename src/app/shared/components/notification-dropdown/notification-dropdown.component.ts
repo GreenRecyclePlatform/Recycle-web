@@ -26,7 +26,7 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   constructor(private notificationService: NotificationService) {}
 
   ngOnInit(): void {
-    // Subscribe to notifications from service
+    // Subscribe to notifications
     this.notificationService.notifications$
       .pipe(takeUntil(this.destroy$))
       .subscribe((notifications) => {
@@ -38,7 +38,7 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
       this.loading = loading;
     });
 
-    // Initial load
+    // Load notifications
     this.loadNotifications();
   }
 
@@ -47,22 +47,21 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
    */
   loadNotifications(): void {
     this.error = null;
-    this.notificationService
-      .getUserNotifications(this.showUnreadOnly)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: () => {
-          // Notifications are updated via the service's BehaviorSubject
-        },
-        error: (error) => {
-          console.error('Error loading notifications:', error);
-          this.error = 'Failed to load notifications. Please try again.';
-        },
-      });
+
+    const request$ = this.showUnreadOnly
+      ? this.notificationService.getUnreadNotifications()
+      : this.notificationService.getAllNotifications();
+
+    request$.pipe(takeUntil(this.destroy$)).subscribe({
+      error: (error) => {
+        console.error('Error loading notifications:', error);
+        this.error = 'Failed to load notifications. Please try again.';
+      },
+    });
   }
 
   /**
-   * Toggle filter between all and unread only
+   * Toggle filter
    */
   toggleFilter(): void {
     this.showUnreadOnly = !this.showUnreadOnly;
@@ -74,31 +73,22 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
    */
   markAsRead(notification: Notification): void {
     if (!notification.isRead && notification.notificationId) {
-      this.notificationService
-        .markAsRead(notification.notificationId)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: () => {
-            // State is updated in the service
-          },
-          error: (error) => {
-            console.error('Error marking notification as read:', error);
-          },
-        });
+      // Update local state immediately
+      this.notificationService.updateNotification(notification.notificationId, {
+        isRead: true,
+        readAt: new Date(),
+      });
     }
   }
 
   /**
-   * Mark all notifications as read
+   * Mark all as read
    */
   markAllAsRead(): void {
     this.notificationService
       .markAllAsRead()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: () => {
-          // State is updated in the service
-        },
         error: (error) => {
           console.error('Error marking all as read:', error);
           this.error = 'Failed to mark all as read. Please try again.';
@@ -107,34 +97,30 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Delete notification
+   * Delete notification (placeholder - implement if you add delete endpoint)
    */
   deleteNotification(notificationId: string): void {
-    if (confirm('Are you sure you want to delete this notification?')) {
-      this.notificationService
-        .deleteNotification(notificationId)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: () => {
-            // State is updated in the service
-          },
-          error: (error) => {
-            console.error('Error deleting notification:', error);
-            this.error = 'Failed to delete notification. Please try again.';
-          },
-        });
-    }
+    // Note: Your API doesn't have a delete endpoint yet
+    // Remove from local state only
+    this.notificationService.removeNotification(notificationId);
   }
 
   /**
-   * Retry loading notifications
+   * Retry loading
    */
   retry(): void {
     this.loadNotifications();
   }
 
   /**
-   * Close dropdown when clicking outside
+   * Track by function
+   */
+  trackByNotificationId(index: number, notification: Notification): string {
+    return notification.notificationId || index.toString();
+  }
+
+  /**
+   * Close dropdown on outside click
    */
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event): void {
@@ -147,12 +133,5 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  /**
-   * Track by function for ngFor performance
-   */
-  trackByNotificationId(index: number, notification: Notification): string {
-    return notification.notificationId || index.toString();
   }
 }

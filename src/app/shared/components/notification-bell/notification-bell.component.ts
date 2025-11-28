@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NotificationService } from '../../../core/services/notification.service';
-import { SignalRService } from '../../../core/services/signalr.service';
+import { SignalrService } from '../../../core/services/signalr.service';
 import { NotificationDropdownComponent } from '../notification-dropdown/notification-dropdown.component';
 
 @Component({
@@ -21,24 +21,24 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
 
   constructor(
     private notificationService: NotificationService,
-    private signalRService: SignalRService
+    private signalRService: SignalrService
   ) {}
 
   ngOnInit(): void {
-    // Subscribe to unread count from service
+    // Subscribe to unread count
     this.notificationService.unreadCount$.pipe(takeUntil(this.destroy$)).subscribe((count) => {
       this.unreadCount = count;
     });
 
     // Subscribe to SignalR connection state
-    this.signalRService.connectionState$.pipe(takeUntil(this.destroy$)).subscribe((state) => {
+    this.signalRService.getConnectionState().pipe(takeUntil(this.destroy$)).subscribe((state: boolean) => {
       this.isConnected = state;
     });
 
-    // Initial load of unread count
+    // Load initial unread count
     this.loadUnreadCount();
 
-    // Initialize SignalR connection if token exists
+    // Initialize SignalR if user is authenticated
     this.initializeSignalR();
   }
 
@@ -50,9 +50,6 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
       .getUnreadCount()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (count) => {
-          // Count is already updated in service
-        },
         error: (error) => {
           console.error('Error loading unread count:', error);
         },
@@ -66,36 +63,17 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
 
     if (token) {
-      this.signalRService
-        .startConnection(token)
-        .then(() => {
-          console.log('SignalR initialized successfully');
-        })
-        .catch((err) => {
-          console.error('Failed to initialize SignalR:', err);
-        });
-    } else {
-      console.warn('No authentication token found. SignalR will not connect.');
+      this.signalRService.startConnection(token).catch((err) => {
+        console.error('Failed to initialize SignalR:', err);
+      });
     }
   }
 
   /**
-   * Toggle dropdown visibility
+   * Toggle dropdown
    */
   toggleDropdown(): void {
     this.isDropdownOpen = !this.isDropdownOpen;
-
-    // Load notifications when opening dropdown
-    if (this.isDropdownOpen) {
-      this.notificationService
-        .getUserNotifications()
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          error: (error) => {
-            console.error('Error loading notifications:', error);
-          },
-        });
-    }
   }
 
   /**

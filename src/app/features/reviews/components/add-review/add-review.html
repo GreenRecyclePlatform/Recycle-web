@@ -1,3 +1,6 @@
+<app-navbar></app-navbar> <!-- ← Add this line at the very top -->
+<div class="container-fluid">
+
 <div class="add-review-container page-container">
   <div class="page-header">
     <button class="btn btn-link text-primary-green p-0 mb-3" routerLink="/reviews">
@@ -204,11 +207,11 @@
             <div class="d-grid gap-2">
               <button 
                 type="submit" 
-                class="btn btn-primary btn-lg"
+                class="btn-submit-review btn-lg"
                 [disabled]="submitting || reviewForm.invalid">
                 @if (!submitting) {
                   <span>
-                    <i class="bi bi-send-fill me-2"></i>
+                    <lucide-icon name="send" class="me-2"></lucide-icon>
                     Submit Review
                   </span>
                 }
@@ -233,4 +236,6 @@
       </div>
     }
   </div>
+</div>
+    
 </div>

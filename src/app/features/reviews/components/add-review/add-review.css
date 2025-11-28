@@ -319,3 +319,26 @@
         height: 64px;
       }
     }
+
+    /* Match logout button style */
+.btn-submit-review {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  color: var(--primary-green);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.btn-submit-review:hover {
+  background-color: rgba(45, 106, 79, 0.1);
+}
+
+.btn-submit-review lucide-icon {
+  color: var(--primary-green);
+}
