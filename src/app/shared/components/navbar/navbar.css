@@ -39,6 +39,8 @@ nav a {
   border-color: #0000001a;
   font-weight: 500;
   font-size: 14px;
+  display: flex;
+  align-items: center;
 }
 
 .logout-btn:hover {
@@ -95,7 +97,8 @@ nav a {
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -116,7 +119,7 @@ nav a {
   .logout-btn span {
     display: none;
   }
-  
+
   .notification-dropdown-container {
     right: -12px;
     width: 90vw;

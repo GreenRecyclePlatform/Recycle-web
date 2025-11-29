@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { tap, catchError, map } from 'rxjs/operators';
 import { Notification } from '../models/notification.model';
-import { enivronment } from '../../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +12,7 @@ export class NotificationService {
   private http = inject(HttpClient);
 
   // ✅ Use environment URL instead of hardcoded
-  private apiUrl = `${enivronment.apiUrl}/Notifications`;
+  private apiUrl = `${environment.apiUrl}/Notifications`;
 
   // State Management
   private notificationsSubject = new BehaviorSubject<Notification[]>([]);

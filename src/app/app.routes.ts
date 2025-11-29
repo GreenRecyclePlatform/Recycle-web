@@ -39,7 +39,8 @@ export const routes: Routes = [
     path: 'reviews',
     loadChildren: () => import('./features/reviews/reviews.routes').then((m) => m.REVIEW_ROUTES),
   },
-  // Catch all
+  {
+    // Catch all
     path: 'pickup-requests',
     loadChildren: () =>
       import('./features/pickup-requests/pickup-requests-routing.module').then(
