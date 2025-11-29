@@ -13,7 +13,7 @@ import {
 } from '../models/auth-response';
 import { HttpClient } from '@angular/common/http';
 import { TokenService } from './tokenservice';
-import { enivronment } from '../../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { API_ENDPOINTS } from '../constants/api-endpoints';
 
 @Injectable({
@@ -24,7 +24,7 @@ export class AuthService {
     this.isAuthenticatedSubject.next(this.hasToken());
   }
 
-  private readonly apiUrl = enivronment.apiUrl;
+  private readonly apiUrl = environment.apiUrl;
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
 
@@ -67,7 +67,8 @@ export class AuthService {
   }
 
   private handleAuthSuccess(authResponse: LoginResponse): void {
-    this.tokenService.setToken(authResponse.accessToken);
+    // Handle successful authentication (e.g., store tokens, update state)
+    this.tokenService.setToken(authResponse.accessToken); 
     this.setAuthenticated(true);
     console.log('✅ Auth success - Token stored');
   }
@@ -116,6 +117,8 @@ export class AuthService {
         catchError((error) => this.handleAuthError(error))
       );
   }
+
+  // src/app/core/services/authservice.ts
 
   refresh(): Observable<LoginResponse> {
     return this.http

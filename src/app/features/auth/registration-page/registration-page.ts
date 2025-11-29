@@ -13,6 +13,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LucideAngularModule, Leaf, User, Truck, ChevronRight, ChevronLeft } from 'lucide-angular';
 import { RegisterRequest } from '../../../core/models/auth-response';
+import { DriverProfileService } from '../../../core/services/driverprofileservice';
 
 interface Role {
   id: string;
@@ -46,8 +47,13 @@ export class RegistrationPage {
   ChevronRight = ChevronRight;
   ChevronLeft = ChevronLeft;
 
+  userId: string | null = null;
+
   step = 1;
   registrationForm: FormGroup;
+
+  selectedFile: File | null = null; // Store the actual file
+  fileName: string = 'No file chosen';
 
   roles: Role[] = [
     {
@@ -63,7 +69,8 @@ export class RegistrationPage {
     private fb: FormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
-    private authService: AuthService
+    private authService: AuthService,
+    private driverProfileService: DriverProfileService
   ) {
     this.registrationForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -129,6 +136,46 @@ export class RegistrationPage {
     }
   }
 
+  onImageChange(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        this.snackBar.open('File size should be less than 5MB', 'Close', {
+          duration: 3000,
+        });
+        event.target.value = '';
+        this.selectedFile = null;
+        this.fileName = 'No file chosen';
+
+        return;
+      }
+
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        this.snackBar.open('Please upload an image file', 'Close', {
+          duration: 3000,
+        });
+        event.target.value = '';
+        this.selectedFile = null;
+        this.fileName = 'No file chosen';
+        this.registrationForm.patchValue({ ProfileImage: '' });
+        return;
+      }
+
+      // Store the file
+      this.selectedFile = file;
+      this.fileName = file.name;
+
+      console.log('✅ File stored successfully:', {
+        name: file.name,
+        size: file.size,
+        type: file.type,
+      });
+      console.log('selectedFile variable:', this.selectedFile);
+    }
+  }
+
   handleSubmit(): void {
     const { street, city, governorate, postalcode } = this.registrationForm.value;
 
@@ -149,9 +196,6 @@ export class RegistrationPage {
       this.snackBar.open('Passwords do not match', 'Close', { duration: 3000 });
       return;
     }
-
-    this.snackBar.open('Account created successfully!', 'Close', { duration: 3000 });
-
     const registerRequest: RegisterRequest = {
       firstName: this.registrationForm.value.firstName,
       lastName: this.registrationForm.value.lastName,
@@ -171,8 +215,23 @@ export class RegistrationPage {
     };
 
     this.authService.register(registerRequest).subscribe({
-      next: () => {
+      next: (response) => {
         this.router.navigate(['/login']);
+        this.userId = response.userId;
+        if (this.registrationForm.value.role == 'Driver') {
+          const formData = new FormData();
+
+          formData.append('stringUserId', this.userId!);
+          formData.append('IdNumber', this.registrationForm.value.IDNumber);
+
+          // Append the actual file
+          if (this.selectedFile) {
+            formData.append('Image', this.selectedFile, this.selectedFile.name);
+          }
+
+          this.driverProfileService.createdriverprofile(formData);
+        }
+        this.snackBar.open('Account created successfully!', 'Close', { duration: 3000 });
       },
       error: (error) => {
         console.log(error);

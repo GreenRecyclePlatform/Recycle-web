@@ -19,7 +19,9 @@
 
 // reviews.routes.ts
 // app.routes.ts
+// src/app/app.routes.ts
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth-guard';
 import { LandingPage } from './pages/landing-page/landing-page';
 import { LoginPage } from './features/auth/login-page/login-page';
 import { RegistrationPage } from './features/auth/registration-page/registration-page';
@@ -38,5 +40,36 @@ export const routes: Routes = [
     loadChildren: () => import('./features/reviews/reviews.routes').then((m) => m.REVIEW_ROUTES),
   },
   // Catch all
+    path: 'pickup-requests',
+    loadChildren: () =>
+      import('./features/pickup-requests/pickup-requests-routing.module').then(
+        (m) => m.PickupRequestsRoutingModule
+      ),
+    canActivate: [authGuard],
+  },
   { path: '**', redirectTo: '' },
+  {
+    path: 'admin',
+    loadComponent: () =>
+      import('./shared/layouts/admin-layout.component/admin-layout.component').then(
+        (m) => m.AdminLayoutComponent
+      ),
+    // canActivate: [adminGuard], // Uncomment when auth is ready
+    children: [
+      {
+        path: 'manage-materials',
+        loadComponent: () =>
+          import('./features/manage-materials/manage-materials').then((m) => m.ManageMaterials),
+      },
+      {
+        path: 'settings',
+        loadComponent: () => import('./features/admin/settings/settings').then((m) => m.Settings),
+      },
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full',
+      },
+    ],
+  },
 ];
