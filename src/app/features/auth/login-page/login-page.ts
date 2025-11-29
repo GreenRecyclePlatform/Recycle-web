@@ -106,45 +106,24 @@ export class LoginPage implements OnDestroy {
     }
 
     // Attempt login
-    this.authService
-      .login(loginRequest)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response: any) => {
-          // ✅ Use 'any' to avoid token property error
-          console.log('✅ Login successful:', response);
-          console.log('📋 Response keys:', Object.keys(response)); // 👈 ADD THIS to see what properties exist
-
-          // ⚠ CRITICAL: Store the token
-          const storage = this.loginForm.value.rememberMe ? localStorage : sessionStorage;
-          const token = response.token || response.accessToken || response.access_token || response.data?.token;
-
-          if (token) {
-            storage.setItem('token', token);
-            console.log('✅ Token stored successfully');
-          } else {
-            console.error('❌ No token received from server!');
-            console.error('📦 Full response:', response);
-          }
-
+     this.authService.login(LoginRequest).subscribe({
+        next: (response) => {
+          this.initializeNotifications(response.acessToken);
+          this.router.navigate(['/']);
+        },
+        error: (error) => {
+          console.log(error);
+          this.snackBar.open(error, 'Close', { duration: 3000 });
+        },
+      });
+  
           // Show success message
           this.snackBar.open('Welcome back!', 'Close', {
             duration: 3000,
             panelClass: ['success-snackbar'],
           });
 
-          // Small delay to ensure token is stored before initializing SignalR
-          setTimeout(() => {
-            this.isLoading = false;
 
-            // Initialize notifications
-            if (response.token) {
-              this.initializeNotifications(response.token);
-            }
-
-            // Navigate to home or dashboard
-            this.router.navigate(['/']);
-          }, 200);
         },
         error: (error) => {
           console.error('❌ Login error:', error);
