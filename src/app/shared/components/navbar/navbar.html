@@ -11,122 +11,58 @@
         <span class="text-dark">RecycleHub</span>
       </a>
 
+      <!-- Navigation Links -->
       <div class="d-none d-md-flex align-items-center gap-4">
         <a routerLink="/" class="text-dark text-decoration-none hover-primary-green">Home</a>
-        <a
-          routerLink="/"
-          fragment="how-it-works"
-          class="text-dark text-decoration-none hover-primary-green"
-          >How It Works</a
-        >
-        <a
-          routerLink="/"
-          fragment="materials"
-          class="text-dark text-decoration-none hover-primary-green"
-          >Materials</a
-        >
-        <a
-          routerLink="/"
-          fragment="contact"
-          class="text-dark text-decoration-none hover-primary-green"
-          >Contact</a
-        >
+        <a routerLink="/" fragment="how-it-works" class="text-dark text-decoration-none hover-primary-green">How It Works</a>
+        <a routerLink="/" fragment="materials" class="text-dark text-decoration-none hover-primary-green" >Materials</a>
+        <a  routerLink="/" fragment="contact" class="text-dark text-decoration-none hover-primary-green">Contact</a>
       </div>
 
       <!-- Right side actions -->
       <div class="d-flex align-items-center gap-3">
-        <!-- <ng-container *ngif="isAuthenticated; else unauthenticated"> -->
-        <!-- Notifications -->
-
-        <!-- <button mat-icon-button [matMenuTriggerFor]="notificationsMenu" class="position-relative">
-            <lucide-icon [name]="Bell" [size]="20"></lucide-icon>
-            <span
-              *ngIf="unreadCount > 0"
-              class="position-absolute top-0 end-0 badge bg-info text-white rounded-circle d-flex align-items-center justify-content-center small"
-            >
-              {{ unreadCount }}
-            </span>
-          </button>
-          <mat-menu #notificationsMenu="matMenu">
-            <div class="p-2">
-              <p class="px-2 py-2 text-dark mb-0">Notifications</p>
-            </div>
-            <mat-divider></mat-divider>
-            <div class="max-h-96 overflow-auto">
-              <button mat-menu-item *ngFor="let notification of notifications" class="p-3">
-                <div class="flex-grow-1">
-                  <p
-                    [class]="'small mb-1 ' + (notification.unread ? 'text-dark' : 'text-secondary')"
-                  >
-                    {{ notification.message }}
-                  </p>
-                  <p class="text-muted small mb-0">{{ notification.time }}</p>
-                </div>
-                <div
-                  *ngIf="notification.unread"
-                  class="badge bg-info rounded-circle"
-                  style="width: 0.5rem; height: 0.5rem"
-                ></div>
-              </button>
-            </div>
-            <mat-divider></mat-divider>
-            <button mat-menu-item class="p-2 justify-content-center text-primary">
-              View All Notifications
-            </button>
-          </mat-menu>
-
-          User Menu
-          <button mat-button [matMenuTriggerFor]="userMenu" class="d-flex align-items-center gap-2">
-            <div
-              class="user-avatar-nav bg-primary-green text-white rounded-circle d-flex align-items-center justify-content-center"
-            >
-              {{ userName.charAt(0) }}
-            </div>
-            <span class="d-none d-md-inline">{{ userName }}</span>
-          </button>
-          <mat-menu #userMenu="matMenu">
-            <div class="p-2">
-              <p class="small text-secondary text-capitalize mb-0">
-                {{ userRole }}
-              </p>
-            </div>
-            <mat-divider></mat-divider>
-            <button mat-menu-item (click)="navigateTo(getDashboardLink())">
-              <lucide-icon [name]="Dashboard" [size]="16" class="me-2"></lucide-icon>
-              Dashboard
-            </button>
-            <button mat-menu-item>
-              <lucide-icon [name]="User" [size]="16" class="me-2"></lucide-icon>
-              Profile
-            </button>
-            <mat-divider></mat-divider>
-            <button mat-menu-item (click)="logout()">
-              <lucide-icon [name]="LogOut" [size]="16" class="me-2"></lucide-icon>
-              Logout
-            </button>
-          </mat-menu>  -->
-        <!-- </ng-container> -->
-
         @if (isAuthenticated == false) {
-        <!-- <ng-template #unauthenticated> -->
-        <div class="d-none d-md-flex align-items-center gap-3">
-          <button mat-button (click)="navigateTo('/login')">Login</button>
-          <button class="btn-primary register-button" (click)="navigateTo('/register')">
-            Get Started
-          </button>
-        </div>
-        <!-- </ng-template> -->
-        } @else{
-        <button mat-icon-button class="position-relative">
-          <lucide-icon [name]="Bell" [size]="20"></lucide-icon>
-          <!-- <span
-            class="position-absolute top-0 end-0 badge bg-info text-white rounded-circle d-flex align-items-center justify-content-center small"
-          >
-          </span> -->
-        </button>
-        <button mat-menu-item (click)="logout()" class="logout">
-          <lucide-icon [name]="LogOut" [size]="16" class="me-1"></lucide-icon>
-          Logout
+          <!-- Unauthenticated State -->
+          <div class="d-none d-md-flex align-items-center gap-3">
+            <button mat-button (click)="navigateTo('/login')">Login</button>
+            <button class="btn-primary register-button" (click)="navigateTo('/register')">
+              Get Started
+            </button>
+          </div>
+        } @else {
+          <!-- Authenticated State -->
+          
+          <!-- Notification Bell -->
+          <div class="notification-bell-wrapper position-relative">
+            <button 
+              mat-icon-button 
+              class="notification-bell-btn position-relative"
+              (click)="toggleNotificationDropdown()"
+              [class.active]="isNotificationDropdownOpen"
+            >
+              <lucide-icon [name]="Bell" [size]="20"></lucide-icon>
+              
+              <!-- Unread badge -->
+              <span
+                *ngIf="unreadCount > 0"
+                class="notification-badge position-absolute top-0 end-0 badge bg-danger text-white rounded-circle d-flex align-items-center justify-content-center"
+              >
+                {{ unreadCount > 99 ? '99+' : unreadCount }}
+              </span>
+            </button>
+
+            <!-- Notification Dropdown -->
+            <app-notification-dropdown
+              *ngIf="isNotificationDropdownOpen"
+              (close)="closeNotificationDropdown()"
+              class="notification-dropdown-container"
+            ></app-notification-dropdown>
+          </div>
+
+          <!-- Logout Button -->
+          <button mat-menu-item (click)="logout()" class="logout-btn">
+            <lucide-icon [name]="LogOut" [size]="16" class="me-2"></lucide-icon>
+            Logout
         </button>
 
         }

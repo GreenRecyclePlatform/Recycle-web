@@ -15,8 +15,6 @@ import { HttpClient } from '@angular/common/http';
 import { TokenService } from './tokenservice';
 import { environment } from '../../../environments/environment';
 import { API_ENDPOINTS } from '../constants/api-endpoints';
-import { ForgotPasswordPage } from '../../features/auth/forgot-password/forgot-password';
-import { ResetPassword } from '../../features/auth/reset-password/reset-password';
 
 @Injectable({
   providedIn: 'root',
@@ -29,16 +27,13 @@ export class AuthService {
   private readonly apiUrl = environment.apiUrl;
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
-  // private userRoleSubject = new BehaviorSubject<UserRole>('user');
-  // private userSubject = new BehaviorSubject<User | null>(null);
 
   public isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
-  // public userRole$: Observable<UserRole> = this.userRoleSubject.asObservable();
-  // public user$: Observable<User | null> = this.userSubject.asObservable();
 
   get isAuthenticated(): boolean {
     return this.isAuthenticatedSubject.value;
   }
+
   setAuthenticated(value: boolean): void {
     this.isAuthenticatedSubject.next(value);
   }
@@ -47,22 +42,39 @@ export class AuthService {
     return !!this.tokenService.getToken();
   }
 
-  // get userRole(): UserRole {
-  //   return this.userRoleSubject.value;
-  // }
+  // ✅ ADD THIS METHOD - Expose getToken from TokenService
+  getToken(): string | null {
+    const token = this.tokenService.getToken();
+    console.log('🔐 AuthService.getToken:', token ? 'EXISTS ✅' : 'MISSING ❌');
+    return token;
+  }
 
-  // get user(): User | null {
-  //   return this.userSubject.value;
-  // }
+  // ✅ ADD THIS METHOD - Check if token is valid and not expired
+  isTokenValid(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const expiry = payload.exp * 1000;
+      const isValid = Date.now() < expiry;
+      console.log('🔐 Token valid:', isValid);
+      return isValid;
+    } catch (error) {
+      console.error('❌ Invalid token format:', error);
+      return false;
+    }
+  }
 
   private handleAuthSuccess(authResponse: LoginResponse): void {
     // Handle successful authentication (e.g., store tokens, update state)
     this.tokenService.setToken(authResponse.accessToken); 
     this.setAuthenticated(true);
+    console.log('✅ Auth success - Token stored');
   }
 
   private handleAuthError(error: any): Observable<never> {
-    // Handle authentication errors (e.g., log error, show notification)
+    console.error('❌ Auth error:', error);
     return throwError(() => error);
   }
 
@@ -70,7 +82,7 @@ export class AuthService {
     return this.http
       .post<ResetPasswordResponse>(`${this.apiUrl}${API_ENDPOINTS.AUTH.RESETPASSWORD}`, reset)
       .pipe(
-        tap((response) => console.log(response.message)),
+        tap((response) => console.log('✅ Password reset:', response.message)),
         catchError((error) => this.handleAuthError(error))
       );
   }
@@ -79,7 +91,7 @@ export class AuthService {
     return this.http
       .post<ForgotResponse>(`${this.apiUrl}${API_ENDPOINTS.AUTH.FORGOTPASSWORD}`, forgot)
       .pipe(
-        tap((response) => console.log(response.message)),
+        tap((response) => console.log('✅ Forgot password:', response.message)),
         catchError((error) => this.handleAuthError(error))
       );
   }
@@ -101,7 +113,7 @@ export class AuthService {
         withCredentials: true,
       })
       .pipe(
-        tap((response) => console.log('Registration successful:', response)),
+        tap((response) => console.log('✅ Registration successful:', response)),
         catchError((error) => this.handleAuthError(error))
       );
   }
@@ -111,7 +123,7 @@ export class AuthService {
   refresh(): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>(
-        `${this.apiUrl}${API_ENDPOINTS.AUTH.REFRESH}`,  //abdo-fix ==>changed from auth.register to auth.refresh
+        `${this.apiUrl}${API_ENDPOINTS.AUTH.REFRESH}`, // ✅ Fixed from REGISTER to REFRESH
         {},
         {
           withCredentials: true,
@@ -124,6 +136,7 @@ export class AuthService {
   }
 
   logout(): void {
+    console.log('🚪 Logging out...');
     this.http
       .post(
         `${this.apiUrl}${API_ENDPOINTS.AUTH.LOGOUT}`,
@@ -136,13 +149,14 @@ export class AuthService {
         next: () => {
           this.tokenService.clearToken();
           this.setAuthenticated(false);
-          console.log('logout successful');
+          console.log('✅ Logout successful');
         },
-        error: (error) => console.error('logout error', error),
+        error: (error) => {
+          console.error('❌ Logout error:', error);
+          // Clear token anyway on error
+          this.tokenService.clearToken();
+          this.setAuthenticated(false);
+        },
       });
   }
-
-  // setUserRole(role: UserRole): void {
-  //   this.userRoleSubject.next(role);
-  // }
 }

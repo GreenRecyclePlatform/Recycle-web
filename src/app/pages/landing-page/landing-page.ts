@@ -24,7 +24,7 @@ interface FAQ {
   standalone: true,
   imports: [CommonModule, RouterLink, Navbar],
   templateUrl: './landing-page.html',
-  styleUrl: './landing-page.css',
+  styleUrls: ['./landing-page.css'],
 })
 export class LandingPage implements OnInit {
   materials: Material[] = [];

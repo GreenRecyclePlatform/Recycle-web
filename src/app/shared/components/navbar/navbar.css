@@ -21,8 +21,17 @@ nav a {
   border-color: #0000001a;
   font-weight: 500;
   font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
-.logout {
+
+.register-button:hover {
+  background-color: #1e4d38;
+  transform: translateY(-1px);
+}
+
+.logout-btn {
   background-color: #2d6a4f;
   padding: 8px 16px;
   color: white;
@@ -30,8 +39,11 @@ nav a {
   border-color: #0000001a;
   font-weight: 500;
   font-size: 14px;
-  display: flex;
-  align-items: center;
+}
+
+.logout-btn:hover {
+  background-color: #1e4d38 !important;
+  transform: translateY(-1px);
 }
 
 .user-avatar-nav {
@@ -46,4 +58,74 @@ nav a {
 
 .transition-colors {
   transition: color 0.2s;
+}
+
+/* Notification Bell Styles */
+.notification-bell-wrapper {
+  position: relative;
+}
+
+.notification-bell-btn {
+  position: relative;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  transition: all 0.3s ease !important;
+}
+
+.notification-bell-btn:hover {
+  background-color: rgba(45, 106, 79, 0.1) !important;
+}
+
+.notification-bell-btn.active {
+  background-color: rgba(45, 106, 79, 0.15) !important;
+}
+
+.notification-badge {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 18px;
+  top: 2px !important;
+  right: 2px !important;
+  transform: scale(1);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Notification Dropdown Container */
+.notification-dropdown-container {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 1000;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .logout-btn span {
+    display: none;
+  }
+  
+  .notification-dropdown-container {
+    right: -12px;
+    width: 90vw;
+    max-width: 400px;
+  }
+}
+
+/* Ensure dropdown appears above other content */
+nav {
+  position: relative;
+  z-index: 100;
 }
