@@ -1,4 +1,7 @@
+
+// src/app/app.routes.ts
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth-guard';
 import { LandingPage } from './pages/landing-page/landing-page';
 import { LoginPage } from './features/auth/login-page/login-page';
 import { RegistrationPage } from './features/auth/registration-page/registration-page';
@@ -8,11 +11,18 @@ import { authGuard } from './core/guards/auth-guard';
 import { adminGuard } from './core/guards/admin-guard';
 
 export const routes: Routes = [
-  { path: '', component: LandingPage },
-  { path: 'login', component: LoginPage },
-  { path: 'register', component: RegistrationPage },
-  { path: 'forgot-password', component: ForgotPasswordPage },
-  { path: 'reset-password', component: ResetPassword },
+    { path: '', component: LandingPage },
+    { path: 'login', component: LoginPage },
+    { path: 'register', component: RegistrationPage },
+    { path: 'forgot-password', component: ForgotPasswordPage },
+    { path: 'reset-password', component: ResetPassword },
+    {
+        path: 'pickup-requests',
+        loadChildren: () => import('./features/pickup-requests/pickup-requests-routing.module')
+            .then(m => m.PickupRequestsRoutingModule),
+        canActivate: [authGuard]
+    },
+    { path: '**', redirectTo: '' }
 
   // Catch all
   { path: '**', redirectTo: '' },

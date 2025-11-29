@@ -13,7 +13,7 @@ import {
 } from '../models/auth-response';
 import { HttpClient } from '@angular/common/http';
 import { TokenService } from './tokenservice';
-import { enivronment } from '../../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { API_ENDPOINTS } from '../constants/api-endpoints';
 import { ForgotPasswordPage } from '../../features/auth/forgot-password/forgot-password';
 import { ResetPassword } from '../../features/auth/reset-password/reset-password';
@@ -26,7 +26,7 @@ export class AuthService {
     this.isAuthenticatedSubject.next(this.hasToken());
   }
 
-  private readonly apiUrl = enivronment.apiUrl;
+  private readonly apiUrl = environment.apiUrl;
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   // private userRoleSubject = new BehaviorSubject<UserRole>('user');
@@ -57,7 +57,7 @@ export class AuthService {
 
   private handleAuthSuccess(authResponse: LoginResponse): void {
     // Handle successful authentication (e.g., store tokens, update state)
-    this.tokenService.setToken(authResponse.accessToken);
+    this.tokenService.setToken(authResponse.accessToken); 
     this.setAuthenticated(true);
   }
 
@@ -106,10 +106,12 @@ export class AuthService {
       );
   }
 
+  // src/app/core/services/authservice.ts
+
   refresh(): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>(
-        `${this.apiUrl}${API_ENDPOINTS.AUTH.REGISTER}`,
+        `${this.apiUrl}${API_ENDPOINTS.AUTH.REFRESH}`,  //abdo-fix ==>changed from auth.register to auth.refresh
         {},
         {
           withCredentials: true,

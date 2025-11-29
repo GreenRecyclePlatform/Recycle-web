@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { enivronment } from '../../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 
 export interface AddressDto {
@@ -14,7 +14,7 @@ export interface AddressDto {
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  private readonly apiUrl = enivronment.apiUrl;
+  private readonly apiUrl = environment.apiUrl;
 }
