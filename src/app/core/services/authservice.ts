@@ -57,7 +57,7 @@ export class AuthService {
 
   private handleAuthSuccess(authResponse: LoginResponse): void {
     // Handle successful authentication (e.g., store tokens, update state)
-    this.tokenService.setToken(authResponse.token); //// ✅ abdo fix ==> Changed from accessToken to token
+    this.tokenService.setToken(authResponse.accessToken); 
     this.setAuthenticated(true);
   }
 
