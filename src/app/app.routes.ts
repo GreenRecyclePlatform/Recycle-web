@@ -4,17 +4,14 @@ import { adminGuard } from './core/guards/admin-guard';
 
 export const routes: Routes = [
   {
-    path: '',
-    loadComponent: () => import('./features/landing/landing').then(m => m.LandingComponent)
-  },
-  {
-    path: 'login',
-    loadComponent: () => import('./features/auth/login/login').then(m => m.Login)
-  },
-  {
-    path: 'register',
-    loadComponent: () => import('./features/auth/register/register').then(m => m.Register)
-  },
+     { path: '', component: LandingPage },
+  { path: 'login', component: LoginPage },
+  { path: 'register', component: RegistrationPage },
+  { path: 'forgot-password', component: ForgotPasswordPage },
+  { path: 'reset-password', component: ResetPassword },
+
+  // Catch all
+  { path: '**', redirectTo: '' },
   {
     path: 'admin',
     loadComponent: () => import('./shared/layouts/admin-layout.component/admin-layout.component').then(m => m.AdminLayoutComponent),
@@ -59,8 +56,5 @@ export const routes: Routes = [
       }
     ]
   },
-  {
-    path: '**',
-    redirectTo: ''
-  }
+  
 ];
