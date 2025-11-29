@@ -71,22 +71,14 @@ export class AuthHelperService {
   }
 
   /**
-   * Logout and redirect to login
-   */
-  logout(): void {
-    localStorage.removeItem('authToken');
-    this.router.navigate(['/login']);
-  }
-
-  /**
    * Validate token and redirect if invalid
    */
-  validateTokenOrRedirect(): boolean {
-    if (!this.isAuthenticated()) {
-      console.warn('Token is invalid or expired. Redirecting to login...');
-      this.logout();
-      return false;
-    }
-    return true;
-  }
+  // validateTokenOrRedirect(): boolean {
+  //   if (!this.isAuthenticated()) {
+  //     console.warn('Token is invalid or expired. Redirecting to login...');
+  //     this.logout();
+  //     return false;
+  //   }
+  //   return true;
+  // }
 }

@@ -96,18 +96,18 @@ export class Navbar implements OnInit, OnDestroy {
 
       // Start SignalR connection (optional - can be disabled for testing)
       // Comment this out if SignalR is not set up yet
-      
-        this.signalRService.startConnection(token)
+
+      this.signalRService
+        .startConnection(token)
         .then(() => {
-            console.log('✅ Notifications initialized in navbar');
+          console.log('✅ Notifications initialized in navbar');
         })
         .catch((err: any) => {
-            console.error('❌ Failed to initialize notifications:', err);
+          console.error('❌ Failed to initialize notifications:', err);
         });
-    
-        } else {
-        console.error('❌ No token found in storage!');
-        }
+    } else {
+      console.error('❌ No token found in storage!');
+    }
   }
 
   /**
@@ -138,9 +138,6 @@ export class Navbar implements OnInit, OnDestroy {
 
     // Logout from auth service
     this.authService.logout();
-
-    // Navigate to login
-    this.router.navigate(['/login']);
   }
 
   /**
