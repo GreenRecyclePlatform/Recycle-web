@@ -14,7 +14,7 @@ export interface AddressDto {
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   private readonly apiUrl = environment.apiUrl;
 }

@@ -57,7 +57,7 @@ export class AuthService {
 
   private handleAuthSuccess(authResponse: LoginResponse): void {
     // Handle successful authentication (e.g., store tokens, update state)
-    this.tokenService.setToken(authResponse.accessToken);
+    this.tokenService.setToken(authResponse.accessToken); 
     this.setAuthenticated(true);
   }
 
@@ -106,10 +106,12 @@ export class AuthService {
       );
   }
 
+  // src/app/core/services/authservice.ts
+
   refresh(): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>(
-        `${this.apiUrl}${API_ENDPOINTS.AUTH.REGISTER}`,
+        `${this.apiUrl}${API_ENDPOINTS.AUTH.REFRESH}`,  //abdo-fix ==>changed from auth.register to auth.refresh
         {},
         {
           withCredentials: true,
