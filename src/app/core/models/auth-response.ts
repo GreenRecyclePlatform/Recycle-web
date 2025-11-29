@@ -26,7 +26,7 @@ export interface RegisterRequest {
 }
 
 export interface LoginResponse {
-  token: string; //  Changed from accessToken to token
+  accessToken: string; 
 }
 
 export interface RegisterResponse {
