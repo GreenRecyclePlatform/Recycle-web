@@ -163,9 +163,20 @@
 
           @if(selectedRole === 'Driver') {
           <div class="row g-3 mb-3">
-            <div class="col-md-12">
+            <div class="col-md-6">
               <label>ID Number</label>
               <input placeholder="idNumber" formControlName="IDNumber" />
+            </div>
+
+            <div class="col-md-6">
+              <label>Profile Image</label>
+              <input
+                class="file-input"
+                type="file"
+                (change)="onImageChange($event)"
+                accept="image/*"
+                placeholder="Profile Image"
+              />
             </div>
 
             <!-- <div class="col-md-6">

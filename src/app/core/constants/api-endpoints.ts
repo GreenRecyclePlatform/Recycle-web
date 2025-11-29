@@ -31,3 +31,7 @@ export const API_ENDPOINTS = {
     getById: (id: string) => `/Materials/${id}`,
   }
 };
+  DRIVERPROFILE: {
+    Create: '/DriverProfiles',
+  },
+};
