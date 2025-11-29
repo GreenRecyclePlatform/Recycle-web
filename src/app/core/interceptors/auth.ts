@@ -1,4 +1,3 @@
-
 import {
   HttpErrorResponse,
   HttpEvent,
@@ -10,31 +9,22 @@ import { inject } from '@angular/core';
 import { TokenService } from '../services/tokenservice';
 import { AuthService } from '../services/authservice';
 import { catchError, Observable, switchMap, throwError } from 'rxjs';
+import { Token } from '@angular/compiler';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const tokenService = inject(TokenService);
   const accessToken = tokenService.getToken();
 
-  // Don't add token to login/register requests
   if (req.url.includes('/Users/Login') || req.url.includes('/Users/Register')) {
     return next(req);
   }
 
-  // Add token if it exists
   if (accessToken) {
     const clonedRequest = addTokenToRequest(req, accessToken);
-    return next(clonedRequest).pipe(
-      catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          return handle401Error(req, next, tokenService, authService);
-        }
-        return throwError(() => error);
-      })
-    );
+    return next(clonedRequest);
   }
 
-  // No token, just continue
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
@@ -62,8 +52,8 @@ function handle401Error(
 ): Observable<any> {
   return authService.refresh().pipe(
     switchMap((loginResponse) => {
-      tokenService.setToken(loginResponse.token); // ✅ Changed from accessToken to token
-      return next(addTokenToRequest(request, loginResponse.token));
+      tokenService.setToken(loginResponse.accessToken);
+      return next(addTokenToRequest(request, loginResponse.accessToken));
     }),
     catchError((error) => {
       authService.logout();
