@@ -1,0 +1,47 @@
+/* Navbar Component Styles */
+.bg-white-95 {
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.logo-container {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+nav a {
+  cursor: pointer;
+}
+
+.register-button {
+  background-color: #2d6a4f;
+  padding: 8px 16px;
+  color: white;
+  border-radius: calc(0.625rem - 2px);
+  border-color: #0000001a;
+  font-weight: 500;
+  font-size: 14px;
+}
+.logout {
+  background-color: #2d6a4f;
+  padding: 8px 16px;
+  color: white;
+  border-radius: calc(0.625rem - 2px);
+  border-color: #0000001a;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.user-avatar-nav {
+  width: 2rem;
+  height: 2rem;
+  font-size: 0.875rem;
+}
+
+.hover-primary-green:hover {
+  color: #2d6a4f !important;
+}
+
+.transition-colors {
+  transition: color 0.2s;
+}
