@@ -30,6 +30,8 @@ nav a {
   border-color: #0000001a;
   font-weight: 500;
   font-size: 14px;
+  display: flex;
+  align-items: center;
 }
 
 .user-avatar-nav {

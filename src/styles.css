@@ -1,11 +1,10 @@
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* Your custom styles here */
-
-
-@import '@angular/material/prebuilt-themes/indigo-pink.css';
 
 :root {
   --primary-green: #2d6a4f;
@@ -51,5 +50,11 @@ body {
   background: linear-gradient(to bottom right, var(--primary-green), var(--primary-green-dark));
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
