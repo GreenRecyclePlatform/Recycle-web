@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { enivronment } from '../../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { API_ENDPOINTS } from '../constants/api-endpoints';
 import { Observable } from 'rxjs/internal/Observable';
 
@@ -10,7 +10,7 @@ import { Observable } from 'rxjs/internal/Observable';
 export class DriverProfileService {
   constructor(private http: HttpClient) {}
 
-  private readonly apiUrl = enivronment.apiUrl;
+  private readonly apiUrl = environment.apiUrl;
 
   createdriverprofile(profile: FormData): void {
     this.http.post(`${this.apiUrl}${API_ENDPOINTS.DRIVERPROFILE.Create}`, profile).subscribe({
