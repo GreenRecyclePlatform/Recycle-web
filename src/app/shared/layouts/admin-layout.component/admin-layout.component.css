@@ -5,39 +5,12 @@
   flex-direction: column;
 }
 
-/* Navbar Placeholder */
-.navbar-placeholder {
-  /* Reserve space for navbar - adjust height as needed */
-  min-height: 64px;
-  background: white;
-  border-bottom: 1px solid #e9ecef;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-
-  /* Optional: Add a visual indicator for developers */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #adb5bd;
-  font-size: 0.875rem;
-}
-
-/* Optional: Remove this after navbar is implemented */
-.navbar-placeholder::after {
-  content: '[ Navbar Component Will Be Inserted Here ]';
-  font-style: italic;
-}
-
-/* Admin Container */
 .admin-container {
   display: flex;
   flex: 1;
-  min-height: calc(100vh - 64px); /* Adjust based on navbar height */
+  min-height: calc(100vh - 64px);
 }
 
-/* Sidebar */
 .sidebar {
   width: 260px;
   background: white;
@@ -45,8 +18,8 @@
   display: flex;
   flex-direction: column;
   position: sticky;
-  top: 64px; /* Match navbar height */
-  height: calc(100vh - 64px); /* Adjust based on navbar height */
+  top: 64px;
+  height: calc(100vh - 64px);
   overflow-y: auto;
   flex-shrink: 0;
 }
@@ -78,7 +51,7 @@
 
 .admin-info {
   flex: 1;
-  min-width: 0; /* Allow text truncation */
+  min-width: 0;
 }
 
 .admin-name {
@@ -101,7 +74,6 @@
   border-radius: 0.25rem;
 }
 
-/* Sidebar Navigation */
 .sidebar-nav {
   flex: 1;
   padding: 1rem 0;
@@ -168,7 +140,6 @@
   background-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Sidebar Footer */
 .sidebar-footer {
   padding: 1rem 1.5rem;
   border-top: 1px solid #e9ecef;
@@ -208,20 +179,18 @@
   margin-bottom: 0;
 }
 
-/* Main Content */
 .main-content {
   flex: 1;
   padding: 2rem;
   overflow-x: hidden;
-  min-width: 0; /* Prevent flex item from overflowing */
+  min-width: 0;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
     left: -260px;
-    top: 64px; /* Match navbar height */
+    top: 64px;
     z-index: 99;
     transition: left 0.3s ease;
     height: calc(100vh - 64px);
@@ -236,7 +205,6 @@
   }
 }
 
-/* Scrollbar Styling */
 .sidebar::-webkit-scrollbar,
 .sidebar-nav::-webkit-scrollbar {
   width: 6px;

@@ -9,19 +9,59 @@
   height: 2.5rem;
 }
 
-nav a {
+.cursor-pointer {
   cursor: pointer;
+}
+
+nav a,
+.nav-link-custom {
+  cursor: pointer;
+  color: #212529;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+  position: relative;
+  white-space: nowrap;
+}
+
+.nav-link-custom:hover {
+  color: #2d6a4f !important;
+}
+
+.nav-link-custom::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: #2d6a4f;
+  transition: width 0.3s ease;
+}
+
+.nav-link-custom:hover::after {
+  width: 100%;
+}
+
+.login-btn {
+  color: #2d6a4f;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.login-btn:hover {
+  background-color: rgba(45, 106, 79, 0.05);
 }
 
 .register-button {
   background-color: #2d6a4f;
-  padding: 8px 16px;
+  padding: 8px 20px;
   color: white;
-  border-radius: calc(0.625rem - 2px);
-  border-color: #0000001a;
+  border-radius: 0.5rem;
+  border: none;
   font-weight: 500;
   font-size: 14px;
-  border: none;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -29,23 +69,40 @@ nav a {
 .register-button:hover {
   background-color: #1e4d38;
   transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(45, 106, 79, 0.2);
 }
 
-.logout-btn {
+.logout {
   background-color: #2d6a4f;
   padding: 8px 16px;
   color: white;
-  border-radius: calc(0.625rem - 2px);
-  border-color: #0000001a;
+  border-radius: 0.5rem;
+  border: none;
   font-weight: 500;
   font-size: 14px;
   display: flex;
   align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.logout-btn:hover {
-  background-color: #1e4d38 !important;
+.logout:hover {
+  background-color: #dc3545;
   transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+}
+
+.notification-btn {
+  color: #495057;
+  transition: background-color 0.2s;
+}
+
+.notification-btn:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.mobile-menu-btn {
+  color: #495057;
 }
 
 .user-avatar-nav {
@@ -62,73 +119,32 @@ nav a {
   transition: color 0.2s;
 }
 
-/* Notification Bell Styles */
-.notification-bell-wrapper {
-  position: relative;
+.bg-primary-green {
+  background-color: #2d6a4f;
 }
 
-.notification-bell-btn {
-  position: relative;
-  width: 40px !important;
-  height: 40px !important;
-  border-radius: 50% !important;
-  transition: all 0.3s ease !important;
-}
-
-.notification-bell-btn:hover {
-  background-color: rgba(45, 106, 79, 0.1) !important;
-}
-
-.notification-bell-btn.active {
-  background-color: rgba(45, 106, 79, 0.15) !important;
-}
-
-.notification-badge {
-  min-width: 18px;
-  height: 18px;
-  padding: 0 4px;
-  font-size: 10px;
-  font-weight: 600;
-  line-height: 18px;
-  top: 2px !important;
-  right: 2px !important;
-  transform: scale(1);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-}
-
-/* Notification Dropdown Container */
-.notification-dropdown-container {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
+.sticky-top {
+  position: sticky;
+  top: 0;
   z-index: 1000;
 }
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .logout-btn span {
-    display: none;
-  }
-
-  .notification-dropdown-container {
-    right: -12px;
-    width: 90vw;
-    max-width: 400px;
-  }
+.z-50 {
+  z-index: 50;
 }
 
-/* Ensure dropdown appears above other content */
-nav {
-  position: relative;
-  z-index: 100;
+.border-bottom {
+  border-bottom: 1px solid #e9ecef;
+}
+
+@media (max-width: 767px) {
+  .nav-link-custom {
+    font-size: 13px;
+  }
+
+  .register-button,
+  .login-btn {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
 }

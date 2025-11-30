@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { SettingService } from '../../../core/services/setting.service';
 
 @Component({
   selector: 'app-settings',
@@ -11,6 +12,8 @@ import { FormsModule } from '@angular/forms';
 })
 export class Settings implements OnInit {
   activeTab: string = 'platform';
+  isLoading: boolean = false;
+  isSaving: boolean = false;
 
   // Platform Settings
   platformSettings = {
@@ -68,16 +71,14 @@ export class Settings implements OnInit {
     { value: 'Asia/Kolkata', label: 'Asia/Kolkata (IST)' },
     { value: 'America/New_York', label: 'America/New_York (EST)' },
     { value: 'Europe/London', label: 'Europe/London (GMT)' },
-      { value: 'Africa/Cairo', label: 'Africa/Cairo (EET)' }
-
+    { value: 'Africa/Cairo', label: 'Africa/Cairo (EET)' }
   ];
 
   currencies = [
     { value: 'INR', label: 'INR (₹)' },
     { value: 'USD', label: 'USD ($)' },
     { value: 'EUR', label: 'EUR (€)' },
-      { value: 'EGP', label: 'EGP (E£)' }
-
+    { value: 'EGP', label: 'EGP (E£)' }
   ];
 
   languages = [
@@ -100,57 +101,121 @@ export class Settings implements OnInit {
     { value: 'wallet', label: 'Digital Wallet' }
   ];
 
+  constructor(private settingService: SettingService) {}
+
   ngOnInit(): void {
-    // Load settings from API if needed
+    this.loadAllSettings();
   }
 
+  loadAllSettings(): void {
+    this.isLoading = true;
+
+    this.settingService.getAllSettings().subscribe({
+      next: (data) => {
+        // Map backend data to component properties
+        if (data.platform) {
+          this.mapSettingsToObject(data.platform, this.platformSettings);
+        }
+        if (data.pricing) {
+          this.mapSettingsToObject(data.pricing, this.pricingSettings);
+        }
+        if (data.notification) {
+          this.mapSettingsToObject(data.notification, this.notificationSettings);
+        }
+        if (data.operational) {
+          this.mapSettingsToObject(data.operational, this.operationalSettings);
+        }
+        if (data.payment) {
+          this.mapSettingsToObject(data.payment, this.paymentSettings);
+        }
+
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading settings:', error);
+        this.isLoading = false;
+        // Keep default values if loading fails
+      }
+    });
+  }
+
+private mapSettingsToObject(source: { [key: string]: string }, target: any): void {
+  Object.keys(target).forEach(key => {
+    if (source[key] !== undefined) {
+      const value = source[key];
+
+      // Type conversion based on target type
+      if (typeof target[key] === 'boolean') {
+        // Properly convert string to boolean
+        target[key] = value === 'true';
+      } else if (typeof target[key] === 'number') {
+        target[key] = parseFloat(value) || 0;
+      } else {
+        target[key] = value;
+      }
+    }
+  });
+}
+private objectToSettingsMap(obj: any): { [key: string]: string } {
+  const result: { [key: string]: string } = {};
+
+  Object.keys(obj).forEach(key => {
+    result[key] = String(obj[key]);
+  });
+
+  return result;
+}
   setActiveTab(tab: string): void {
     this.activeTab = tab;
   }
 
   handleSaveSettings(section: string): void {
-    // Call API to save settings
-    alert(`${section} settings saved successfully!`);
+    this.isSaving = true;
+
+    let category = '';
+    let settings: any = {};
+
+    // Map section name to category and settings object
+    switch(section.toLowerCase()) {
+      case 'platform':
+        category = 'platform';
+        settings = this.platformSettings;
+        break;
+      case 'pricing':
+        category = 'pricing';
+        settings = this.pricingSettings;
+        break;
+      case 'notification':
+        category = 'notification';
+        settings = this.notificationSettings;
+        break;
+      case 'operational':
+        category = 'operational';
+        settings = this.operationalSettings;
+        break;
+      case 'payment':
+        category = 'payment';
+        settings = this.paymentSettings;
+        break;
+      default:
+        console.error('Unknown section:', section);
+        this.isSaving = false;
+        return;
+    }
+
+    // Convert settings object to string map
+    const settingsMap = this.objectToSettingsMap(settings);
+
+    this.settingService.updateCategorySettings(category, settingsMap).subscribe({
+      next: () => {
+        this.isSaving = false;
+        alert(`${section} settings saved successfully!`);
+      },
+      error: (error) => {
+        console.error(`Error saving ${section} settings:`, error);
+        this.isSaving = false;
+        alert(`Failed to save ${section} settings. Please try again.\n${error.message}`);
+      }
+    });
   }
 }
-/*[Route("api/[controller]")]
-[ApiController]
-[Authorize(Roles = "Admin")]
-public class SettingsController : ControllerBase
-{
-    private readonly AppDbContext _context;
-
-    public SettingsController(AppDbContext context)
-    {
-        _context = context;
-    }
-
-    [HttpGet]
-    public async Task<ActionResult> GetSettings()
-    {
-        var settings = new
-        {
-            platform = await _context.PlatformSettings.FirstOrDefaultAsync(),
-            pricing = await _context.PricingSettings.FirstOrDefaultAsync()
-            // Add others...
-        };
-        return Ok(settings);
-    }
-
-    [HttpPut("platform")]
-    public async Task<ActionResult> UpdatePlatformSettings([FromBody] PlatformSettings settings)
-    {
-        var existing = await _context.PlatformSettings.FirstOrDefaultAsync();
-        if (existing != null)
-        {
-            existing.PlatformName = settings.PlatformName;
-            existing.PlatformEmail = settings.PlatformEmail;
-            existing.Timezone = settings.Timezone;
-            existing.Currency = settings.Currency;
-            existing.Language = settings.Language;
-            existing.UpdatedAt = DateTime.UtcNow;
-        }
-        await _context.SaveChangesAsync();
-        return Ok();
-    }
-}*/

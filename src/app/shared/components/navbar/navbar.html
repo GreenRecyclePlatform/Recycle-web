@@ -2,21 +2,23 @@
   <div class="container-fluid px-3 px-md-4">
     <div class="d-flex justify-content-between align-items-center" style="height: 4rem">
       <!-- Logo -->
-      <a routerLink="/" class="d-flex align-items-center gap-2 text-decoration-none">
+      <a (click)="scrollToSection('top')" class="d-flex align-items-center gap-2 text-decoration-none cursor-pointer">
         <div
           class="logo-container bg-primary-green rounded d-flex align-items-center justify-content-center"
         >
           <lucide-icon [name]="Leaf" [size]="24" class="text-white"></lucide-icon>
         </div>
-        <span class="text-dark">RecycleHub</span>
+        <span class="text-dark fw-semibold">RecycleHub</span>
       </a>
 
-      <!-- Navigation Links -->
+      <!-- Desktop Navigation Links -->
       <div class="d-none d-md-flex align-items-center gap-4">
-        <a routerLink="/" class="text-dark text-decoration-none hover-primary-green">Home</a>
-        <a routerLink="/" fragment="how-it-works" class="text-dark text-decoration-none hover-primary-green">How It Works</a>
-        <a routerLink="/" fragment="materials" class="text-dark text-decoration-none hover-primary-green" >Materials</a>
-        <a  routerLink="/" fragment="contact" class="text-dark text-decoration-none hover-primary-green">Contact</a>
+        <a (click)="scrollToSection('top')" class="nav-link-custom">Home</a>
+        <a (click)="scrollToSection('how-it-works')" class="nav-link-custom">How It Works</a>
+        <a (click)="scrollToSection('materials')" class="nav-link-custom">Materials</a>
+        <a (click)="scrollToSection('testimonials')" class="nav-link-custom">Testimonials</a>
+        <a (click)="scrollToSection('faq')" class="nav-link-custom">FAQ</a>
+        <a (click)="scrollToSection('contact')" class="nav-link-custom">Contact</a>
       </div>
 
       <!-- Right side actions -->
@@ -24,48 +26,26 @@
         @if (isAuthenticated == false) {
           <!-- Unauthenticated State -->
           <div class="d-none d-md-flex align-items-center gap-3">
-            <button mat-button (click)="navigateTo('/login')">Login</button>
-            <button class="btn-primary register-button" (click)="navigateTo('/register')">
+            <button mat-button (click)="navigateTo('/login')" class="login-btn">Login</button>
+            <button class="register-button" (click)="navigateTo('/register')">
               Get Started
             </button>
           </div>
         } @else {
           <!-- Authenticated State -->
-          
-          <!-- Notification Bell -->
-          <div class="notification-bell-wrapper position-relative">
-            <button 
-              mat-icon-button 
-              class="notification-bell-btn position-relative"
-              (click)="toggleNotificationDropdown()"
-              [class.active]="isNotificationDropdownOpen"
-            >
-              <lucide-icon [name]="Bell" [size]="20"></lucide-icon>
-              
-              <!-- Unread badge -->
-              <span
-                *ngIf="unreadCount > 0"
-                class="notification-badge position-absolute top-0 end-0 badge bg-danger text-white rounded-circle d-flex align-items-center justify-content-center"
-              >
-                {{ unreadCount > 99 ? '99+' : unreadCount }}
-              </span>
-            </button>
-
-            <!-- Notification Dropdown -->
-            <app-notification-dropdown
-              *ngIf="isNotificationDropdownOpen"
-              (close)="closeNotificationDropdown()"
-              class="notification-dropdown-container"
-            ></app-notification-dropdown>
-          </div>
-
-          <!-- Logout Button -->
-          <button mat-menu-item (click)="logout()" class="logout-btn">
-            <lucide-icon [name]="LogOut" [size]="16" class="me-2"></lucide-icon>
+          <button mat-icon-button class="position-relative notification-btn">
+            <lucide-icon [name]="Bell" [size]="20"></lucide-icon>
+          </button>
+          <button (click)="logout()" class="logout">
+            <lucide-icon [name]="LogOut" [size]="16" class="me-1"></lucide-icon>
             Logout
-        </button>
-
+          </button>
         }
+
+        <!-- Mobile Menu Button (Optional - for future implementation) -->
+        <button class="d-md-none mobile-menu-btn" mat-icon-button>
+          <lucide-icon [name]="Menu" [size]="24"></lucide-icon>
+        </button>
       </div>
     </div>
   </div>

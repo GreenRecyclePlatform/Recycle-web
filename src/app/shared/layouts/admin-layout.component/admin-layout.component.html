@@ -1,11 +1,8 @@
 <div class="admin-layout">
-  <!-- Navbar Placeholder - Someone else will create this -->
-  <div class="navbar-placeholder">
-    <!-- The navbar component will be inserted here by another developer -->
-    <!-- They should create a component that fills this space -->
-  </div>
+  <!-- Navbar Component -->
+  <app-navbar [transparent]="false"></app-navbar>
 
-  <!-- Main Content Area -->
+  <!-- Main Container -->
   <div class="admin-container">
     <!-- Sidebar -->
     <aside class="sidebar">
@@ -36,7 +33,6 @@
             <polyline points="14 2 14 8 20 8"></polyline>
             <line x1="16" y1="13" x2="8" y2="13"></line>
             <line x1="16" y1="17" x2="8" y2="17"></line>
-            <polyline points="10 9 9 9 8 9"></polyline>
           </svg>
           <span>Review Requests</span>
           <span class="badge-notification" *ngIf="notificationCount > 0">{{ notificationCount }}</span>
@@ -54,8 +50,9 @@
 
         <a routerLink="/admin/manage-materials" routerLinkActive="active" class="nav-item">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
           </svg>
           <span>Manage Materials</span>
         </a>
@@ -107,7 +104,7 @@
           </svg>
           <span>Logout</span>
         </button>
-        <p class="copyright">© 2025</p>
+        <p class="copyright">© 2025 RecycleHub</p>
       </div>
     </aside>
 
