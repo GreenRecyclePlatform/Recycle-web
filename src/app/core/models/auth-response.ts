@@ -26,11 +26,12 @@ export interface RegisterRequest {
 }
 
 export interface LoginResponse {
-  accessToken: string;
+  accessToken: string; 
 }
 
 export interface RegisterResponse {
   message: string;
+  userId: string;
 }
 
 export interface ForgotRequest {

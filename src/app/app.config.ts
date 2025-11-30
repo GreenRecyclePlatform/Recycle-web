@@ -5,9 +5,11 @@ import {
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { HttpInterceptorFn } from '@angular/common/http';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { authInterceptor } from './core/interceptors/auth';
 
 /* Interceptor لإضافة الـ Token في كل الطلبات (اختياري)
@@ -31,16 +33,19 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     
     // ✅ ده المهم: إضافة HttpClient
    // provideHttpClient(withInterceptors([authInterceptor]))
-        provideHttpClient(withInterceptors([authInterceptor])),
+       // provideHttpClient(withInterceptors([authInterceptor])),
 
     // ⚠️ لو مش محتاجة Interceptor (مش محتاجة توكن)، استخدمي ده بدل اللي فوق:
    // provideHttpClient()
-  ]
+    provideHttpClient(withInterceptors([authInterceptor])),
+    provideAnimations(),
+  ],
+  
+   
 };
 

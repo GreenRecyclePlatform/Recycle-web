@@ -1,0 +1,19 @@
+<div class="notification-bell-container">
+  <!-- Bell Icon with Badge -->
+  <button 
+    class="notification-bell-btn" 
+    (click)="toggleDropdown()" 
+    [class.has-notifications]="unreadCount > 0"
+    aria-label="Notifications">
+    <i class="fas fa-bell"></i>
+    <span class="notification-badge" *ngIf="unreadCount > 0">
+      {{ unreadCount > 99 ? '99+' : unreadCount }}
+    </span>
+  </button>
+
+  <!-- Dropdown -->
+  <app-notification-dropdown 
+    *ngIf="isDropdownOpen" 
+    (close)="closeDropdown()">
+</app-notification-dropdown>
+</div>

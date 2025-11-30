@@ -1,0 +1,162 @@
+/* Custom green theme colors */
+.btn-success {
+  background-color: #2D6A4F;
+  border-color: #2D6A4F;
+}
+
+.btn-success:hover {
+  background-color: #245a42;
+  border-color: #245a42;
+}
+
+.nav-tabs .nav-link {
+  color: #6c757d;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.75rem 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+  color: #2D6A4F;
+  border-color: transparent;
+  background-color: #f8f9fa;
+}
+
+.nav-tabs .nav-link.active {
+  color: #2D6A4F;
+  background-color: transparent;
+  border-bottom: 2px solid #2D6A4F;
+  font-weight: 500;
+}
+
+.nav-tabs {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 1.25rem;
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 0.25rem;
+}
+
+.list-group-item {
+  border: 1px solid #e9ecef;
+  margin-bottom: 0.75rem;
+  border-radius: 6px !important;
+  padding: 1rem 1.25rem;
+}
+
+.list-group-item h6 {
+  font-weight: 600;
+  color: #212529;
+}
+
+.form-check-input:checked {
+  background-color: #2D6A4F;
+  border-color: #2D6A4F;
+}
+
+.form-check-input:focus {
+  border-color: #2D6A4F;
+  box-shadow: 0 0 0 0.25rem rgba(45, 106, 79, 0.25);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #2D6A4F;
+  box-shadow: 0 0 0 0.25rem rgba(45, 106, 79, 0.15);
+}
+
+.input-group-text {
+  background-color: #f8f9fa;
+  border-color: #dee2e6;
+}
+
+.border-success {
+  border-color: #2D6A4F !important;
+}
+
+.bg-success {
+  background-color: #2D6A4F !important;
+}
+
+.text-success {
+  color: #2D6A4F !important;
+}
+
+.bg-opacity-10 {
+  opacity: 0.1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .nav-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav-tabs .nav-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+
+  .card-header {
+    padding: 1rem;
+  }
+
+  .list-group-item {
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* Form styling improvements */
+.form-label {
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.form-control,
+.form-select {
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  padding: 0.625rem 0.875rem;
+}
+
+/* Icon styling */
+.bi {
+  vertical-align: middle;
+}
+
+/* Animation for tab switching */
+.tab-pane {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
