@@ -1,5 +1,5 @@
 // driver-dashboard.component.ts
-
+import { DriverSidebar } from '../driver-sidebar/driver-sidebar';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,21 +10,15 @@ import {
   PickupStats, 
   PickupStatus,
   getStatusLabel,
-  getStatusClass
+  getStatusClass,
+  StatCard
 } from '../../models/DashpickupDriver';
 
-interface StatCard {
-  key: string;
-  status: PickupStatus | 'all';
-  label: string;
-  count: number;
-  color: string;
-}
 
 @Component({
   selector: 'app-driver-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,DriverSidebar],
   templateUrl: './driver-dashboard.html',
   styleUrls: ['./driver-dashboard.css']
 })

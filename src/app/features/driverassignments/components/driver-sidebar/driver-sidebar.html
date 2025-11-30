@@ -1,0 +1,28 @@
+<!-- driver-sidebar.component.html -->
+
+<div class="sidebar">
+  <!-- Driver Profile Card -->
+  <div class="driver-profile">
+    <div class="driver-avatar">
+      {{ driverInitials }}
+    </div>
+    <h3 class="driver-name">{{ driverName }}</h3>
+    <p class="driver-role">{{ driverRole }}</p>
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="nav-menu">
+    <button *ngFor="let item of navItems"
+            class="nav-item"
+            [class.active]="isActiveRoute(item.route)"
+            (click)="navigateTo(item.route)">
+      
+      <!-- Bootstrap Icon -->
+      <i class="bi" [ngClass]="item.icon"></i>
+
+      <span>{{ item.label }}</span>
+
+      <span *ngIf="item.badge" class="badge">{{ item.badge }}</span>
+    </button>
+  </nav>
+</div>

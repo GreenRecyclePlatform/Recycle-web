@@ -1,4 +1,3 @@
-// all-drivers.model.ts
 export interface Address {
   street: string;
   city: string;
@@ -12,6 +11,7 @@ export interface DriverProfileResponse {
   firstName: string;
   lastName: string;
   profileImageUrl: string;
+  phonenumber: string;  
   idNumber: string;
   rating: number;
   ratingCount: number;
@@ -19,6 +19,7 @@ export interface DriverProfileResponse {
   totalTrips: number;
   createdAt: string;
   address: Address;
+  email: string;
 }
 
 export interface Driver {
@@ -71,23 +72,25 @@ export function getInitials(name: string): string {
 // Helper function to map API response to Driver model
 export function mapDriverProfileToDriver(profile: DriverProfileResponse): Driver {
   const fullName = `${profile.firstName} ${profile.lastName}`;
-  const location = `${profile.address.street}, ${profile.address.city}, ${profile.address.governorate}`;
+  const location = profile.address 
+    ? `${profile.address.city}, ${profile.address.governorate}` 
+    : 'N/A';
   
   return {
     id: profile.id,
     name: fullName,
     initials: getInitials(fullName),
     avatarColor: generateAvatarColor(fullName),
-    phone: profile.idNumber, // استخدام idNumber كرقم هاتف مؤقتاً
+    phone: profile.phonenumber || 'N/A', 
     location: location,
     vehicle: {
-      type: 'Unknown', // لا يوجد في API
-      number: 'N/A'    // لا يوجد في API
+      type: 'Unknown',
+      number: 'N/A'
     },
     rating: profile.rating,
     pickups: {
       total: profile.totalTrips,
-      todayCount: 0 // لا يوجد في API
+      todayCount: 0
     },
     status: profile.isAvailable ? 'active' : 'inactive',
     profileImageUrl: profile.profileImageUrl,

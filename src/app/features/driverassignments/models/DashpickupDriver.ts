@@ -1,6 +1,6 @@
 // DashpickupDriver.model.ts
 
-// ========== Status Enum (حسب الـ API بتاعك) ==========
+// ========== Status Enum  ==========
 export enum PickupStatus {
   Pending = 1,      // may accept or cancel 
   Cancelled = 2,    
@@ -22,6 +22,13 @@ export interface UpdateAssignmentStatusDto {
 }
 
 
+export interface StatCard {
+  key: string;
+  status: PickupStatus | 'all';
+  label: string;
+  count: number;
+  color: string;
+}
 
 // ==========  ( Response ) ==========
 export interface Pickup {

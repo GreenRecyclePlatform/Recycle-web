@@ -1,1 +1,275 @@
-<p>profiledriver works!</p>
+<div class="container">
+  <app-driver-sidebar 
+    [driverName]="sidebarData.name"
+    [driverRole]="sidebarData.role"
+    [driverImage]="sidebarData.image"
+    [driverRating]="sidebarData.rating">
+  </app-driver-sidebar>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="spinner"></div>
+      <p>جاري تحميل البيانات...</p>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-error">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+        <circle cx="10" cy="10" r="8" stroke-width="2"/>
+        <path d="M10 6V10" stroke-width="2"/>
+        <circle cx="10" cy="14" r="1" fill="currentColor"/>
+      </svg>
+      {{ errorMessage }}
+      <button class="close-btn" (click)="errorMessage = ''">×</button>
+    </div>
+
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+        <circle cx="10" cy="10" r="8" stroke-width="2"/>
+        <path d="M6 10L9 13L14 7" stroke-width="2"/>
+      </svg>
+      {{ successMessage }}
+      <button class="close-btn" (click)="successMessage = ''">×</button>
+    </div>
+
+    <div *ngIf="!isLoading">
+      <div class="profile-header">
+        <div>
+          <h1>Driver Profile</h1>
+          <p class="subtitle">View and manage your profile information</p>
+        </div>
+        <button class="btn-edit" (click)="toggleEdit()" [disabled]="isSaving">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor">
+            <path d="M12.75 2.25L15.75 5.25L6 15H3V12L12.75 2.25Z" stroke-width="1.5"/>
+          </svg>
+          {{ isSaving ? 'جاري الحفظ...' : (isEditing ? 'Save Changes' : 'Edit Profile') }}
+        </button>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon pickup">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="3" y="8" width="18" height="12" rx="2" stroke-width="2"/>
+              <path d="M8 8V6C8 4.89543 8.89543 4 10 4H14C15.1046 4 16 4.89543 16 6V8" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <span class="stat-label">Total Pickups</span>
+            <span class="stat-value">{{ stats.totalPickups }}</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon rating">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <span class="stat-label">Rating</span>
+            <span class="stat-value">{{ stats.rating }}</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon completion">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M9 11L12 14L22 4" stroke-width="2"/>
+              <path d="M21 12V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H16" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <span class="stat-label">Rating Count</span>
+            <span class="stat-value">{{ stats.completionRate }}</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon earnings">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="2" y="5" width="20" height="14" rx="2" stroke-width="2"/>
+              <circle cx="12" cy="12" r="3" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <span class="stat-label">Total Earnings</span>
+            <span class="stat-value">{{ stats.totalEarnings }}</span>
+          </div>
+        </div>
+
+        <!-- Availability Status Card -->
+        <div class="stat-card availability-card">
+          <div class="stat-icon" [ngClass]="stats.isAvailable ? 'available' : 'unavailable'">
+            <svg *ngIf="stats.isAvailable" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="12" cy="12" r="10" stroke-width="2"/>
+              <path d="M9 12L11 14L15 10" stroke-width="2"/>
+            </svg>
+            <svg *ngIf="!stats.isAvailable" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="12" cy="12" r="10" stroke-width="2"/>
+              <path d="M15 9L9 15M9 9L15 15" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <span class="stat-label">Status</span>
+            <div class="availability-toggle">
+              <span class="availability-status" [ngClass]="stats.isAvailable ? 'available-text' : 'unavailable-text'">
+                {{ stats.isAvailable ? 'Available' : 'Not Available' }}
+              </span>
+              <label class="toggle-switch" [class.disabled]="isTogglingAvailability">
+                <input 
+                  type="checkbox" 
+                  [checked]="stats.isAvailable"
+                  (change)="toggleAvailability()"
+                  [disabled]="isTogglingAvailability">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Form -->
+      <div class="profile-form">
+        <h2>Personal Information</h2>
+
+        <!-- Profile Image Section -->
+        <div class="form-group image-upload">
+          <label>Profile Image</label>
+          <div class="image-upload-container">
+            <div class="image-preview">
+              <img *ngIf="previewImage || profileData.profileImage" 
+                   [src]="previewImage || profileData.profileImage" 
+                   alt="Profile">
+              <div *ngIf="!previewImage && !profileData.profileImage" class="no-image">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor">
+                  <circle cx="24" cy="16" r="6" stroke-width="2"/>
+                  <path d="M12 36V32C12 28.6863 14.6863 26 18 26H30C33.3137 26 36 28.6863 36 32V36" stroke-width="2"/>
+                </svg>
+              </div>
+            </div>
+            <button *ngIf="isEditing" 
+                    type="button" 
+                    class="btn-upload" 
+                    (click)="triggerFileInput()">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor">
+                <path d="M15 11V14C15 14.5523 14.5523 15 14 15H4C3.44772 15 3 14.5523 3 14V11" stroke-width="1.5"/>
+                <path d="M12 6L9 3M9 3L6 6M9 3V12" stroke-width="1.5"/>
+              </svg>
+              Change Image
+            </button>
+            <input type="file" 
+                   id="profileImageInput" 
+                   accept="image/*" 
+                   (change)="onImageSelected($event)"
+                   style="display: none;">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name *</label>
+            <div class="input-with-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                <circle cx="10" cy="6" r="3" stroke-width="1.5"/>
+                <path d="M5 17V15C5 13.3431 6.34315 12 8 12H12C13.6569 12 15 13.3431 15 15V17" stroke-width="1.5"/>
+              </svg>
+              <input type="text" 
+                     id="firstName" 
+                     [(ngModel)]="profileData.FirstName" 
+                     [disabled]="!isEditing"
+                     placeholder="Enter your first name">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="lastName">Last Name *</label>
+            <div class="input-with-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                <circle cx="10" cy="6" r="3" stroke-width="1.5"/>
+                <path d="M5 17V15C5 13.3431 6.34315 12 8 12H12C13.6569 12 15 13.3431 15 15V17" stroke-width="1.5"/>
+              </svg>
+              <input type="text" 
+                     id="lastName" 
+                     [(ngModel)]="profileData.LastName" 
+                     [disabled]="!isEditing"
+                     placeholder="Enter your last name">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">Phone Number *</label>
+            <div class="input-with-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                <path d="M2 3C2 2.44772 2.44772 2 3 2H6.15287C6.64171 2 7.0589 2.35341 7.13927 2.8356L8.16639 8.94813C8.23734 9.37729 8.00939 9.79904 7.61617 9.97528L5.5 11C5.5 11 7 15 11 16.5L12.0247 14.3838C12.201 13.9906 12.6227 13.7627 13.0519 13.8336L19.1644 14.8607C19.6466 14.9411 20 15.3583 20 15.8471V18C20 18.5523 19.5523 19 19 19H17C8.71573 19 2 12.2843 2 4V3Z" stroke-width="1.5"/>
+              </svg>
+              <input type="tel" 
+                     id="phone" 
+                     [(ngModel)]="profileData.phone" 
+                     [disabled]="!isEditing"
+                     placeholder="Enter your phone number">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <div class="input-with-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                <rect x="2" y="4" width="16" height="12" rx="2" stroke-width="1.5"/>
+                <path d="M2 6L10 11L18 6" stroke-width="1.5"/>
+              </svg>
+              <input type="email" 
+                     id="email" 
+                     [(ngModel)]="profileData.email" 
+                     [disabled]="!isEditing"
+                     placeholder="Enter your email">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="address">Address *</label>
+          <div class="input-with-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+              <path d="M10 2C7.23858 2 5 4.23858 5 7C5 11 10 18 10 18C10 18 15 11 15 7C15 4.23858 12.7614 2 10 2Z" stroke-width="1.5"/>
+              <circle cx="10" cy="7" r="2" stroke-width="1.5"/>
+            </svg>
+            <input type="text" 
+                   id="address" 
+                   [(ngModel)]="profileData.address" 
+                   [disabled]="!isEditing"
+                   placeholder="Enter your address">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="idNumber">ID-Number *</label>
+          <div class="input-with-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+              <circle cx="10" cy="6" r="3" stroke-width="1.5"/>
+              <path d="M5 17V15C5 13.3431 6.34315 12 8 12H12C13.6569 12 15 13.3431 15 15V17" stroke-width="1.5"/>
+            </svg>
+            <input type="text" 
+                   id="idNumber" 
+                   [(ngModel)]="profileData.ID" 
+                   [disabled]="!isEditing"
+                   placeholder="Enter your ID Number">
+          </div>
+        </div>
+
+        <div *ngIf="isEditing" class="form-actions">
+          <button type="button" class="btn-secondary" (click)="cancelEdit()" [disabled]="isSaving">Cancel</button>
+          <button type="button" class="btn-primary" (click)="toggleEdit()" [disabled]="isSaving">
+            {{ isSaving ? 'saving changes...' : 'Save Changes' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

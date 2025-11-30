@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Request } from '../../models/request';
-import { Driver } from '../../models/driver';
-import { AssignmentRequest } from '../../models/assignment';
+import { AssignmentRequest, Driver, Request } from '../../models/assignment';
 import { DriverService } from '../../services/driver';
+
 @Component({
   selector: 'app-assign-driver',
   standalone: true,
@@ -18,6 +17,13 @@ export class AssignDriver implements OnInit {
   selectedRequest: Request | null = null;
   isLoading = false;
   errorMessage = '';
+  
+  // Modal properties
+  showConfirmModal = false;
+  showSuccessModal = false;
+  showErrorModal = false;
+  modalMessage = '';
+  pendingDriver: Driver | null = null;
 
   constructor(private driverService: DriverService) {}
 
@@ -25,41 +31,38 @@ export class AssignDriver implements OnInit {
     this.loadData();
   }
 
-  // تحميل البيانات من الداتابيز
   loadData(): void {
     this.isLoading = true;
     this.errorMessage = '';
 
-    // جلب الطلبات المعتمدة
     this.driverService.getApprovedRequests().subscribe({
       next: (requests) => {
         this.approvedRequests = requests;
-        console.log('✅ Approved Requests loaded:', requests);
+        console.log('Requests loaded:', requests);
       },
       error: (error) => {
-        this.errorMessage = error.message || 'فشل في تحميل الطلبات';
-        console.error('❌ Error loading requests:', error);
+        this.errorMessage = error.message || 'Failed to load requests';
+        console.error(error);
       }
     });
 
-    // جلب السائقين المتاحين
     this.driverService.getAvailableDrivers().subscribe({
       next: (drivers) => {
         this.availableDrivers = drivers;
         this.isLoading = false;
-        console.log('✅ Available Drivers loaded:', drivers);
+        console.log('Available Drivers loaded:', drivers);
       },
       error: (error) => {
-        this.errorMessage = error.message || 'فشل في تحميل السائقين';
+        this.errorMessage = error.message || 'Failed to load drivers';
         this.isLoading = false;
-        console.error('❌ Error loading drivers:', error);
+        console.error(error);
       }
     });
   }
 
   selectRequest(request: Request): void {
     this.selectedRequest = request;
-    console.log('📋 Selected Request:', request);
+    console.log('Selected:', request);
   }
 
   assignToDriver(driver: Driver): void {
@@ -67,52 +70,82 @@ export class AssignDriver implements OnInit {
       return;
     }
 
-    // تأكيد التعيين
-    const confirmed = confirm(
-      `هل أنت متأكد من تعيين الطلب ${this.selectedRequest.id} للسائق ${driver.name}؟`
-    );
+    // Show confirmation 
+    this.pendingDriver = driver;
+    this.modalMessage = `Are you sure you want to assign Request ${this.selectedRequest.id} to Driver ${driver.name}?`;
+    this.showConfirmModal = true;
+  }
 
-    if (!confirmed) {
+  confirmAssignment(): void {
+    if (!this.selectedRequest || !this.pendingDriver) {
       return;
     }
 
+    this.showConfirmModal = false;
     this.isLoading = true;
     this.errorMessage = '';
 
     const assignment: AssignmentRequest = {
       requestId: this.selectedRequest.id,
-      driverId: driver.id
+      driverId: this.pendingDriver.id
     };
+
+    const driver = this.pendingDriver;
 
     this.driverService.assignRequestToDriver(assignment).subscribe({
       next: (response) => {
-        console.log('✅ Assignment successful:', response);
+        console.log('Assignment successful:', response);
         
-        // إظهار رسالة نجاح
-        alert(`تم تعيين الطلب ${this.selectedRequest?.id} للسائق ${driver.name} بنجاح!`);
+        // Show success 
+        this.modalMessage = `Request ${this.selectedRequest?.id} has been assigned to Driver ${driver.name} successfully!`;
+        this.showSuccessModal = true;
         
-        // إزالة الطلب من القائمة
+        // Remove assigned request from the list
         this.approvedRequests = this.approvedRequests.filter(
           req => req.id !== this.selectedRequest?.id
         );
         
-        // تحديث عدد المشاوير للسائق
+        // Update driver's pickups count
         driver.todayPickups++;
         
-        // إعادة تعيين الطلب المحدد
         this.selectedRequest = null;
+        this.pendingDriver = null;
         this.isLoading = false;
       },
       error: (error) => {
-        this.errorMessage = error.message || 'فشل في تعيين الطلب للسائق';
+        this.errorMessage = error.message || 'Failed to assign request to driver';
         this.isLoading = false;
-        console.error('❌ Error assigning request:', error);
-        alert(`خطأ: ${this.errorMessage}`);
+        console.error('Error assigning request:', error);
+        
+        // Show error 
+        this.modalMessage = this.errorMessage;
+        this.showErrorModal = true;
+        this.pendingDriver = null;
       }
     });
   }
 
-  // إعادة تحميل البيانات
+  cancelAssignment(): void {
+    this.showConfirmModal = false;
+    this.pendingDriver = null;
+  }
+
+  closeSuccessModal(): void {
+    this.showSuccessModal = false;
+  }
+
+  closeErrorModal(): void {
+    this.showErrorModal = false;
+  }
+
+  onImageError(event: any): void {
+    event.target.style.display = 'none';
+    const avatarDiv = event.target.previousElementSibling;
+    if (avatarDiv) {
+      avatarDiv.style.display = 'flex';
+    }
+  }
+
   refreshData(): void {
     this.selectedRequest = null;
     this.loadData();

@@ -13,9 +13,10 @@ import {
 } from '../models/auth-response';
 import { HttpClient } from '@angular/common/http';
 import { TokenService } from './tokenservice';
-import { enivronment } from '../../../environments/environment';
 import { API_ENDPOINTS } from '../constants/api-endpoints';
 import { ForgotPasswordPage } from '../../features/auth/forgot-password/forgot-password';
+import { environment } from '../../../environments/environment';
+
 import { ResetPassword } from '../../features/auth/reset-password/reset-password';
 
 @Injectable({
@@ -26,7 +27,7 @@ export class AuthService {
     this.isAuthenticatedSubject.next(this.hasToken());
   }
 
-  private readonly apiUrl = enivronment.apiUrl;
+  private readonly apiUrl = environment.apiUrl;
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   // private userRoleSubject = new BehaviorSubject<UserRole>('user');

@@ -1,4 +1,4 @@
-/* driver-dashboard.component.css - COMPLETE FILE */
+/* driver-dashboard.component.css - UPDATED WITH LAYOUT */
 
 /* ========== Variables ========== */
 :host {
@@ -33,14 +33,20 @@
 }
 
 /* ========== Layout ========== */
-.dashboard-container {
+.dashboard-layout {
+  display: flex;
   min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
   background-color: var(--gray-50);
+  overflow-x: hidden;
 }
 
 .page-content {
   padding: 1.5rem;
-  max-width: 1400px;
+  max-width: 2000px;
   margin: 0 auto;
 }
 
@@ -547,25 +553,35 @@
 }
 
 @media (max-width: 768px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
   .page-content {
     padding: 1rem;
   }
+
   .page-header {
     flex-direction: column;
     gap: 1rem;
   }
+
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
   .info-grid {
     grid-template-columns: 1fr;
   }
+
   .filters-bar {
     flex-wrap: wrap;
   }
+
   .search-box {
     flex: 1 1 100%;
   }
+
   .card-actions {
     flex-wrap: wrap;
   }
@@ -575,9 +591,11 @@
   .stats-grid {
     grid-template-columns: 1fr 1fr;
   }
+
   .stat-card:last-child {
     grid-column: span 2;
   }
+
   .card-actions .btn {
     flex: 1;
     justify-content: center;

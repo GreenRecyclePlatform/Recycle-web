@@ -62,19 +62,19 @@ export class DashpickupDriverservice {
     );
   }
 
-  // ========== Fetch by Status ==========// في DashpickupDriverservice.ts
+  // ========== Fetch by Status ==========
 
 private fetchByStatus(status: PickupStatus): Observable<Pickup[]> {
-  // 🔥 ابعت الرقم مباشرة (Integer)
+  //  (number of Status)
   const params = new HttpParams().set('status', status.toString());
   const fullUrl = `${this.apiUrl}/my-assignments`;
   
-  console.log(`🔍 Fetching ${PickupStatus[status]}`);
-  console.log(`   URL: ${fullUrl}?status=${status}`);  // هيطبع الرقم
+  console.log(` Fetching ${PickupStatus[status]}`);
+  console.log(`   URL: ${fullUrl}?status=${status}`);  
   
   return this.http.get<Pickup[]>(fullUrl, { params }).pipe(
     tap(response => {
-      console.log(`✅ ${PickupStatus[status]}: ${response?.length || 0} items`);
+      console.log(` ${PickupStatus[status]}: ${response?.length || 0} items`);
     }),
   
   );
@@ -139,7 +139,7 @@ private fetchByStatus(status: PickupStatus): Observable<Pickup[]> {
   completePickup(assignmentId: string, driverNotes?: string): Observable<any> {
     const body: UpdateAssignmentStatusDto = {
       assignmentId: assignmentId,
-      status: 1, // ✅ 1 = Completed
+      status: 1, //  1 = Completed
       notes: driverNotes
     };
     
@@ -148,11 +148,11 @@ private fetchByStatus(status: PickupStatus): Observable<Pickup[]> {
     return this.http.put(`${this.apiUrl}/update-status`, body)
       .pipe(
         tap((response) => {
-          console.log('✅ Complete Response:', response);
+          console.log(' Complete Response:', response);
           this.updateLocalStatus(assignmentId, PickupStatus.Completed);
         }),
         catchError((error) => {
-          console.error('❌ Complete Error:', error);
+          console.error(' Complete Error:', error);
           return this.handleError(error);
         })
       );

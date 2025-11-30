@@ -1,4 +1,3 @@
-// all-drivers.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -94,32 +93,12 @@ export class AllDrivers implements OnInit {
   getStatusBadgeClass(status: string): string {
     return status.toLowerCase();
   }
-/*
-  onChangeStatus(driver: Driver): void {
-    const newStatus = driver.status === 'active' ? 'inactive' : 'active';
-    const isAvailable = newStatus === 'active';
-    
-    this.driverService.updateDriverAvailability(driver.id, isAvailable).subscribe({
-      next: (updatedDriver) => {
-        driver.status = updatedDriver.status;
-        this.calculateStatistics();
-        console.log(`Driver ${driver.name} status changed to ${newStatus}`);
-      },
-      error: (error) => {
-        console.error('Error updating driver status:', error);
-        alert('فشل في تحديث حالة السائق. يرجى المحاولة مرة أخرى.');
-      }
-    });
-  }
-    */
 
-  onDriverAction(driver: Driver, action: string): void {
-   
-        if (confirm(`Are you sure to Delete${driver.name}؟`)) {
-          this.deleteDriver(driver);
-        }
-        
-    
+  // ✅ تم التعديل: دالة واحدة فقط للحذف
+  onDeleteDriver(driver: Driver): void {
+    if (confirm(`Are you sure you want to delete ${driver.name}?`)) {
+      this.deleteDriver(driver);
+    }
   }
 
   deleteDriver(driver: Driver): void {
@@ -133,7 +112,7 @@ export class AllDrivers implements OnInit {
       },
       error: (error) => {
         console.error('Error deleting driver:', error);
-        alert('Failed to delete driver. Please try again later.');
+        this.errorMessage = 'Failed to delete driver. Please try again.';
       }
     });
   }

@@ -1,10 +1,10 @@
 
-import { Injectable } from '@angular/core';
+
+  import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { Request, PickupRequest } from '../models/request';
-import { Driver, DriverApiResponse } from '../models/driver';
+import { Request, PickupRequest,Driver } from '../models/assignment';
 import { AssignmentRequest } from '../models/assignment';
 import { environment } from '../../../../environments/environment';
 
@@ -12,12 +12,10 @@ import { environment } from '../../../../environments/environment';
   providedIn: 'root'
 })
 export class DriverService {
-  // ✅ الـ URL بتاع الـ API بتاعك
   private readonly apiUrl = `${environment.apiUrl}`;
 
   constructor(private http: HttpClient) { }
-
-  //  Headers (without Token until Login)
+//  Headers (without Token until Login)
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
       'Content-Type': 'application/json'
@@ -31,13 +29,12 @@ export class DriverService {
     // });
   }
 
-  //    (Pending)
+//pickup requests with status 'Pending'
   getApprovedRequests(): Observable<Request[]> {
     return this.http.get<PickupRequest[]>(
       `${this.apiUrl}/PickupRequests/status/Pending`,
       { headers: this.getHeaders() }
     ).pipe(
-      // تحويل الـ Response لـ Interface بتاع الـ Component
       map(requests => requests.map(req => ({
         id: req.requestId,
         customerName: req.userName,
@@ -49,104 +46,105 @@ export class DriverService {
       catchError(this.handleError)
     );
   }
-
-  //  السائقين المتاحين
+// Get available drivers
   getAvailableDrivers(): Observable<Driver[]> {
     return this.http.get<any[]>(
-      `${this.apiUrl}/DriverAssignments/available-drivers`,
+      `${this.apiUrl}/DriverProfiles`,
       { headers: this.getHeaders() }
     ).pipe(
-      map(drivers => drivers.map(driver => ({
-        id: driver.driverId,
-        name: driver.driverName,
-        initials: this.getInitials(driver.driverName),
-        rating: driver.rating || 0,
-        currentLocation: 'Available',
-        phone: driver.phoneNumber,
-        todayPickups: driver.totalTrips || 0
-      }))),
+      map(drivers => drivers
+        .filter(driver => driver.isAvailable) 
+        .map(driver => ({
+          id: driver.userId || driver.id,
+          name: `${driver.firstName} ${driver.lastName}`,
+          initials: this.getInitials(`${driver.firstName} ${driver.lastName}`),
+          rating: driver.rating || 0,
+          currentLocation: driver.address 
+            ? `${driver.address.city}, ${driver.address.governorate}` 
+            : 'Available',
+          phone: driver.phonenumber || driver.phoneNumber || 'N/A',
+          todayPickups: driver.totalTrips || 0,
+          profileImageUrl: driver.profileImageUrl || null 
+        }))
+      ),
       catchError(this.handleError)
     );
   }
 
-  // تعيين طلب لسائق
+// Assign request to driver
   assignRequestToDriver(assignment: AssignmentRequest): Observable<any> {
-    console.log('🔍 Assignment data being sent:', assignment);
-    console.log('🔍 Request URL:', `${this.apiUrl}/DriverAssignments/assign`);
+   // console.log(' Assignment data being sent:', assignment);
+    //console.log(' Request URL:', `${this.apiUrl}/DriverAssignments/assign`);
     
     return this.http.post(
       `${this.apiUrl}/DriverAssignments/assign`,
       assignment,
       { 
         headers: this.getHeaders(),
-        observe: 'response' // عشان نشوف الـ response كامل
       }
     ).pipe(
-      map((response: any) => {
-        console.log('✅ Full Response:', response);
-        return response.body;
-      }),
+     
       catchError(this.handleError)
     );
   }
 
-  // Helper: لتحويل المواد لنص
+//helper to get materials text
   private getMaterialsText(materials: any[]): string {
     if (!materials || materials.length === 0) {
       return 'Mixed Materials';
     }
     return materials.map(m => m.materialName || m.name).join(', ');
   }
-
-  // Helper: لاستخراج الأحرف الأولى من الاسم
+//helper to get initials letters
   private getInitials(name: string): string {
     if (!name) return 'NA';
-    const parts = name.split(' ');
+    const parts = name.trim().split(' ');
     if (parts.length >= 2) {
       return (parts[0][0] + parts[1][0]).toUpperCase();
     }
     return name.substring(0, 2).toUpperCase();
   }
 
-  // معالجة الأخطاء
-  private handleError(error: any) {
-    let errorMessage = 'حدث خطأ في الاتصال بالسيرفر';
-    
-    console.log('🔴 Full Error Object:', error);
-    console.log('🔴 Error Status:', error.status);
-    console.log('🔴 Error error property:', error.error);
-    
-    // محاولة طباعة كل خصائص error.error
-    if (error.error) {
-      console.log('🔴 Error keys:', Object.keys(error.error));
-      console.log('🔴 Error stringified:', JSON.stringify(error.error));
-    }
-    
-    if (error.status === 400) {
-      errorMessage = 'خطأ في البيانات المرسلة (400 Bad Request)';
-      
-      if (error.error?.errors) {
-        console.log('🔴 Validation Errors:', error.error.errors);
-        const validationErrors = Object.values(error.error.errors).flat().join(', ');
-        errorMessage += ': ' + validationErrors;
-      } else if (error.error?.message) {
-        errorMessage += ': ' + error.error.message;
-      } else if (typeof error.error === 'string') {
-        errorMessage += ': ' + error.error;
-      }
-    } else if (error.status === 401) {
-      errorMessage = 'غير مصرح لك بالدخول - يرجى تسجيل الدخول مرة أخرى';
-    } else if (error.status === 403) {
-      errorMessage = 'ليس لديك صلاحية Admin للوصول لهذه البيانات';
-    } else if (error.status === 0) {
-      errorMessage = 'لا يمكن الاتصال بالسيرفر - تأكد من تشغيل الـ Backend';
-    } else if (error.error instanceof ErrorEvent) {
-      errorMessage = `خطأ: ${error.error.message}`;
-    } else {
-      errorMessage = error.error?.message || `خطأ ${error.status}: ${error.message}`;
-    }
-    
-    console.error('❌ Final Error Message:', errorMessage);
-    return throwError(() => new Error(errorMessage));
+//error handler//error handler
+private handleError(error: any) {
+  let errorMessage = 'An unknown error occurred fetching data from the server.';
+  
+  console.log('🔴 Full Error Object:', error);
+  console.log('🔴 Error Status:', error.status);
+  console.log('🔴 Error error property:', error.error);
+  
+  if (error.error) {
+    console.log('🔴 Error keys:', Object.keys(error.error));
+    console.log('🔴 Error stringified:', JSON.stringify(error.error));
   }
+  
+  if (error.status === 400) {
+    errorMessage ='Errors in the submitted data';
+    
+    if (error.error?.errors) {
+      console.log(' Validation Errors:', error.error.errors);
+      const validationErrors = Object.values(error.error.errors).flat().join(', ');
+      errorMessage += ': ' + validationErrors;
+    } else if (error.error?.message) {
+      errorMessage += ': ' + error.error.message;
+    } else if (typeof error.error === 'string') {
+      errorMessage += ': ' + error.error;
+    }
+  } else if (error.status === 401) {
+    errorMessage = 'Unauthorized access - please log in again';
+  } else if (error.status === 403) {
+    errorMessage = 'You do not have Admin permission to access this data';
+  } else if (error.status === 0) {
+    errorMessage = 'Cannot connect to server. Please check your network connection.';
+  } else if (error.error instanceof ErrorEvent) {
+    errorMessage = `error: ${error.error.message}`;
+  } else {
+    errorMessage = error.error?.message || `error ${error.status}: ${error.message}`;
+  }
+  
+  console.error('Final Error Message:', errorMessage);
+  return throwError(() => new Error(errorMessage));
 }
+}
+
+
