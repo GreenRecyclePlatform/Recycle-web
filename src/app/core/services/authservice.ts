@@ -27,8 +27,18 @@ export class AuthService {
   private readonly apiUrl = environment.apiUrl;
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  private userRoleSubject = new BehaviorSubject<string | null>(null);
 
   public isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
+  public userRole$: Observable<string | null> = this.userRoleSubject.asObservable();
+
+  get userRole(): string | null {
+    return this.userRoleSubject.value;
+  }
+
+  setUserRole(role: string | any): void {
+    this.userRoleSubject.next(role);
+  }
 
   get isAuthenticated(): boolean {
     return this.isAuthenticatedSubject.value;
@@ -40,6 +50,13 @@ export class AuthService {
 
   hasToken(): boolean {
     return !!this.tokenService.getToken();
+  }
+
+  getUserName(): string | null {
+    return this.tokenService.getUserName();
+  }
+  getUserId(): string | null {
+    return this.tokenService.getUserId();
   }
 
   // ✅ ADD THIS METHOD - Expose getToken from TokenService
@@ -54,22 +71,17 @@ export class AuthService {
     const token = this.getToken();
     if (!token) return false;
 
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const expiry = payload.exp * 1000;
-      const isValid = Date.now() < expiry;
-      console.log('🔐 Token valid:', isValid);
-      return isValid;
-    } catch (error) {
-      console.error('❌ Invalid token format:', error);
-      return false;
-    }
+    return this.tokenService.isTokenExpired();
   }
 
   private handleAuthSuccess(authResponse: LoginResponse): void {
     // Handle successful authentication (e.g., store tokens, update state)
-    this.tokenService.setToken(authResponse.accessToken); 
+    this.tokenService.setToken(authResponse.accessToken);
+    const role = this.tokenService.getRole();
+
     this.setAuthenticated(true);
+    this.setUserRole(role);
+
     console.log('✅ Auth success - Token stored');
   }
 
@@ -149,12 +161,14 @@ export class AuthService {
         next: () => {
           this.tokenService.clearToken();
           this.setAuthenticated(false);
+          this.setUserRole(null);
           console.log('✅ Logout successful');
         },
         error: (error) => {
           console.error('❌ Logout error:', error);
           // Clear token anyway on error
           this.tokenService.clearToken();
+          this.setUserRole(null);
           this.setAuthenticated(false);
         },
       });
