@@ -54,7 +54,7 @@ export class TokenService {
     return decoded?.sub || null;
   }
 
-  getUserEmail(): string | null {
+  UserEmail(): string | null {
     const decoded = this.decodeToken();
     return decoded?.email || null;
   }
