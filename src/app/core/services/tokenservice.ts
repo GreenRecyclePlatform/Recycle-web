@@ -54,6 +54,11 @@ export class TokenService {
     return decoded?.sub || null;
   }
 
+  getUserEmail(): string | null {
+    const decoded = this.decodeToken();
+    return decoded?.email || null;
+  }
+  
   setToken(token: string): void {
     sessionStorage.setItem('accesstoken', token);
   }
