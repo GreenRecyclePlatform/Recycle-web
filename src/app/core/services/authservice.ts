@@ -89,8 +89,7 @@ export class AuthService {
   }
 
   getUserEmail(): string | null {
-    const decoded = this.tokenService.decodeToken();
-    return decoded?.email || null;
+    return this.tokenService.UserEmail()
   }
 
   hasRole(role: string): boolean {
