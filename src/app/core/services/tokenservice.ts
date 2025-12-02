@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 
@@ -53,6 +54,11 @@ export class TokenService {
     return decoded?.sub || null;
   }
 
+  UserEmail(): string | null {
+    const decoded = this.decodeToken();
+    return decoded?.email || null;
+  }
+  
   setToken(token: string): void {
     sessionStorage.setItem('accesstoken', token);
   }

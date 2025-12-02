@@ -1,0 +1,356 @@
+/* Container & Layout */
+.assign-driver-container {
+  padding: 2rem;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Sections */
+.requests-section,
+.drivers-section {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e0e0e0;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--dark-gray);
+  margin-bottom: 1.5rem;
+}
+
+/* Cards */
+.requests-list,
+.drivers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.request-card,
+.driver-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  border: 2.5px solid var(--primary-green);
+  transition: all 0.3s ease;
+}
+
+.request-card {
+  cursor: pointer;
+}
+
+.request-card:hover,
+.driver-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(178, 9, 9, 0.12);
+  border-color: var(--primary-green);
+  background: var(--white);
+}
+
+.request-card.selected {
+  border-color: var(--primary-green);
+  border-width: 3px;
+  box-shadow: 0 4px 16px rgba(45, 106, 79, 0.2);
+  background-color: #e8f5e9;
+}
+
+/* Request Card */
+.request-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.request-id-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.label {
+  font-size: 0.75rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.request-id {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--dark-gray);
+}
+
+.status-badge {
+  padding: 0.375rem 1rem;
+  background-color: #E3F2FD;
+  color: #1976D2;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.request-details,
+.driver-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.driver-details {
+  margin-bottom: 1.25rem;
+}
+
+/* Driver Card */
+.driver-header {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.driver-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #2D6A4F;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.driver-avatar-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid #fff;
+}
+
+.driver-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.driver-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--dark-gray);
+  margin: 0 0 0.25rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.driver-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #FFA000;
+  font-weight: 650;
+}
+
+/* Detail Items */
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  color: #495057;
+}
+
+/* Icons */
+.icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.icon-user::before { content: '👤'; }
+.icon-location::before { content: '📍'; }
+.icon-box::before { content: '📦'; }
+.icon-phone::before { content: '📞'; }
+.icon-calendar::before { content: '📅'; }
+.icon-star::before { content: '⭐'; }
+.icon-refresh::before { content: '🔄'; }
+
+/* Buttons */
+.btn-assign {
+  width: 100%;
+  padding: 0.875rem;
+  background-color: #2D6A4F;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-assign:hover:not(:disabled) {
+  background-color: #034829;
+  transform: translateY(-1px);
+}
+
+.btn-assign:disabled {
+  cursor: not-allowed;
+}
+
+.btn-refresh {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: var(--primary-green);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-refresh:hover {
+  background: #1e4d38;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(45, 106, 79, 0.5);
+}
+
+/* Modal Styles - Custom additions to Bootstrap */
+.modal-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.confirm-icon {
+  background-color: #FFF3E0;
+  color: #F57C00;
+}
+
+.success-icon {
+  background-color: #E8F5E9;
+  color: #2D6A4F;
+}
+
+.error-icon {
+  background-color: #FFEBEE;
+  color: #C62828;
+}
+
+.btn-success-custom {
+  background-color: #2D6A4F;
+  color: white;
+  border: none;
+  font-weight: 600;
+}
+
+.btn-success-custom:hover {
+  background-color: #1e4d38;
+  color: white;
+}
+
+/* Loading & States */
+.loading-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  gap: 15px;
+}
+
+.error-message {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  color: #c33;
+  padding: 12px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #718096;
+  font-size: 16px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .assign-driver-container {
+    padding: 1rem;
+  }
+  
+  .request-card,
+  .driver-card {
+    padding: 1rem;
+  }
+
+  .modal-dialog {
+    width: 95%;
+    max-width: none;
+    margin: 1rem;
+  }
+
+  .modal-header {
+    padding: 1.5rem 1.5rem 1rem;
+  }
+
+  .modal-body {
+    padding: 1rem 1.5rem;
+  }
+
+  .modal-footer {
+    padding: 1rem 1.5rem 1.5rem;
+    flex-direction: column;
+  }
+
+  .btn-modal {
+    width: 100%;
+  }
+
+
+
+
+}
