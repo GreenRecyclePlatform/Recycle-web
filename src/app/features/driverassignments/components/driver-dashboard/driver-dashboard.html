@@ -1,13 +1,16 @@
-<!-- driver-dashboard.component.html - UPDATED WITH SIDEBAR -->
+
+<app-navbar></app-navbar>
 
 <div class="dashboard-layout">
-  <!-- Sidebar Component -->
+
+  <!-- Sidebar -->
   <app-driver-sidebar></app-driver-sidebar>
 
   <!-- Main Content -->
   <div class="main-content">
     <div class="page-content">
-      
+
+
       <!-- Page Header -->
       <div class="page-header">
         <div>
@@ -45,7 +48,9 @@
             class="stat-card"
             [class.active]="isActiveFilter(stat.status)"
             (click)="setActiveFilter(stat.status)">
-            <div class="stat-count" [attr.data-color]="stat.color">{{ stat.count }}</div>
+            <div class="stat-count" [attr.data-color]="stat.color">
+              {{ stat.count }}
+            </div>
             <div class="stat-label">{{ stat.label }}</div>
           </button>
         }
@@ -74,9 +79,10 @@
       <!-- Pickup Cards -->
       @if (!isLoading) {
         <div class="pickups-list">
+
           @for (pickup of filteredPickups; track trackByPickupId($index, pickup)) {
             <div class="pickup-card">
-              
+
               <!-- Card Header -->
               <div class="card-header">
                 <div class="request-info">
@@ -85,10 +91,14 @@
                   </div>
                   <div>
                     <span class="label">Assignment ID</span>
-                    <span class="value">{{ pickup.assignmentId | slice:0:8 }}...</span>
+                    <span class="value">
+                      {{ pickup.assignmentId | slice:0:8 }}...
+                    </span>
                   </div>
                 </div>
-                <span class="status-badge" [ngClass]="getStatusClass(pickup.status)">
+
+                <span class="status-badge"
+                      [ngClass]="getStatusClass(pickup.status)">
                   {{ getStatusLabel(pickup.status) }}
                 </span>
               </div>
@@ -96,9 +106,10 @@
               <!-- Card Body -->
               <div class="card-body">
                 <div class="info-grid">
-                  
+
                   <!-- Left Column -->
                   <div class="info-column">
+
                     <div class="info-item">
                       <i class="bi bi-geo-alt"></i>
                       <div>
@@ -106,12 +117,14 @@
                         <span class="value">{{ pickup.pickupAddress }}</span>
                       </div>
                     </div>
-                    
+
                     <div class="info-item">
                       <i class="bi bi-clock"></i>
                       <div>
                         <span class="label">Assigned At</span>
-                        <span class="value">{{ formatDate(pickup.assignedAt) }}</span>
+                        <span class="value">
+                          {{ formatDate(pickup.assignedAt) }}
+                        </span>
                       </div>
                     </div>
 
@@ -120,7 +133,9 @@
                         <i class="bi bi-check2-circle"></i>
                         <div>
                           <span class="label">Accepted At</span>
-                          <span class="value">{{ formatDate(pickup.acceptedAt) }}</span>
+                          <span class="value">
+                            {{ formatDate(pickup.acceptedAt) }}
+                          </span>
                         </div>
                       </div>
                     }
@@ -130,14 +145,18 @@
                         <i class="bi bi-flag"></i>
                         <div>
                           <span class="label">Completed At</span>
-                          <span class="value">{{ formatDate(pickup.completedAt) }}</span>
+                          <span class="value">
+                            {{ formatDate(pickup.completedAt) }}
+                          </span>
                         </div>
                       </div>
                     }
+
                   </div>
 
                   <!-- Right Column -->
                   <div class="info-column">
+
                     <div class="info-item">
                       <i class="bi bi-person"></i>
                       <div>
@@ -169,49 +188,52 @@
                         <i class="bi bi-x-circle"></i>
                         <div>
                           <span class="label">Reject Reason</span>
-                          <span class="value text-danger">{{ pickup.rejectReason }}</span>
+                          <span class="value text-danger">
+                            {{ pickup.rejectReason }}
+                          </span>
                         </div>
                       </div>
                     }
+
                   </div>
                 </div>
               </div>
 
               <!-- Card Actions -->
               <div class="card-actions">
-                <button class="btn btn-outline" (click)="openDirections(pickup.pickupAddress)">
+
+                <button class="btn btn-outline"
+                        (click)="openDirections(pickup.pickupAddress)">
                   <i class="bi bi-compass"></i>
                   Directions
                 </button>
 
-                <!-- Pending: Accept / Reject -->
                 @if (pickup.status === PickupStatus.Pending) {
-                  <button
-                    class="btn btn-reject"
-                    (click)="openRejectModal(pickup.assignmentId)"
-                    [disabled]="isProcessing">
+
+                  <button class="btn btn-reject"
+                          (click)="openRejectModal(pickup.assignmentId)"
+                          [disabled]="isProcessing">
                     <i class="bi bi-x-circle"></i>
                     Reject
                   </button>
-                  <button
-                    class="btn btn-primary"
-                    (click)="acceptPickup(pickup.assignmentId)"
-                    [disabled]="isProcessing">
+
+                  <button class="btn btn-primary"
+                          (click)="acceptPickup(pickup.assignmentId)"
+                          [disabled]="isProcessing">
                     <i class="bi bi-check-circle"></i>
                     Accept
                   </button>
                 }
 
-                <!-- In Progress: Complete -->
                 @if (pickup.status === PickupStatus.InProgress) {
-                  <button
-                    class="btn btn-primary"
-                    (click)="openCompleteModal(pickup.assignmentId)"
-                    [disabled]="isProcessing">
+                  <button class="btn btn-primary"
+                          (click)="openCompleteModal(pickup.assignmentId)"
+                          [disabled]="isProcessing">
                     <i class="bi bi-check-circle"></i>
                     Complete
                   </button>
                 }
+
               </div>
             </div>
           }
@@ -223,58 +245,79 @@
               <p>No assignments found</p>
             </div>
           }
+
         </div>
       }
+
+      <!-- Reject Modal -->
+      @if (showRejectModal) {
+        <div class="modal-overlay" (click)="closeRejectModal()">
+          <div class="modal-content" (click)="$event.stopPropagation()">
+            <h3>Reject Assignment</h3>
+            <p>Please provide a reason for rejecting:</p>
+
+            <textarea [(ngModel)]="rejectReason"
+                      placeholder="Enter reason..."
+                      rows="4"></textarea>
+
+            <div class="modal-actions">
+              <button class="btn btn-outline"
+                      (click)="closeRejectModal()">
+                Cancel
+              </button>
+
+              <button class="btn btn-danger"
+                      (click)="confirmReject()"
+                      [disabled]="!rejectReason.trim() || isProcessing">
+
+                @if (isProcessing) {
+                  <span class="spinner-sm"></span>
+                }
+
+                Confirm Rejection
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Complete Modal -->
+      @if (showCompleteModal) {
+        <div class="modal-overlay" (click)="closeCompleteModal()">
+          <div class="modal-content" (click)="$event.stopPropagation()">
+            <h3>Complete Assignment</h3>
+            <p>Add any notes (optional):</p>
+
+            <textarea [(ngModel)]="completeNotes"
+                      placeholder="Enter notes..."
+                      rows="4"></textarea>
+
+            <div class="modal-actions">
+              <button class="btn btn-outline"
+                      (click)="closeCompleteModal()">
+                Cancel
+              </button>
+
+              <button class="btn btn-primary"
+                      (click)="confirmComplete()"
+                      [disabled]="isProcessing">
+
+                @if (isProcessing) {
+                  <span class="spinner-sm"></span>
+                }
+
+                Complete Pickup
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+
+    </div> <!-- page-content -->      
     </div>
   </div>
 
-  <!-- Reject Modal -->
-  @if (showRejectModal) {
-    <div class="modal-overlay" (click)="closeRejectModal()">
-      <div class="modal-content" (click)="$event.stopPropagation()">
-        <h3>Reject Assignment</h3>
-        <p>Please provide a reason for rejecting:</p>
-        <textarea
-          [(ngModel)]="rejectReason"
-          placeholder="Enter reason..."
-          rows="4">
-        </textarea>
-        <div class="modal-actions">
-          <button class="btn btn-outline" (click)="closeRejectModal()">Cancel</button>
-          <button
-            class="btn btn-danger"
-            (click)="confirmReject()"
-            [disabled]="!rejectReason.trim() || isProcessing">
-            @if (isProcessing) { <span class="spinner-sm"></span> }
-            Confirm Rejection
-          </button>
-        </div>
-      </div>
-    </div>
-  }
 
-  <!-- Complete Modal -->
-  @if (showCompleteModal) {
-    <div class="modal-overlay" (click)="closeCompleteModal()">
-      <div class="modal-content" (click)="$event.stopPropagation()">
-        <h3>Complete Assignment</h3>
-        <p>Add any notes (optional):</p>
-        <textarea
-          [(ngModel)]="completeNotes"
-          placeholder="Enter notes..."
-          rows="4">
-        </textarea>
-        <div class="modal-actions">
-          <button class="btn btn-outline" (click)="closeCompleteModal()">Cancel</button>
-          <button
-            class="btn btn-primary"
-            (click)="confirmComplete()"
-            [disabled]="isProcessing">
-            @if (isProcessing) { <span class="spinner-sm"></span> }
-            Complete Pickup
-          </button>
-        </div>
-      </div>
-    </div>
-  }
-</div>
+
+
+

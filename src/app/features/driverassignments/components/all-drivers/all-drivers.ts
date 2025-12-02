@@ -1,9 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+
+import { Component, importProvidersFrom, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router'; 
 import { Alldriverservice } from '../../services/alldriverservice';
 import { Driver } from '../../models/all-drivers';
+import { AuthService } from '../../../../core/services/authservice'; 
+import { Navbar } from '../../../../shared/components/navbar/navbar';
+import { AdminSidebarComponent } from '../../../../shared/components/admin-sidebar/admin-sidebar';
 
 @Component({
   selector: 'app-all-drivers',
@@ -11,7 +16,10 @@ import { Driver } from '../../models/all-drivers';
   imports: [
     CommonModule,
     FormsModule,
-    MatIconModule
+    MatIconModule,
+    Navbar,
+    AdminSidebarComponent
+    
   ],
   templateUrl: './all-drivers.html',
   styleUrls: ['./all-drivers.css']
@@ -31,10 +39,40 @@ export class AllDrivers implements OnInit {
   // Loading and error states
   isLoading: boolean = false;
   errorMessage: string = '';
+  successMessage: string = ''; 
 
-  constructor(private driverService: Alldriverservice) {}
+  constructor(
+    private driverService: Alldriverservice,
+    private authService: AuthService, 
+    private router: Router 
+  ) {}
 
   ngOnInit(): void {
+    this.checkAdminAccess(); 
+  }
+
+  checkAdminAccess(): void {
+    const token = this.authService.getToken();
+    const isAdmin = this.authService.isAdmin();
+    const userId = this.authService.getUserIdFromToken();
+
+    console.log('🔐 Token exists:', !!token);
+    console.log('🔐 User ID:', userId);
+    console.log('🔐 Is Admin:', isAdmin);
+
+    if (!token) {
+      this.errorMessage = 'Please login to access this page';
+      console.warn('⚠️ No token found - redirecting to login');
+      return;
+    }
+
+    if (!isAdmin) {
+      this.errorMessage = 'You need Admin privileges to access this page';
+      console.warn('⚠️ Not an admin - access denied');
+      return;
+    }
+
+    console.log('✅ Admin access confirmed - loading drivers');
     this.loadDrivers();
   }
 
@@ -48,11 +86,16 @@ export class AllDrivers implements OnInit {
         this.filteredDrivers = data;
         this.calculateStatistics();
         this.isLoading = false;
+        console.log('✅ Drivers loaded:', data.length, 'drivers');
       },
       error: (error) => {
-        console.error('Error loading drivers:', error);
-        this.errorMessage = 'Failed to load drivers. Please try again later.';
+        console.error('❌ Error loading drivers:', error);
+        this.errorMessage = error.message || 'Failed to load drivers. Please try again later.';
         this.isLoading = false;
+        
+        if (error.message && (error.message.includes('Unauthorized') || error.message.includes('403'))) {
+          this.errorMessage = 'You do not have permission to view drivers';
+        }
       }
     });
   }
@@ -94,30 +137,52 @@ export class AllDrivers implements OnInit {
     return status.toLowerCase();
   }
 
-  // ✅ تم التعديل: دالة واحدة فقط للحذف
   onDeleteDriver(driver: Driver): void {
-    if (confirm(`Are you sure you want to delete ${driver.name}?`)) {
+    if (!this.authService.isAdmin()) {
+      this.errorMessage = 'Only admins can delete drivers';
+      return;
+    }
+
+    if (confirm(`Are you sure you want to delete ${driver.name}? This action cannot be undone.`)) {
       this.deleteDriver(driver);
     }
   }
 
   deleteDriver(driver: Driver): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
     this.driverService.deleteDriver(driver.id).subscribe({
       next: () => {
         // Remove driver from local array
         this.drivers = this.drivers.filter(d => d.id !== driver.id);
         this.applyFilters();
         this.calculateStatistics();
-        console.log(`Driver ${driver.name} deleted successfully`);
+        this.isLoading = false;
+        
+        this.successMessage = `Driver ${driver.name} deleted successfully`;
+        console.log('✅ Driver deleted:', driver.name);
+        
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 3000);
       },
       error: (error) => {
-        console.error('Error deleting driver:', error);
-        this.errorMessage = 'Failed to delete driver. Please try again.';
+        console.error('❌ Error deleting driver:', error);
+        this.errorMessage = error.message || 'Failed to delete driver. Please try again.';
+        this.isLoading = false;
+        
+        if (error.message && error.message.includes('403')) {
+          this.errorMessage = 'You do not have permission to delete drivers';
+        }
       }
     });
   }
 
   refreshDrivers(): void {
+    this.searchQuery = '';
+    this.selectedStatus = 'All Status';
     this.loadDrivers();
   }
 }

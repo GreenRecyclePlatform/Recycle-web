@@ -1,3 +1,5 @@
+
+
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -17,9 +19,9 @@ interface DecodedToken {
 export class AuthHelperService {
   constructor(private router: Router) {}
 
-  /**
-   * Decode JWT token without verification
-   */
+  
+   //* Decode JWT token without verification
+   
   decodeToken(token: string): DecodedToken | null {
     try {
       const payload = token.split('.')[1];
@@ -31,9 +33,9 @@ export class AuthHelperService {
     }
   }
 
-  /**
-   * Check if token is expired
-   */
+
+   //* Check if token is expired
+   
   isTokenExpired(token: string): boolean {
     const decoded = this.decodeToken(token);
     if (!decoded || !decoded.exp) return true;
@@ -42,9 +44,9 @@ export class AuthHelperService {
     return expirationDate < new Date();
   }
 
-  /**
-   * Get current user ID from token
-   */
+
+   //* Get current user ID from token
+
   getUserIdFromToken(): string | null {
     const token = localStorage.getItem('authToken');
     if (!token) return null;
@@ -53,9 +55,9 @@ export class AuthHelperService {
     return decoded?.nameid || decoded?.sub || null;
   }
 
-  /**
-   * Check if user is authenticated
-   */
+
+   //* Check if user is authenticated
+   
   isAuthenticated(): boolean {
     const token = localStorage.getItem('authToken');
     if (!token) return false;
@@ -63,9 +65,9 @@ export class AuthHelperService {
     return !this.isTokenExpired(token);
   }
 
-  /**
-   * Get the current auth token
-   */
+
+   //* Get the current auth token
+ 
   getToken(): string | null {
     return localStorage.getItem('authToken');
   }

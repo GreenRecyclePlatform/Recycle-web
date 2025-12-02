@@ -1,4 +1,4 @@
-
+// ✅ All interfaces match backend DTOs exactly
 
 export interface DriverProfileResponse {
   id: string;
@@ -12,7 +12,7 @@ export interface DriverProfileResponse {
   isAvailable: boolean;
   totalTrips: number;
   createdAt: string;
-  phonenumber: string;
+  phonenumber: string;  // Backend returns lowercase
   email: string;
   address: {
     street: string;
@@ -22,11 +22,12 @@ export interface DriverProfileResponse {
   };
 }
 
+// ✅ FIXED: phoneNumber with capital N to match backend DTO
 export interface UpdateDriverProfileRequest {
   firstName: string;
   lastName: string;
   profileImageUrl?: string;
-  phonenumber: string;
+  phoneNumber: string;  // ⬅️ Capital N to match backend UpdateDriverProfileDto
   email: string;
   address: {
     street: string;
@@ -35,8 +36,8 @@ export interface UpdateDriverProfileRequest {
     postalCode: string;
   };
 }
-////////////////////
 
+// Internal component interfaces (no changes)
 export interface DriverProfile {
   FirstName: string;
   LastName: string;

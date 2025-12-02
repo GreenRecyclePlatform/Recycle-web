@@ -38,8 +38,14 @@ export const routes: Routes = [
 
     
 
-    { path: 'AllDriver', component: AllDrivers},
-    {path: 'AssignDrivers', component: AssignDriver},
+   {
+    path: 'admin',
+    children: [
+      { path: 'drivers', component: AllDrivers },  
+      { path: 'assign-drivers', component: AssignDriver },  
+    ]
+   },
+   
     { path: 'DashBoardDrivers', component: DriverDashboard },
     { path: 'DriverProfile', component: Profiledriver },
 

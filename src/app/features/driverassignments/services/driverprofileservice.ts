@@ -1,8 +1,7 @@
-// driverprofileservice.ts
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { DriverProfileResponse ,UpdateDriverProfileRequest} from '.././models/Profiledriver';
+import { DriverProfileResponse, UpdateDriverProfileRequest } from '../models/Profiledriver';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({
@@ -13,29 +12,22 @@ export class DriverProfileService {
 
   constructor(private http: HttpClient) {}
 
+  // GET - with driverId parameter
   getDriverProfile(driverId: string): Observable<DriverProfileResponse> {
     return this.http.get<DriverProfileResponse>(`${this.apiUrl}/${driverId}`);
   }
 
+  // PUT - with driverId parameter
   updateDriverProfile(driverId: string, profileData: UpdateDriverProfileRequest): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'accept': '*/*'
-    });
-    
-    return this.http.put(`${this.apiUrl}/${driverId}`, profileData, { headers });
+    return this.http.put(`${this.apiUrl}/${driverId}`, profileData);
   }
 
-  // method to update availability
+  //  PUT availability 
   updateAvailability(isAvailable: boolean): Observable<boolean> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'accept': '*/*'
-    });
-    
-    return this.http.put<boolean>(`${this.apiUrl}/availability`, isAvailable, { headers });
+    return this.http.put<boolean>(`${this.apiUrl}/availability`, isAvailable);
   }
 
+  //  POST upload image 
   uploadProfileImage(file: File): Observable<{imageUrl: string}> {
     const formData = new FormData();
     formData.append('file', file);

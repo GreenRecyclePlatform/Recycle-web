@@ -3,65 +3,92 @@ import { DriverSidebar } from '../driver-sidebar/driver-sidebar';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { DashpickupDriverservice } from '../../services/DashpickupDriverservice';
+import { AuthService } from '../../../../core/services/authservice'; 
 import { 
   Pickup, 
   PickupStats, 
   PickupStatus,
   getStatusLabel,
   getStatusClass,
-  StatCard
+  StatCard,
+  
 } from '../../models/DashpickupDriver';
-
+import { Navbar } from '../../../../shared/components/navbar/navbar';
 
 @Component({
   selector: 'app-driver-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule,DriverSidebar],
+  imports: [CommonModule, FormsModule, DriverSidebar,Navbar],
   templateUrl: './driver-dashboard.html',
   styleUrls: ['./driver-dashboard.css']
 })
 export class DriverDashboard implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
-  // Make enum available in template
   PickupStatus = PickupStatus;
 
-  // Data
   pickups: Pickup[] = [];
   filteredPickups: Pickup[] = [];
   stats: PickupStats = { all: 0, pending: 0, inProgress: 0, completed: 0, cancelled: 0 };
 
-  // UI State
   activeFilter: PickupStatus | 'all' = 'all';
   searchTerm: string = '';
 
-  // Modal State
   showRejectModal: boolean = false;
   showCompleteModal: boolean = false;
   selectedPickupId: string | null = null;
   rejectReason: string = '';
   completeNotes: string = '';
 
-  // Loading & Messages
   isLoading: boolean = true;
   isProcessing: boolean = false;
   errorMessage: string = '';
   successMessage: string = '';
 
-  constructor(private dashpickupDriverservice: DashpickupDriverservice) {}
+  constructor(
+    private dashpickupDriverservice: DashpickupDriverservice,
+    private authService: AuthService,
+    private router: Router 
+  ) {}
 
   ngOnInit(): void {
-    this.loadData();
+    this.checkDriverAccess();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
+  //
 
-  // ========== Load Data ==========
+  checkDriverAccess(): void {
+    const token = this.authService.getToken();
+    const isDriver = this.authService.isDriver();
+    const userId = this.authService.getUserIdFromToken();
+
+    console.log('🔐 Token exists:', !!token);
+    console.log('🔐 User ID:', userId);
+    console.log('🔐 Is Driver:', isDriver);
+
+    if (!token) {
+      this.errorMessage = 'Please login to access your dashboard';
+      console.warn('⚠️ No token found - redirecting to login');
+      return;
+    }
+
+    if (!isDriver) {
+      this.errorMessage = 'You need Driver privileges to access this page';
+      console.warn('⚠️ Not a driver - access denied');
+      return;
+    }
+
+    console.log('✅ Driver access confirmed - loading dashboard');
+    this.loadData();
+  }
+
   private loadData(): void {
     this.isLoading = true;
     this.errorMessage = '';
@@ -73,10 +100,15 @@ export class DriverDashboard implements OnInit, OnDestroy {
           this.pickups = pickups;
           this.applyFilters();
           this.isLoading = false;
+          console.log( pickups.length);
         },
         error: (err) => {
           this.errorMessage = err.message || 'Failed to load data';
           this.isLoading = false;
+          console.error( err);
+          
+          if (err.message && (err.message.includes('Unauthorized') || err.message.includes('403'))) {
+          }
         }
       });
 
@@ -89,7 +121,6 @@ export class DriverDashboard implements OnInit, OnDestroy {
     this.loadData();
   }
 
-  // ========== Filters ==========
   setActiveFilter(status: PickupStatus | 'all'): void {
     this.activeFilter = status;
     this.applyFilters();
@@ -105,7 +136,6 @@ export class DriverDashboard implements OnInit, OnDestroy {
       .subscribe(filtered => this.filteredPickups = filtered);
   }
 
-  // ========== Actions ==========
   acceptPickup(id: string): void {
     this.isProcessing = true;
     this.clearMessages();
@@ -118,15 +148,16 @@ export class DriverDashboard implements OnInit, OnDestroy {
           this.successMessage = 'Assignment accepted!';
           this.applyFilters();
           this.autoHideSuccess();
+          console.log(id);
         },
         error: (err) => {
           this.isProcessing = false;
           this.errorMessage = err.message;
+          console.error(err);
         }
       });
   }
 
-  // ========== Reject Modal ==========
   openRejectModal(id: string): void {
     this.selectedPickupId = id;
     this.rejectReason = '';
@@ -154,15 +185,16 @@ export class DriverDashboard implements OnInit, OnDestroy {
           this.successMessage = 'Assignment rejected';
           this.applyFilters();
           this.autoHideSuccess();
+          console.log( this.selectedPickupId);
         },
         error: (err) => {
           this.isProcessing = false;
           this.errorMessage = err.message;
+          console.error( err);
         }
       });
   }
 
-  // ========== Complete Modal ==========
   openCompleteModal(id: string): void {
     this.selectedPickupId = id;
     this.completeNotes = '';
@@ -190,15 +222,16 @@ export class DriverDashboard implements OnInit, OnDestroy {
           this.successMessage = 'Assignment completed!';
           this.applyFilters();
           this.autoHideSuccess();
+          console.log('✅ Assignment completed:', this.selectedPickupId);
         },
         error: (err) => {
           this.isProcessing = false;
           this.errorMessage = err.message;
+          console.error( err);
         }
       });
   }
 
-  // ========== Helpers ==========
   getStatusLabel(status: PickupStatus): string {
     return getStatusLabel(status);
   }

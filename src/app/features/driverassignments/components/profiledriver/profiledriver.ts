@@ -1,14 +1,16 @@
-// profiledriver.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DriverSidebar } from "../driver-sidebar/driver-sidebar";
 import { DriverProfile, DriverStats, DriverProfileResponse } from '../../models/Profiledriver';
 import { DriverProfileService } from '../../services/driverprofileservice';
+import { AuthService } from '../../../../core/services/authservice'; 
+import { Navbar } from '../../../../shared/components/navbar/navbar';
+
 
 @Component({
-  imports: [FormsModule, CommonModule, DriverSidebar],
+  imports: [FormsModule, CommonModule, DriverSidebar,Navbar],
   selector: 'app-driver-profile',
   templateUrl: './profiledriver.html',
   styleUrls: ['./profiledriver.css']
@@ -23,7 +25,8 @@ export class Profiledriver implements OnInit {
   errorMessage: string = '';
   successMessage: string = '';
   
-  driverId: string = '22222222-2222-2222-2222-222222222222';
+  driverId: string = ''; // User ID
+  driverProfileId: string = ''; // Driver Profile ID
 
   sidebarData = {
     name: '',
@@ -55,16 +58,47 @@ export class Profiledriver implements OnInit {
 
   constructor(
     private driverProfileService: DriverProfileService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      if (params['id']) {
-        this.driverId = params['id'];
-      }
-    });
+    this.checkDriverAccess();
+  }
 
+  checkDriverAccess(): void {
+    const token = this.authService.getToken(); 
+    const userId = this.authService.getUserIdFromToken();
+    const userRole = this.authService.getUserRole();
+    const isDriver = this.authService.isDriver();
+    const isAdmin = this.authService.isAdmin();
+
+    console.log('🔐 Token exists:', !!token);
+    console.log('🔐 User ID:', userId);
+    console.log('🔐 Role:', userRole);
+    console.log('🔐 Is Driver:', isDriver);
+    console.log('🔐 Is Admin:', isAdmin);
+
+    if (!token) {
+      this.errorMessage = 'Please login to access your profile';
+      console.warn('⚠️ No token found - redirecting to login');
+      return;
+    }
+
+    if (!userId) {
+      this.errorMessage = 'Unable to identify user';
+      return;
+    }
+
+    if (!isDriver && !isAdmin) {
+      this.errorMessage = 'You need Driver privileges to access this page';
+      console.warn('⚠️ Not a driver - access denied');
+      return;
+    }
+
+    this.driverId = userId;
+    console.log( this.driverId);
     this.loadDriverProfile();
   }
 
@@ -75,6 +109,10 @@ export class Profiledriver implements OnInit {
     this.driverProfileService.getDriverProfile(this.driverId).subscribe({
       next: (response: DriverProfileResponse) => {
         this.apiResponse = response;
+        this.driverProfileId = response.id; 
+        
+        console.log( response);
+        console.log( this.driverProfileId);
         
         this.profileData = {
           FirstName: response.firstName,
@@ -103,16 +141,20 @@ export class Profiledriver implements OnInit {
 
         this.originalData = { ...this.profileData };
         this.isLoading = false;
+        console.log( response.email);
       },
       error: (error) => {
-        console.error('Error loading driver profile:', error);
-        this.errorMessage = 'failed to load driver profile. Please try again.';
+        console.error(error);
+        this.errorMessage = 'Failed to load driver profile. Please try again.';
         this.isLoading = false;
+        
+        if (error.message && (error.message.includes('Unauthorized') || error.message.includes('403'))) {
+          console.warn('⚠️ Unauthorized access - redirecting');
+        }
       }
     });
   }
 
-  // Toggle availability function
   toggleAvailability(): void {
     if (this.isTogglingAvailability) return;
     
@@ -125,17 +167,19 @@ export class Profiledriver implements OnInit {
       next: (result) => {
         this.stats.isAvailable = result;
         this.successMessage = this.stats.isAvailable ? 
-          'availability enabled successfully!' : 
-          'availability disabled successfully!';
+          'Availability enabled successfully!' : 
+          'Availability disabled successfully!';
         this.isTogglingAvailability = false;
+        
+        console.log( result);
         
         setTimeout(() => {
           this.successMessage = '';
         }, 3000);
       },
       error: (error) => {
-        console.error('Error updating availability:', error);
-        this.errorMessage = 'failed to update availability status. Please try again.';
+        console.error( error);
+        this.errorMessage = 'Failed to update availability status. Please try again.';
         this.isTogglingAvailability = false;
       }
     });
@@ -161,7 +205,7 @@ export class Profiledriver implements OnInit {
       firstName: this.profileData.FirstName,
       lastName: this.profileData.LastName,
       profileImageUrl: this.previewImage || this.profileData.profileImage || '',
-      phonenumber: this.profileData.phone,
+      phoneNumber: this.profileData.phone, 
       email: this.profileData.email,
       address: {
         street: addressParts.street,
@@ -171,9 +215,9 @@ export class Profiledriver implements OnInit {
       }
     };
 
-    this.driverProfileService.updateDriverProfile(this.driverId, updateRequest).subscribe({
+   
+    this.driverProfileService.updateDriverProfile(this.driverProfileId, updateRequest).subscribe({
       next: (response) => {
-        console.log('Profile updated successfully:', response);
         this.successMessage = 'Profile updated successfully!';
         this.isEditing = false;
         this.isSaving = false;
@@ -194,9 +238,17 @@ export class Profiledriver implements OnInit {
         }, 3000);
       },
       error: (error) => {
-        console.error('Error updating profile:', error);
-        this.errorMessage =  'failed to save changes. Please try again.';
+        console.error(error);
+        
+       
+        if (error.error) {
+          this.errorMessage = JSON.stringify(error.error, null, 2);
+        } else {
+          this.errorMessage = 'Failed to save changes. Please try again.';
+        }
+        
         this.isSaving = false;
+        
       }
     });
   }
@@ -214,7 +266,7 @@ export class Profiledriver implements OnInit {
     const file = event.target.files[0];
     if (file) {
       if (!file.type.startsWith('image/')) {
-        this.errorMessage = 'please select a valid image file.';
+        this.errorMessage = 'Please select a valid image file.';
         return;
       }
 
@@ -254,18 +306,17 @@ export class Profiledriver implements OnInit {
   private calculateEarnings(totalTrips: number): string {
     const earningsPerTrip = 134;
     const total = totalTrips * earningsPerTrip;
-    return `₹${total.toLocaleString('en-IN')}`;
+    return `EG${total.toLocaleString('en-IN')}`;
   }
 
   private uploadImage(file: File): void {
     this.driverProfileService.uploadProfileImage(file).subscribe({
       next: (response) => {
         this.previewImage = response.imageUrl;
-        console.log('Image uploaded successfully:', response.imageUrl);
       },
       error: (error) => {
-        console.error('Error uploading image:', error);
-        this.errorMessage = 'failed to upload image. Please try again.';
+        console.error( error);
+        this.errorMessage = 'Failed to upload image. Please try again.';
       }
     });
   }

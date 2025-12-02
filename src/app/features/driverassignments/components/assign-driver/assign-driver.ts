@@ -1,13 +1,18 @@
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AssignmentRequest, Driver, Request } from '../../models/assignment';
 import { DriverService } from '../../services/driver';
+import { AuthService } from '../../../../core/services/authservice'; 
+import { Navbar } from '../../../../shared/components/navbar/navbar';
+import { AdminSidebarComponent } from '../../../../shared/components/admin-sidebar/admin-sidebar';
 
 @Component({
   selector: 'app-assign-driver',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,Navbar, AdminSidebarComponent],
   templateUrl: './assign-driver.html',
   styleUrls: ['./assign-driver.css']
 })
@@ -18,16 +23,46 @@ export class AssignDriver implements OnInit {
   isLoading = false;
   errorMessage = '';
   
-  // Modal properties
   showConfirmModal = false;
   showSuccessModal = false;
   showErrorModal = false;
   modalMessage = '';
   pendingDriver: Driver | null = null;
 
-  constructor(private driverService: DriverService) {}
+  constructor(
+    private driverService: DriverService,
+    private authService: AuthService, // ⬅️ بدل AuthHelperService
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
+    this.checkAdminAccess();
+  }
+
+  checkAdminAccess(): void {
+    const token = this.authService.getToken();
+    const isAdmin = this.authService.isAdmin();
+    const userId = this.authService.getUserIdFromToken();
+
+    console.log('🔐 Token exists:', !!token);
+    console.log('🔐 User ID:', userId);
+    console.log('🔐 Is Admin:', isAdmin);
+
+    if (!token) {
+      this.errorMessage = 'Please login to access this page';
+      console.warn('⚠️ No token found - redirecting to login');
+      // this.router.navigate(['/login']);
+      return;
+    }
+
+    if (!isAdmin) {
+      this.errorMessage = 'You need Admin privileges to access this page';
+      console.warn('⚠️ Not an admin - access denied');
+      // this.router.navigate(['/unauthorized']);
+      return;
+    }
+
+    console.log('✅ Admin access confirmed - loading data');
     this.loadData();
   }
 
@@ -38,11 +73,15 @@ export class AssignDriver implements OnInit {
     this.driverService.getApprovedRequests().subscribe({
       next: (requests) => {
         this.approvedRequests = requests;
-        console.log('Requests loaded:', requests);
+        console.log('✅ Requests loaded:', requests.length, 'requests');
       },
       error: (error) => {
         this.errorMessage = error.message || 'Failed to load requests';
-        console.error(error);
+        console.error('❌ Error loading requests:', error);
+        
+        if (error.message.includes('Unauthorized')) {
+          // this.router.navigate(['/login']);
+        }
       }
     });
 
@@ -50,19 +89,23 @@ export class AssignDriver implements OnInit {
       next: (drivers) => {
         this.availableDrivers = drivers;
         this.isLoading = false;
-        console.log('Available Drivers loaded:', drivers);
+        console.log('✅ Available Drivers loaded:', drivers.length, 'drivers');
       },
       error: (error) => {
         this.errorMessage = error.message || 'Failed to load drivers';
         this.isLoading = false;
-        console.error(error);
+        console.error('❌ Error loading drivers:', error);
+        
+        if (error.message.includes('Unauthorized')) {
+          // this.router.navigate(['/login']);
+        }
       }
     });
   }
 
   selectRequest(request: Request): void {
     this.selectedRequest = request;
-    console.log('Selected:', request);
+    console.log('📋 Selected request:', request.id);
   }
 
   assignToDriver(driver: Driver): void {
@@ -70,7 +113,6 @@ export class AssignDriver implements OnInit {
       return;
     }
 
-    // Show confirmation 
     this.pendingDriver = driver;
     this.modalMessage = `Are you sure you want to assign Request ${this.selectedRequest.id} to Driver ${driver.name}?`;
     this.showConfirmModal = true;
@@ -94,18 +136,15 @@ export class AssignDriver implements OnInit {
 
     this.driverService.assignRequestToDriver(assignment).subscribe({
       next: (response) => {
-        console.log('Assignment successful:', response);
+        console.log('✅ Assignment successful:', response);
         
-        // Show success 
         this.modalMessage = `Request ${this.selectedRequest?.id} has been assigned to Driver ${driver.name} successfully!`;
         this.showSuccessModal = true;
         
-        // Remove assigned request from the list
         this.approvedRequests = this.approvedRequests.filter(
           req => req.id !== this.selectedRequest?.id
         );
         
-        // Update driver's pickups count
         driver.todayPickups++;
         
         this.selectedRequest = null;
@@ -115,9 +154,8 @@ export class AssignDriver implements OnInit {
       error: (error) => {
         this.errorMessage = error.message || 'Failed to assign request to driver';
         this.isLoading = false;
-        console.error('Error assigning request:', error);
+        console.error('❌ Error assigning request:', error);
         
-        // Show error 
         this.modalMessage = this.errorMessage;
         this.showErrorModal = true;
         this.pendingDriver = null;

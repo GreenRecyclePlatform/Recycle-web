@@ -600,4 +600,38 @@
     flex: 1;
     justify-content: center;
   }
+  /* ✅ حل المسافة نهائيًا */
+
+:host {
+  display: block;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.dashboard-layout {
+  display: flex;
+  width: 100%;
+  min-height: calc(100vh - 70px); /* ارتفاع الـ navbar */
+  margin: 0;
+  padding: 0;
+}
+
+app-driver-sidebar {
+  flex: 0 0 280px;
+}
+
+.main-content2 {
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  background: #f9fafb;
+}
+
+.page-content {
+  padding: 24px;
+  margin: 0;
+}
+
+  
 }

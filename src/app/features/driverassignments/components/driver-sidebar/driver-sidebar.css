@@ -1,7 +1,11 @@
 /* driver-sidebar.component.css */
 
-/* ========== Variables ========== */
+/* ========== Host (IMPORTANT FIX) ========== */
 :host {
+  width: 280px;
+  min-width: 280px;
+  display: block;
+
   --primary-green: #2D6A4F;
   --primary-green-dark: #1e4d38;
   --primary-green-light: #d8f3dc;
@@ -22,14 +26,13 @@
 
 /* ========== Sidebar Container ========== */
 .sidebar {
-  width: 280px;
+  width: 100%;
   background: var(--white);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
   min-height: 100vh;
-  position: relative;
   border-right: 1px solid var(--gray-200);
 }
 
@@ -90,24 +93,6 @@
   font-size: 0.875rem;
   margin: 0 0 0.5rem;
   font-weight: 500;
-}
-
-/* Rating Badge */
-.driver-rating {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  background: var(--warning);
-  color: var(--white);
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  margin-top: 0.5rem;
-}
-
-.driver-rating i {
-  font-size: 0.75rem;
 }
 
 /* ========== Navigation Menu ========== */
@@ -172,70 +157,28 @@
   line-height: 1;
 }
 
-.nav-item.active .badge {
-  background: var(--white);
-  color: var(--primary-green);
-}
-
 /* ========== Responsive ========== */
 @media (max-width: 768px) {
-  .sidebar {
+  :host {
     width: 100%;
+    min-width: 100%;
+  }
+
+  .sidebar {
     min-height: auto;
     padding: 1rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     border-right: none;
     border-bottom: 1px solid var(--gray-200);
-  }
-
-  .driver-profile {
-    padding: 1rem;
-    margin-bottom: 1rem;
-  }
-
-  .driver-avatar,
-  .driver-avatar-image {
-    width: 48px;
-    height: 48px;
-    font-size: 1.25rem;
-  }
-
-  .driver-avatar-image {
-    border-width: 2px;
-  }
-
-  .driver-name {
-    font-size: 1rem;
-  }
-
-  .driver-rating {
-    font-size: 0.75rem;
-    padding: 0.2rem 0.6rem;
   }
 
   .nav-menu {
     flex-direction: row;
     overflow-x: auto;
-    gap: 0.5rem;
   }
 
   .nav-item {
     flex-direction: column;
-    padding: 0.75rem;
     min-width: 80px;
     text-align: center;
-    gap: 0.25rem;
-  }
-
-  .nav-item span:not(.badge) {
-    font-size: 0.75rem;
-  }
-
-  .nav-item .badge {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    min-width: 18px;
-    padding: 0.125rem 0.375rem;
   }
 }

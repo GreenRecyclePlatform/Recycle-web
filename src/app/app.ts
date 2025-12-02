@@ -19,7 +19,7 @@ import { Profiledriver } from './features/driverassignments/components/profiledr
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrls: ['./app.css'],
-  imports: [RouterOutlet],
+  imports: [RouterOutlet,Profiledriver],
     //imports: [AssignDriver, RouterOutlet, DriverDashboard, AllDrivers, LandingPage, Navbar, DriverSidebar, Profiledriver], 
 
 })
