@@ -30,6 +30,8 @@ import { LoginPage } from './features/auth/login-page/login-page';
 import { RegistrationPage } from './features/auth/registration-page/registration-page';
 import { ForgotPasswordPage } from './features/auth/forgot-password/forgot-password';
 import { ResetPassword } from './features/auth/reset-password/reset-password';
+import { TestNotificationsComponent } from './pages/test-notifications/test-notifications.component';
+import { ProfileComponent } from './features/profile/profile.component';
 import { Profiledriver } from './features/driverassignments/components/profiledriver/profiledriver';
 
 export const routes: Routes = [
