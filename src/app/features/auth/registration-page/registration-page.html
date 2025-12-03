@@ -51,53 +51,282 @@
           <div class="row g-3 mb-3">
             <div appearance="outline" class="col-md-6">
               <label>first Name *</label>
-              <input placeholder="John Doe" formControlName="firstName" required />
+              <input
+                [class.error-border]="hasError('firstName')"
+                placeholder="John Doe"
+                formControlName="firstName"
+                required
+              />
+
+              @if(hasError('firstName')){
+
+              <p class="error text-danger mb-0 d-flex gap-1 mt-2 align-items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-circle-alert w-4 h-4"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" x2="12" y1="8" y2="12"></line>
+                  <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                </svg>
+                {{ errorMessage('firstName') }}
+              </p>
+              }
             </div>
 
             <div appearance="outline" class="col-md-6">
               <label>last Name *</label>
-              <input placeholder="Doe" formControlName="lastName" required />
+              <input
+                [class.error-border]="hasError('lastName')"
+                placeholder="Doe"
+                formControlName="lastName"
+              />
+
+              @if(hasError('lastName')){
+
+              <p class="error text-danger mb-0 d-flex gap-1 mt-2 align-items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-circle-alert w-4 h-4"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" x2="12" y1="8" y2="12"></line>
+                  <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                </svg>
+                {{ errorMessage('lastName') }}
+              </p>
+              }
             </div>
           </div>
 
           <div class="row g-3 mb-3">
             <div class="col-md-6" appearance="outline">
               <label>Email Address *</label>
-              <input type="email" placeholder="you@example.com" formControlName="email" required />
+              <input
+                [class.error-border]="hasError('email')"
+                type="email"
+                placeholder="you@example.com"
+                formControlName="email"
+                required
+              />
+
+              @if(hasError('email')){
+
+              <p class="error text-danger mb-0 d-flex gap-1 mt-2 align-items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-circle-alert w-4 h-4"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" x2="12" y1="8" y2="12"></line>
+                  <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                </svg>
+                {{ errorMessage('email') }}
+              </p>
+              }
             </div>
 
             <div class="col-md-6">
               <label>User Name *</label>
-              <input placeholder="Joe-D77" formControlName="userName" required />
+              <input
+                [class.error-border]="hasError('userName')"
+                placeholder="Joe-D77"
+                formControlName="userName"
+                required
+              />
+
+              @if(hasError('userName')){
+
+              <p class="error text-danger mb-0 d-flex gap-1 mt-2 align-items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-circle-alert w-4 h-4"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" x2="12" y1="8" y2="12"></line>
+                  <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                </svg>
+                {{ errorMessage('userName') }}
+              </p>
+              }
             </div>
           </div>
 
           <div class="row g-3 mb-3">
             <div class="col-md-6">
               <label>Phone Number *</label>
-              <input placeholder="+123 456 7890" formControlName="phone" required />
+              <input
+                [class.error-border]="hasError('phone')"
+                placeholder="+123 456 7890"
+                formControlName="phone"
+                required
+              />
+
+              @if(hasError('phone')){
+
+              <p class="error text-danger mb-0 d-flex gap-1 mt-2 align-items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-circle-alert w-4 h-4"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" x2="12" y1="8" y2="12"></line>
+                  <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                </svg>
+                {{ errorMessage('phone') }}
+              </p>
+              }
             </div>
 
             <div class="col-md-6">
               <label>Date of Birth *</label>
-              <input type="date" formControlName="birthDate" required />
+              <input
+                [class.error-border]="hasError('birthDate')"
+                type="date"
+                formControlName="birthDate"
+                required
+              />
+
+              @if(hasError('birthDate')){
+
+              <p class="error text-danger mb-0 d-flex gap-1 mt-2 align-items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-circle-alert w-4 h-4"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" x2="12" y1="8" y2="12"></line>
+                  <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                </svg>
+                {{ errorMessage('birthDate') }}
+              </p>
+              }
             </div>
           </div>
 
           <div class="row g-3 mb-3">
             <div class="col-md-6">
               <label>Password *</label>
-              <input type="password" placeholder="••••••••" formControlName="password" required />
+              <input
+                [class.error-border]="hasError('password')"
+                type="password"
+                placeholder="••••••••"
+                formControlName="password"
+                required
+              />
+
+              @if(hasError('password')){
+
+              <p class="error text-danger mb-0 d-flex gap-1 mt-2 align-items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-circle-alert w-4 h-4"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" x2="12" y1="8" y2="12"></line>
+                  <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                </svg>
+                {{ errorMessage('password') }}
+              </p>
+              }
             </div>
 
             <div class="col-md-6">
               <label>Confirm Password *</label>
               <input
+                [class.error-border]="hasError('confirmPassword')"
                 type="password"
                 placeholder="••••••••"
                 formControlName="confirmPassword"
                 required
               />
+
+              @if(hasError('confirmPassword')){
+
+              <p class="error text-danger mb-0 d-flex gap-1 mt-2 align-items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-circle-alert w-4 h-4"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" x2="12" y1="8" y2="12"></line>
+                  <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                </svg>
+                {{ errorMessage('confirmPassword') }}
+              </p>
+              }
             </div>
           </div>
 
@@ -142,22 +371,135 @@
           <div class="row g-3 mb-3">
             <div class="col-md-6">
               <label>Street</label>
-              <input placeholder="Street" formControlName="street" />
-            </div>
+              <input
+                [class.error-border]="hasError('street')"
+                placeholder="Street"
+                formControlName="street"
+              />
 
-            <div class="col-md-6">
-              <label>Governorate</label>
-              <input placeholder="Governorate" formControlName="governorate" />
+              @if(hasError('street')){
+
+              <p class="error text-danger mb-0 d-flex gap-1 mt-2 align-items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-circle-alert w-4 h-4"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" x2="12" y1="8" y2="12"></line>
+                  <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                </svg>
+                {{ errorMessage('street') }}
+              </p>
+              }
             </div>
 
             <div class="col-md-6">
               <label>City</label>
-              <input placeholder="Mumbai" formControlName="city" />
+              <input
+                [class.error-border]="hasError('city')"
+                placeholder="Mumbai"
+                formControlName="city"
+              />
+
+              @if(hasError('city')){
+
+              <p class="error text-danger mb-0 d-flex gap-1 mt-2 align-items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-circle-alert w-4 h-4"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" x2="12" y1="8" y2="12"></line>
+                  <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                </svg>
+                {{ errorMessage('city') }}
+              </p>
+              }
+            </div>
+
+            <div class="col-md-6">
+              <label>Governorate</label>
+              <input
+                [class.error-border]="hasError('governorate')"
+                placeholder="Governorate"
+                formControlName="governorate"
+              />
+
+              @if(hasError('governorate')){
+
+              <p class="error text-danger mb-0 d-flex gap-1 mt-2 align-items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-circle-alert w-4 h-4"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" x2="12" y1="8" y2="12"></line>
+                  <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                </svg>
+                {{ errorMessage('governorate') }}
+              </p>
+              }
             </div>
 
             <div class="col-md-6">
               <label>Postalcode</label>
-              <input matInput placeholder="12345" formControlName="postalcode" />
+              <input
+                [class.error-border]="hasError('postalcode')"
+                matInput
+                placeholder="12345"
+                formControlName="postalcode"
+              />
+
+              @if(hasError('postalcode')){
+
+              <p class="error text-danger mb-0 d-flex gap-1 mt-2 align-items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-circle-alert w-4 h-4"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" x2="12" y1="8" y2="12"></line>
+                  <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                </svg>
+                {{ errorMessage('postalcode') }}
+              </p>
+              }
             </div>
           </div>
 
@@ -178,13 +520,6 @@
                 placeholder="Profile Image"
               />
             </div>
-
-            <!-- <div class="col-md-6">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Vehicle Number</mat-label>
-                <input matInput placeholder="MH-01-AB-1234" formControlName="vehicleNumber" />
-              </mat-form-field>
-            </div> -->
           </div>
           }
 
@@ -221,13 +556,7 @@
             <lucide-icon [name]="ChevronRight" [size]="18" class="ms-1"></lucide-icon>
           </button>
           @if(step === 2) {
-          <button
-            type="submit"
-            mat-raised-button
-            color="primary"
-            class="btn-primary create"
-            [disabled]="!registrationForm.valid"
-          >
+          <button type="submit" mat-raised-button color="primary" class="btn-primary create">
             Create Account
           </button>
           }
