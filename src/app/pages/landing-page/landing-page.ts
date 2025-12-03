@@ -1,3 +1,5 @@
+//neww
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -87,7 +89,7 @@ export class LandingPage implements OnInit {
     {
       question: 'What areas do you serve?',
       answer:
-        'We currently operate in major cities across India. Enter your pincode during registration to check if we service your area.',
+        'We currently operate in major cities across Egypt. Enter your pincode during registration to check if we service your area.',
       isOpen: false,
     },
   ];
@@ -132,6 +134,16 @@ export class LandingPage implements OnInit {
   }
 
   scrollToSection(sectionId: string) {
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const navbarHeight = 64; // Height of navbar in pixels (4rem)
+      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = elementPosition - navbarHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
   }
 }

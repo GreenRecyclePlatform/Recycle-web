@@ -8,15 +8,16 @@
         >
           <lucide-icon [name]="Leaf" [size]="24" class="text-white"></lucide-icon>
         </div>
-        <span class="text-dark">RecycleHub</span>
+        <span class="text-dark fw-semibold">RecycleHub</span>
       </a>
 
       <!-- Navigation Links -->
       <div class="d-none d-md-flex align-items-center gap-4">
-        <a routerLink="/" class="text-dark text-decoration-none hover-primary-green">Home</a>
-        <a routerLink="/" fragment="how-it-works" class="text-dark text-decoration-none hover-primary-green">How It Works</a>
-        <a routerLink="/" fragment="materials" class="text-dark text-decoration-none hover-primary-green" >Materials</a>
-        <a  routerLink="/" fragment="contact" class="text-dark text-decoration-none hover-primary-green">Contact</a>
+        <a routerLink="/" class="nav-link text-dark text-decoration-none hover-primary-green">Home</a>
+        <a (click)="scrollToSection('how-it-works')" class="nav-link text-dark text-decoration-none hover-primary-green" style="cursor: pointer;">How It Works</a>
+        <a (click)="scrollToSection('materials')" class="nav-link text-dark text-decoration-none hover-primary-green" style="cursor: pointer;">Materials</a>
+        <a (click)="scrollToSection('faq')" class="nav-link text-dark text-decoration-none hover-primary-green" style="cursor: pointer;">FAQ</a>
+        <a (click)="scrollToSection('contact')" class="nav-link text-dark text-decoration-none hover-primary-green" style="cursor: pointer;">Contact</a>
       </div>
 
       <!-- Right side actions -->
@@ -31,17 +32,17 @@
           </div>
         } @else {
           <!-- Authenticated State -->
-          
+
           <!-- Notification Bell -->
           <div class="notification-bell-wrapper position-relative">
-            <button 
-              mat-icon-button 
+            <button
+              mat-icon-button
               class="notification-bell-btn position-relative"
               (click)="toggleNotificationDropdown()"
               [class.active]="isNotificationDropdownOpen"
             >
               <lucide-icon [name]="Bell" [size]="20"></lucide-icon>
-              
+
               <!-- Unread badge -->
               <span
                 *ngIf="unreadCount > 0"
@@ -63,7 +64,7 @@
           <button mat-menu-item (click)="logout()" class="logout-btn">
             <lucide-icon [name]="LogOut" [size]="16" class="me-2"></lucide-icon>
             Logout
-        </button>
+          </button>
 
         }
       </div>
