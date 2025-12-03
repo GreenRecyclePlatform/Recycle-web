@@ -103,6 +103,64 @@
   opacity: 0.1;
 }
 
+/* Loading Overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.95);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(3px);
+}
+
+.loading-overlay .spinner-border {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-width: 0.35rem;
+  color: #2D6A4F;
+}
+
+.loading-overlay p {
+  color: #2D6A4F;
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+}
+
+/* Button Loading States */
+.btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.btn-success:disabled {
+  background-color: #2D6A4F;
+  border-color: #2D6A4F;
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15em;
+}
+
+/* Button with spinner animation */
+.btn .spinner-border {
+  animation: spinner-border 0.75s linear infinite;
+}
+
+@keyframes spinner-border {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .nav-tabs {
@@ -124,6 +182,15 @@
   .list-group-item {
     padding: 0.75rem 1rem;
   }
+
+  .loading-overlay .spinner-border {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .loading-overlay p {
+    font-size: 1rem;
+  }
 }
 
 /* Form styling improvements */
@@ -138,6 +205,13 @@
   border-radius: 6px;
   border: 1px solid #ced4da;
   padding: 0.625rem 0.875rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  background-color: #e9ecef;
+  opacity: 1;
 }
 
 /* Icon styling */
@@ -159,4 +233,34 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Success feedback animation */
+.btn-success.saved {
+  animation: successPulse 0.4s ease-in-out;
+}
+
+@keyframes successPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Smooth transitions */
+.btn,
+.form-control,
+.form-select,
+.form-check-input {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Focus visible for accessibility */
+.btn:focus-visible,
+.form-control:focus-visible,
+.form-select:focus-visible {
+  outline: 2px solid #2D6A4F;
+  outline-offset: 2px;
 }
