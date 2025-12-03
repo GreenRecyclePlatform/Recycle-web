@@ -19,12 +19,18 @@
       <form [formGroup]="loginForm" (ngSubmit)="handleLogin()" class="login-form">
         <!-- Login Method Toggle -->
         <div class="login-toggle">
-          <button type="button" [class]="'login-toggle-btn ' + (loginMethod === 'email' ? 'active' : '')"
-            (click)="toggleLoginMethod('email')">
+          <button
+            type="button"
+            [class]="'login-toggle-btn ' + (loginMethod === 'email' ? 'active' : '')"
+            (click)="toggleLoginMethod('email')"
+          >
             Email
           </button>
-          <button type="button" [class]="'login-toggle-btn ' + (loginMethod === 'username' ? 'active' : '')"
-            (click)="toggleLoginMethod('username')">
+          <button
+            type="button"
+            [class]="'login-toggle-btn ' + (loginMethod === 'username' ? 'active' : '')"
+            (click)="toggleLoginMethod('username')"
+          >
             Username
           </button>
         </div>
@@ -32,39 +38,97 @@
         <div class="w-100">
           <label>{{ loginMethod === 'email' ? 'Email Address' : 'Username' }}</label>
 
-          <input [type]="loginMethod === 'email' ? 'email' : 'text'"
-            [placeholder]="loginMethod === 'email' ? 'you@example.com' : 'yourusername'" formControlName="email"
-            required />
+          <input
+            [class.error-border]="hasError('email')"
+            [type]="loginMethod === 'email' ? 'email' : 'text'"
+            [placeholder]="loginMethod === 'email' ? 'you@example.com' : 'yourusername'"
+            formControlName="email"
+            required
+          />
+
+          @if(hasError('email')){
+
+          <p class="error text-danger mb-0 d-flex gap-1 mt-2 align-items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-circle-alert w-4 h-4"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" x2="12" y1="8" y2="12"></line>
+              <line x1="12" x2="12.01" y1="16" y2="16"></line>
+            </svg>
+            {{ errorMessage('email') }}
+          </p>
+          }
         </div>
 
         <div class="w-100">
           <label>Password</label>
           <!-- <mat-form-field appearance="outline" class="w-100"> -->
           <!-- <mat-label>Password</mat-label> -->
-          <input matInput type="password" placeholder="••••••••" formControlName="password" required />
-          <!-- </mat-form-field> -->
+          <input
+            [class.error-border]="hasError('password')"
+            matInput
+            type="password"
+            placeholder="••••••••"
+            formControlName="password"
+            required
+          />
+          @if(hasError('password')){
+
+          <p class="error text-danger mb-0 d-flex gap-1 mt-2 align-items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-circle-alert w-4 h-4"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" x2="12" y1="8" y2="12"></line>
+              <line x1="12" x2="12.01" y1="16" y2="16"></line>
+            </svg>
+            {{ errorMessage('password') }}
+          </p>
+          }
         </div>
 
         <div class="login-options">
           <mat-checkbox formControlName="rememberMe">Remember me</mat-checkbox>
-          <a routerLink="/forgot-password" class="small text-primary text-decoration-none">Forgot password?</a>
+          <a routerLink="/forgot-password" class="small text-primary text-decoration-none"
+            >Forgot password?</a
+          >
         </div>
 
-        <button type="submit" class="w-100 btn-primary" [disabled]="!loginForm.valid">
-          Sign In
-        </button>
+        <button type="submit" class="w-100 btn-primary">Sign In</button>
 
-        <div class="login-divider">
-          <div class="login-divider-text">
-            <span>Or</span>
-          </div>
+        <!-- <div class="login-divider"> -->
+        <div class="login-divider-text mt-2 mb-2">
+          <span>Or</span>
         </div>
+        <!-- </div> -->
 
         <div class="text-center">
           <p class="small text-secondary">
             Don't have an account?
             <a routerLink="/register" class="text-primary-green text-decoration-none">
-              Register here</a>
+              Register here</a
+            >
           </p>
         </div>
       </form>

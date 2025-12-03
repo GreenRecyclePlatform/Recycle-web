@@ -14,6 +14,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { LucideAngularModule, Leaf, User, Truck, ChevronRight, ChevronLeft } from 'lucide-angular';
 import { RegisterRequest } from '../../../core/models/auth-response';
 import { DriverProfileService } from '../../../core/services/driverprofileservice';
+import { passwordUpperValidator } from '../../../core/validators/passwordUpperValidator';
+import { passwordLowerValidator } from '../../../core/validators/passwordLowerValidator';
+import { passwordSpecialValidator } from '../../../core/validators/passwordSpecialValidator';
+import { passwordMatchValidator } from '../../../core/validators/passwordMatchValidator';
 
 interface Role {
   id: string;
@@ -72,23 +76,37 @@ export class RegistrationPage {
     private authService: AuthService,
     private driverProfileService: DriverProfileService
   ) {
-    this.registrationForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      userName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', Validators.required],
-      birthDate: ['', Validators.required],
-      password: ['', Validators.required],
-      confirmPassword: ['', Validators.required],
-      role: ['', Validators.required],
-      street: ['', Validators.required],
-      governorate: ['', Validators.required],
-      city: ['', Validators.required],
-      postalcode: ['', Validators.required],
-      IDNumber: [''],
-      termsAccepted: [false, Validators.requiredTrue],
-    });
+    this.registrationForm = this.fb.group(
+      {
+        firstName: ['', [Validators.required, Validators.minLength(3)]],
+        lastName: ['', [Validators.required, Validators.minLength(3)]],
+        userName: ['', [Validators.required, Validators.minLength(3)]],
+        email: ['', [Validators.required, Validators.email]],
+        phone: ['', Validators.required],
+        birthDate: ['', Validators.required],
+        password: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            passwordUpperValidator,
+            passwordLowerValidator,
+            passwordSpecialValidator,
+          ],
+        ],
+        confirmPassword: ['', Validators.required],
+        role: ['', Validators.required],
+        street: ['', Validators.required],
+        governorate: ['', Validators.required],
+        city: ['', Validators.required],
+        postalcode: ['', Validators.required],
+        IDNumber: [''],
+        termsAccepted: [false, Validators.requiredTrue],
+      },
+      {
+        validators: passwordMatchValidator('password', 'confirmPassword'),
+      }
+    );
   }
 
   get progress(): number {
@@ -119,8 +137,20 @@ export class RegistrationPage {
         !confirmPassword ||
         !role
       ) {
+        Object.keys(this.registrationForm.controls).forEach((key) => {
+          this.registrationForm.get(key)?.markAsTouched();
+        });
+
         this.snackBar.open('Please fill all required fields and select a role', 'Close', {
           duration: 3000,
+        });
+
+        const page2Fields = ['street', 'governorate', 'city', 'postalcode'];
+
+        page2Fields.forEach((field) => {
+          const control = this.registrationForm.get(field);
+          control?.markAsPristine();
+          control?.markAsUntouched();
         });
         return;
       }
@@ -176,13 +206,79 @@ export class RegistrationPage {
     }
   }
 
+  private getFieldLabel(fieldName: string): string {
+    const labels: { [key: string]: string } = {
+      firstName: 'First Name',
+      lastName: 'Last Name',
+      email: 'Email',
+      userName: 'Username',
+      phone: 'Phone Number',
+      birthDate: 'Date OF Birth',
+      password: 'Password',
+      confirmPassword: 'Confirm Password',
+      role: 'Role',
+      street: 'Street',
+      city: 'City',
+      governorate: 'Governorate',
+      postalcode: 'PostalCode',
+    };
+    return labels[fieldName] || fieldName;
+  }
+
+  hasError(fieldName: string): boolean {
+    const field = this.registrationForm.get(fieldName);
+    return (field?.invalid && (field?.dirty || field?.touched)) || false;
+  }
+
+  errorMessage(fieldName: string) {
+    const field = this.registrationForm.get(fieldName);
+
+    if (!field || !field.errors) {
+      return '';
+    }
+
+    if (field.errors['required']) {
+      return `${this.getFieldLabel(fieldName)} is required`;
+    }
+
+    if (field.errors['minlength']) {
+      const requiredLength = field.errors['minlength'].requiredLength;
+      return `${this.getFieldLabel(fieldName)} must be at least ${requiredLength} characters`;
+    }
+
+    if (field.errors['email']) {
+      return 'Email is not Valid';
+    }
+
+    if (field.errors['passwordUpper']) {
+      return 'Password must contain uppercase character';
+    }
+
+    if (field.errors['passwordLower']) {
+      return 'Password must contain lowercase character';
+    }
+
+    if (field.errors['passwordSpecial']) {
+      return 'Password must contain special character';
+    }
+    if (field.errors['passwordMismatch']) {
+      return 'Password and confirm Password must be same';
+    }
+
+    return '';
+  }
+
   handleSubmit(): void {
     const { street, city, governorate, postalcode } = this.registrationForm.value;
 
     if (!street || !city || !governorate || !postalcode) {
-      this.snackBar.open('Please fill all required fields', 'Close', {
-        duration: 3000,
+      const page2Fields = ['street', 'governorate', 'city', 'postalcode'];
+
+      page2Fields.forEach((field) => {
+        const control = this.registrationForm.get(field);
+        control?.markAsTouched();
       });
+
       return;
     }
 
@@ -191,11 +287,11 @@ export class RegistrationPage {
       return;
     }
 
-    const { password, confirmPassword } = this.registrationForm.value;
-    if (password !== confirmPassword) {
-      this.snackBar.open('Passwords do not match', 'Close', { duration: 3000 });
-      return;
-    }
+    // const { password, confirmPassword } = this.registrationForm.value;
+    // if (password !== confirmPassword) {
+    //   this.snackBar.open('Passwords do not match', 'Close', { duration: 3000 });
+    //   return;
+    // }
     const registerRequest: RegisterRequest = {
       firstName: this.registrationForm.value.firstName,
       lastName: this.registrationForm.value.lastName,
