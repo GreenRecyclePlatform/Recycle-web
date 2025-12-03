@@ -208,3 +208,13 @@ button[type='submit'] {
   align-items: center;
   justify-content: center;
 }
+
+.error {
+  font-size: 0.875rem;
+}
+
+/* Red border for invalid inputs */
+input.error-border {
+  outline: 3px solid #dc3545;
+  outline-offset: 2px;
+}

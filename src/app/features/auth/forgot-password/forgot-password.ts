@@ -48,6 +48,28 @@ export class ForgotPasswordPage {
     });
   }
 
+  hasError(fieldName: string): boolean {
+    const field = this.forgotPasswordForm.get(fieldName);
+    return !!(field?.touched || field?.dirty) && field?.invalid;
+  }
+
+  errorMessage() {
+    const field = this.forgotPasswordForm.get('email');
+
+    if (!field || !field.errors) {
+      return '';
+    }
+
+    if (field.errors['required']) {
+      return `Email is required`;
+    }
+
+    if (field.errors['email']) {
+      return 'Email is not Valid';
+    }
+    return '';
+  }
+
   handleSubmit(): void {
     if (this.forgotPasswordForm.valid) {
       const forgotRequest: ForgotRequest = {
@@ -65,6 +87,10 @@ export class ForgotPasswordPage {
 
       this.snackBar.open('Password reset link sent to your email!', 'Close', { duration: 3000 });
     } else {
+      Object.keys(this.forgotPasswordForm.controls).forEach((key) => {
+        this.forgotPasswordForm.get(key)?.markAsTouched();
+      });
+
       this.snackBar.open('Please enter your email address', 'Close', { duration: 3000 });
     }
   }

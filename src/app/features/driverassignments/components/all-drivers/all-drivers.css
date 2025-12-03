@@ -1,0 +1,390 @@
+/* =========================
+   Page Background
+   ========================= */
+.all-drivers-container {
+  background-color: #fafafa;
+  min-height: 100vh;
+  padding-bottom: 2rem;
+}
+
+
+/* =========================
+   Stat Cards Styles
+   ========================= */
+.stat-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border-radius: 1rem;
+  min-height: 140px;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.stat-card .card-body {
+  padding: 1.5rem !important;
+}
+
+.stat-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-icon-wrapper mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+/* =========================
+   Search & Filter Inputs
+   ========================= */
+.search-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  padding-left: 3rem !important;
+  border: 1px solid #dee2e6;
+  border-radius: 0.75rem;
+  height: 56px;
+  font-size: 0.95rem;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 0.2rem rgba(45, 106, 79, 0.15);
+  background-color: white;
+}
+
+.search-input::placeholder {
+  color: #adb5bd;
+}
+
+.filter-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.filter-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+}
+
+.filter-select {
+  padding-left: 3rem !important;
+  border: 1px solid #dee2e6;
+  border-radius: 0.75rem;
+  height: 56px;
+  font-size: 0.95rem;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-select:focus {
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 0.2rem rgba(45, 106, 79, 0.15);
+  background-color: white;
+}
+
+/* =========================
+   Drivers Table Card
+   ========================= */
+.drivers-table-card {
+  border-radius: 1rem;
+  min-height: 800px;
+  border: 1px solid #e0e0e0;
+}
+
+.drivers-table-card .card-header {
+  background-color: #fafafa;
+  border-bottom: 2px solid #f0f0f0;
+  border-radius: 1rem 1rem 0 0;
+}
+
+/* =========================
+   Table Styles
+   ========================= */
+.drivers-table {
+  font-size: 0.95rem;
+  background-color: white;
+}
+
+.drivers-table thead th {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #747677;
+  text-transform: capitalize;
+  letter-spacing: 0;
+  background-color: #fafafa;
+}
+
+.driver-row {
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.driver-row:hover {
+  background-color: #fafafa;
+}
+
+.driver-row:last-child {
+  border-bottom: none;
+}
+
+.driver-row td {
+  padding: 1.25rem 0.75rem !important;
+}
+
+/* =========================
+   Driver Avatar
+   ========================= */
+.driver-avatar {
+  width: 48px;
+  height: 48px;
+  font-size: 1.05rem;
+  flex-shrink: 0;
+}
+
+/* =========================
+   Status Badges
+   ========================= */
+.badge.active {
+  background-color: #d4edda !important;
+  color: #155724 !important;
+  font-weight: 500;
+  text-transform: lowercase;
+  font-size: 0.8125rem;
+}
+
+.badge.inactive {
+  background-color: #f8d7da !important;
+  color: #721c24 !important;
+  font-weight: 500;
+  text-transform: lowercase;
+  font-size: 0.8125rem;
+}
+
+/* =========================
+   Action Dropdown
+   ========================= */
+.action-dropdown-btn {
+  border: none;
+  background-color: transparent !important;
+  color: #adb5bd !important;
+  padding: 0.25rem 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.action-dropdown-btn:hover,
+.action-dropdown-btn:focus {
+  color: #6c757d !important;
+  background-color: #f8f9fa !important;
+}
+
+.action-dropdown-btn::after {
+  display: none;
+}
+
+.action-dropdown-menu {
+  min-width: 180px;
+  padding: 0.5rem 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 0.5rem;
+}
+
+.action-dropdown-menu .dropdown-item {
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--dark-gray);
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+.action-dropdown-menu .dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.action-dropdown-menu .dropdown-item .mat-icon {
+  color: #6c757d;
+  vertical-align: middle;
+}
+
+.action-dropdown-menu .dropdown-item.text-danger .mat-icon {
+  color: #dc3545 !important;
+}
+
+/* =========================
+   Button Styles
+   ========================= */
+.btn-primary {
+  background-color: var(--primary-green) !important;
+  border-color: var(--primary-green) !important;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.3s ease;
+  border-radius: 0.5rem;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-green-dark) !important;
+  border-color: var(--primary-green-dark) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 0.25rem 0.5rem rgba(45, 106, 79, 0.25);
+}
+
+.btn-primary:focus {
+  box-shadow: 0 0 0 0.2rem rgba(45, 106, 79, 0.25) !important;
+}
+
+.btn-primary .mat-icon {
+  vertical-align: middle;
+}
+
+.btn-outline-secondary {
+  border-color: #dee2e6;
+  color: #6c757d;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.3s ease;
+  border-radius: 0.5rem;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #f8f9fa;
+  border-color: #adb5bd;
+  color: #495057;
+}
+
+/* =========================
+   Loading & Error States
+   ========================= */
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+.alert {
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+}
+
+/* =========================
+   Empty State
+   ========================= */
+.empty-state-icon {
+  font-size: 64px !important;
+  width: 64px !important;
+  height: 64px !important;
+  opacity: 0.3;
+}
+
+/* =========================
+   Material Icon Sizes
+   ========================= */
+.mat-icon.icon-sm {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+}
+
+.mat-icon.icon-md {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.mat-icon.icon-lg {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+}
+
+/* =========================
+   Text Utilities
+   ========================= */
+.text-success-custom {
+  color: var(--primary-green) !important;
+}
+
+.fw-semibold {
+  font-weight: 600 !important;
+}
+
+/* =========================
+   Responsive Design
+   ========================= */
+@media (max-width: 768px) {
+  .stat-card {
+    margin-bottom: 1rem;
+    min-height: 120px;
+  }
+  
+  .search-input,
+  .filter-select {
+    height: 48px;
+  }
+  
+  .table-responsive {
+    font-size: 0.875rem;
+  }
+  
+  .driver-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 0.9rem;
+  }
+  
+  .drivers-table-card {
+    min-height: auto;
+  }
+}
+
+/* =========================
+   Custom Scrollbar
+   ========================= */
+.table-responsive::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+}

@@ -3,6 +3,11 @@
   background: white;
 }
 
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
 /* Hero Section */
 .hero {
   position: relative;
@@ -122,6 +127,7 @@
 .btn-primary:hover {
   background: rgba(255, 255, 255, 0.9);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .btn-secondary {
@@ -132,6 +138,7 @@
 
 .btn-secondary:hover {
   background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
 }
 
 .btn-white {
@@ -142,6 +149,7 @@
 .btn-white:hover {
   background: rgba(255, 255, 255, 0.9);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .chevron {
@@ -257,11 +265,13 @@
 
 .filter-btn:hover {
   background: rgba(45, 106, 79, 0.05);
+  transform: translateY(-2px);
 }
 
 .filter-btn.active {
   background: #2d6a4f;
   color: white;
+  box-shadow: 0 4px 8px rgba(45, 106, 79, 0.3);
 }
 
 .materials-grid {
@@ -279,7 +289,7 @@
 }
 
 .material-card:hover {
-  transform: translateY(-5px) scale(1.05);
+  transform: translateY(-5px) scale(1.02);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
@@ -294,6 +304,11 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.material-card:hover .material-image img {
+  transform: scale(1.05);
 }
 
 .material-content {
@@ -321,6 +336,20 @@
 .materials-cta {
   text-align: center;
   margin-top: 3rem;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  font-size: 1.125rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  font-size: 1.125rem;
 }
 
 /* Statistics Section */
@@ -389,6 +418,7 @@
 
 .testimonial-card:hover {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
 }
 
 .stars {
@@ -450,6 +480,11 @@
   border-radius: 0.625rem;
   overflow: hidden;
   background: white;
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
 }
 
 .faq-question {
@@ -465,11 +500,17 @@
   color: #212529;
   font-weight: 600;
   text-align: left;
+  transition: background 0.3s ease;
+}
+
+.faq-question:hover {
+  background: rgba(45, 106, 79, 0.03);
 }
 
 .faq-icon {
   transition: transform 0.3s ease;
   font-size: 0.875rem;
+  color: #2d6a4f;
 }
 
 .faq-icon.open {
@@ -612,11 +653,12 @@
   justify-content: center;
   color: white;
   text-decoration: none;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .social-icon:hover {
   background: #2d6a4f;
+  transform: translateY(-2px);
 }
 
 /* Responsive Design */

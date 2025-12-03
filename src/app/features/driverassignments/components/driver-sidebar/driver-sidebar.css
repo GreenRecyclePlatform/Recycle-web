@@ -1,0 +1,184 @@
+/* driver-sidebar.component.css */
+
+/* ========== Host (IMPORTANT FIX) ========== */
+:host {
+  width: 280px;
+  min-width: 280px;
+  display: block;
+
+  --primary-green: #2D6A4F;
+  --primary-green-dark: #1e4d38;
+  --primary-green-light: #d8f3dc;
+  --white: #FFFFFF;
+  --gray-50: #F9FAFB;
+  --gray-100: #F3F4F6;
+  --gray-200: #E5E7EB;
+  --gray-300: #D1D5DB;
+  --gray-500: #6B7280;
+  --gray-600: #4B5563;
+  --gray-700: #374151;
+  --gray-800: #1F2937;
+  --info: #3B82F6;
+  --warning: #F59E0B;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+}
+
+/* ========== Sidebar Container ========== */
+.sidebar {
+  width: 100%;
+  background: var(--white);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+  min-height: 100vh;
+  border-right: 1px solid var(--gray-200);
+}
+
+/* ========== Driver Profile Card ========== */
+.driver-profile {
+  background: var(--gray-50);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  border: 1px solid var(--gray-200);
+}
+
+/* Avatar with Initials */
+.driver-avatar {
+  width: 64px;
+  height: 64px;
+  background: var(--primary-green);
+  border-radius: 50%;
+  margin: 0 auto 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--white);
+  box-shadow: 0 2px 8px rgba(45, 106, 79, 0.2);
+}
+
+/* Avatar with Image */
+.driver-avatar-image {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin: 0 auto 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(45, 106, 79, 0.2);
+  border: 3px solid var(--primary-green-light);
+}
+
+.driver-avatar-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.driver-name {
+  color: var(--gray-800);
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+  line-height: 1.4;
+}
+
+.driver-role {
+  color: var(--primary-green);
+  font-size: 0.875rem;
+  margin: 0 0 0.5rem;
+  font-weight: 500;
+}
+
+/* ========== Navigation Menu ========== */
+.nav-menu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  color: var(--primary-green-dark);
+  text-decoration: none;
+  border-radius: var(--radius-lg);
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  font-size: 0.95rem;
+  position: relative;
+  font-family: inherit;
+}
+
+.nav-item:hover {
+  background: var(--primary-green);
+  color: var(--gray-200);
+}
+
+.nav-item.active {
+  background: var(--primary-green);
+  color: var(--white);
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(45, 106, 79, 0.25);
+}
+
+.nav-item i {
+  font-size: 1.25rem;
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.nav-item span:not(.badge) {
+  flex: 1;
+}
+
+.nav-item .badge {
+  background: var(--info);
+  color: var(--white);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  min-width: 22px;
+  text-align: center;
+  line-height: 1;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  :host {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .sidebar {
+    min-height: auto;
+    padding: 1rem;
+    border-right: none;
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .nav-menu {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .nav-item {
+    flex-direction: column;
+    min-width: 80px;
+    text-align: center;
+  }
+}

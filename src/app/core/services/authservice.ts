@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { User, UserRole } from '../models/usermodel';
@@ -22,13 +23,28 @@ import { API_ENDPOINTS } from '../constants/api-endpoints';
 export class AuthService {
   constructor(private http: HttpClient, private tokenService: TokenService) {
     this.isAuthenticatedSubject.next(this.hasToken());
+    // ✅ تحميل الـ role من الـ token عند البداية
+    const role = this.tokenService.getRole();
+    if (role) {
+      this.userRoleSubject.next(role);
+    }
   }
 
   private readonly apiUrl = environment.apiUrl;
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  private userRoleSubject = new BehaviorSubject<string | null>(null);
 
   public isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
+  public userRole$: Observable<string | null> = this.userRoleSubject.asObservable();
+
+  get userRole(): string | null {
+    return this.userRoleSubject.value;
+  }
+
+  setUserRole(role: string | any): void {
+    this.userRoleSubject.next(role);
+  }
 
   get isAuthenticated(): boolean {
     return this.isAuthenticatedSubject.value;
@@ -42,35 +58,67 @@ export class AuthService {
     return !!this.tokenService.getToken();
   }
 
-  // ✅ ADD THIS METHOD - Expose getToken from TokenService
+  getUserName(): string | null {
+    return this.tokenService.getUserName();
+  }
+
+  getUserId(): string | null {
+    return this.tokenService.getUserId();
+  }
+
   getToken(): string | null {
     const token = this.tokenService.getToken();
     console.log('🔐 AuthService.getToken:', token ? 'EXISTS ✅' : 'MISSING ❌');
     return token;
   }
 
-  // ✅ ADD THIS METHOD - Check if token is valid and not expired
   isTokenValid(): boolean {
     const token = this.getToken();
     if (!token) return false;
+    return !this.tokenService.isTokenExpired();
+  }
 
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const expiry = payload.exp * 1000;
-      const isValid = Date.now() < expiry;
-      console.log('🔐 Token valid:', isValid);
-      return isValid;
-    } catch (error) {
-      console.error('❌ Invalid token format:', error);
-      return false;
-    }
+  // ✅ NEW METHODS للـ Roles والـ User Info
+  
+  getUserRole(): string | null {
+    return this.tokenService.getRole();
+  }
+
+  getUserIdFromToken(): string | null {
+    return this.tokenService.getUserId();
+  }
+
+  getUserEmail(): string | null {
+    return this.tokenService.UserEmail()
+  }
+
+  hasRole(role: string): boolean {
+    const userRole = this.getUserRole();
+    if (!userRole) return false;
+    return userRole.toLowerCase() === role.toLowerCase();
+  }
+
+  isAdmin(): boolean {
+    return this.hasRole('Admin');
+  }
+
+  isDriver(): boolean {
+    return this.hasRole('Driver');
+  }
+
+  isUser(): boolean {
+    return this.hasRole('User');
   }
 
   private handleAuthSuccess(authResponse: LoginResponse): void {
-    // Handle successful authentication (e.g., store tokens, update state)
-    this.tokenService.setToken(authResponse.accessToken); 
+    this.tokenService.setToken(authResponse.accessToken);
+    const role = this.tokenService.getRole();
+
     this.setAuthenticated(true);
+    this.setUserRole(role);
+
     console.log('✅ Auth success - Token stored');
+    console.log('✅ User Role:', role);
   }
 
   private handleAuthError(error: any): Observable<never> {
@@ -118,12 +166,10 @@ export class AuthService {
       );
   }
 
-  // src/app/core/services/authservice.ts
-
   refresh(): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>(
-        `${this.apiUrl}${API_ENDPOINTS.AUTH.REFRESH}`, // ✅ Fixed from REGISTER to REFRESH
+        `${this.apiUrl}${API_ENDPOINTS.AUTH.REFRESH}`,
         {},
         {
           withCredentials: true,
@@ -149,12 +195,13 @@ export class AuthService {
         next: () => {
           this.tokenService.clearToken();
           this.setAuthenticated(false);
+          this.setUserRole(null);
           console.log('✅ Logout successful');
         },
         error: (error) => {
           console.error('❌ Logout error:', error);
-          // Clear token anyway on error
           this.tokenService.clearToken();
+          this.setUserRole(null);
           this.setAuthenticated(false);
         },
       });

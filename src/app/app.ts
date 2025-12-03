@@ -5,11 +5,13 @@ import { Subject, takeUntil } from 'rxjs';
 import { RouterOutlet } from '@angular/router';
 import { RouterModule } from '@angular/router';
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrls: ['./app.css'],
   imports: [RouterOutlet],
+
 })
 export class App implements OnInit, OnDestroy {
   title = 'RecycleHub';
@@ -64,3 +66,4 @@ export class App implements OnInit, OnDestroy {
     this.signalRService.stopConnection();
   }
 }
+
