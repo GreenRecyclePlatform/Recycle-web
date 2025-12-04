@@ -18,10 +18,13 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   @Output() close = new EventEmitter<void>();
 
   notifications: Notification[] = [];
+  displayedNotifications: Notification[] = [];
   showUnreadOnly = false;
+  showAllInDropdown = false; // ✅ Add this flag
   loading = false;
   error: string | null = null;
   private destroy$ = new Subject<void>();
+  readonly MAX_DISPLAYED = 5;
 
   constructor(private notificationService: NotificationService) {}
 
@@ -31,6 +34,7 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((notifications) => {
         this.notifications = notifications;
+        this.updateDisplayedNotifications();
       });
 
     // Subscribe to loading state
@@ -40,6 +44,31 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
 
     // Load notifications
     this.loadNotifications();
+  }
+
+  /**
+   * Update displayed notifications
+   */
+  private updateDisplayedNotifications(): void {
+    // Sort by date (most recent first)
+    const sorted = [...this.notifications].sort((a, b) => {
+      const dateA = new Date(a.createdAt || 0).getTime();
+      const dateB = new Date(b.createdAt || 0).getTime();
+      return dateB - dateA;
+    });
+
+    // Show only first 5, or all if expanded
+    this.displayedNotifications = this.showAllInDropdown
+      ? sorted
+      : sorted.slice(0, this.MAX_DISPLAYED);
+  }
+
+  /**
+   * Show all notifications in dropdown
+   */
+  showAllNotifications(): void {
+    this.showAllInDropdown = true;
+    this.updateDisplayedNotifications();
   }
 
   /**
@@ -65,6 +94,7 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
    */
   toggleFilter(): void {
     this.showUnreadOnly = !this.showUnreadOnly;
+    this.showAllInDropdown = false; // Reset to limited view when filtering
     this.loadNotifications();
   }
 
@@ -73,7 +103,6 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
    */
   markAsRead(notification: Notification): void {
     if (!notification.isRead && notification.notificationId) {
-      // Update local state immediately
       this.notificationService.updateNotification(notification.notificationId, {
         isRead: true,
         readAt: new Date(),
@@ -97,11 +126,9 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Delete notification (placeholder - implement if you add delete endpoint)
+   * Delete notification
    */
   deleteNotification(notificationId: string): void {
-    // Note: Your API doesn't have a delete endpoint yet
-    // Remove from local state only
     this.notificationService.removeNotification(notificationId);
   }
 
@@ -117,6 +144,20 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
    */
   trackByNotificationId(index: number, notification: Notification): string {
     return notification.notificationId || index.toString();
+  }
+
+  /**
+   * Get total notification count for display
+   */
+  get totalCount(): number {
+    return this.notifications.length;
+  }
+
+  /**
+   * Check if there are more notifications
+   */
+  get hasMore(): boolean {
+    return !this.showAllInDropdown && this.notifications.length > this.MAX_DISPLAYED;
   }
 
   /**
