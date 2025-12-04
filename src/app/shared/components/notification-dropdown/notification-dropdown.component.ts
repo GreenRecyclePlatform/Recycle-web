@@ -57,6 +57,7 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
       return dateB - dateA;
     });
 
+    
     // Show only first 5, or all if expanded
     this.displayedNotifications = this.showAllInDropdown
       ? sorted
