@@ -33,6 +33,8 @@ import { ForgotPasswordPage } from './features/auth/forgot-password/forgot-passw
 import { ResetPassword } from './features/auth/reset-password/reset-password';
 import { Profiledriver } from './features/driverassignments/components/profiledriver/profiledriver';
 import { TestNotificationsComponent } from './pages/test-notifications/test-notifications.component';
+import { Settings } from './features/admin/settings/settings';
+import { ManageMaterials } from './features/manage-materials/manage-materials';
 
 export const routes: Routes = [
 
@@ -43,12 +45,22 @@ export const routes: Routes = [
     children: [
       { path: 'drivers', component: AllDrivers },  
       { path: 'assign-drivers', component: AssignDriver },  
+      {path:'settings',component:Settings},
+      {path:'manage-materials',component:ManageMaterials}
     ]
    },
    
-    { path: 'DashBoardDrivers', component: DriverDashboard },
+
+   {
+      path:'driver',
+      children:[
+ { path: 'DashBoardDrivers', component: DriverDashboard },
     { path: 'DriverProfile', component: Profiledriver },
 
+      ]
+
+   },
+   
 
 
     { path: '', component: LandingPage },

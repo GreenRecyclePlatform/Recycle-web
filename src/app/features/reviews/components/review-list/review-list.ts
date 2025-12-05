@@ -8,6 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 import { ReviewService, Review, UpdateReviewDto } from '../../../../core/services/review.service';
 import { Navbar } from '../../../../shared/components/navbar/navbar';
 import { LucideAngularModule } from "lucide-angular";
+import { UserSidebar } from '../../../../shared/components/user-sidebar/user-sidebar';
 
 @Component({
   selector: 'app-review-list',
@@ -17,7 +18,7 @@ import { LucideAngularModule } from "lucide-angular";
     ReactiveFormsModule,
     RouterLink, // Use RouterLink instead of RouterModule
     Navbar,
-    LucideAngularModule
+    LucideAngularModule,UserSidebar
 ],
   templateUrl: './review-list.html',
   styleUrls: ['./review-list.css'],

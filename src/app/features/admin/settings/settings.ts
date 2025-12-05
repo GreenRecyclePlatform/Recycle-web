@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Navbar } from '../../../shared/components/navbar/navbar';
+import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/admin-sidebar';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,Navbar,AdminSidebarComponent],
   templateUrl: './settings.html',
   styleUrl: './settings.css'
 })
