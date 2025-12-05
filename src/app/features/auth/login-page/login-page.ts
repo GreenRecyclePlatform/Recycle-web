@@ -1,6 +1,12 @@
 import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+  EmailValidator,
+} from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -60,6 +66,36 @@ export class LoginPage implements OnDestroy {
     });
   }
 
+  private getFieldLabel(fieldName: string): string {
+    const labels: { [key: string]: string } = {
+      email: this.loginMethod === 'email' ? 'Email' : 'Username',
+      password: 'Password',
+    };
+    return labels[fieldName] || fieldName;
+  }
+
+  hasError(fieldName: string): boolean {
+    const field = this.loginForm.get(fieldName);
+    return !!(field?.touched || field?.dirty) && field?.invalid;
+  }
+
+  errorMessage(fieldName: string) {
+    const field = this.loginForm.get(fieldName);
+
+    if (!field || !field.errors) {
+      return '';
+    }
+
+    if (field.errors['required']) {
+      return `${this.getFieldLabel(fieldName)} is required`;
+    }
+
+    if (field.errors['email']) {
+      return 'Email is not Valid';
+    }
+    return '';
+  }
+
   toggleLoginMethod(method: 'email' | 'username'): void {
     this.loginMethod = method;
     const emailControl = this.loginForm.get('email');
@@ -76,10 +112,15 @@ export class LoginPage implements OnDestroy {
   handleLogin(): void {
     // Validate form
     if (!this.loginForm.valid) {
+      Object.keys(this.loginForm.controls).forEach((key) => {
+        this.loginForm.get(key)?.markAsTouched();
+      });
+
       this.snackBar.open('Please enter valid credentials', 'Close', {
         duration: 3000,
         panelClass: ['error-snackbar'],
       });
+
       return;
     }
 

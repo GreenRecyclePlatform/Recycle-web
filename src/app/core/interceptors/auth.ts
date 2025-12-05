@@ -6,11 +6,10 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { TokenService } from '../services/tokenservice';
 import { AuthService } from '../services/authservice';
 import { catchError, Observable, switchMap, throwError } from 'rxjs';
 import { Token } from '@angular/compiler';
-
+import { TokenService } from '../services/tokenservice';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const tokenService = inject(TokenService);

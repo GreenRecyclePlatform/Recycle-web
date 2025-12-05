@@ -2,7 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AuthHelperService } from './auth-helper.service';
 
 // API Response Models
 export interface ApiResponse<T> {
@@ -75,19 +74,18 @@ export interface DriverRatingDto {
 })
 export class ReviewService {
   private http = inject(HttpClient);
-  private authHelper = inject(AuthHelperService);
   private apiUrl = 'http://localhost:5139/api/Reviews';
 
-  /**
-   * Get authorization headers with JWT token
-   */
-  private getAuthHeaders(): HttpHeaders {
-    const token = this.authHelper.getToken();
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: token ? `Bearer ${token}` : '',
-    });
-  }
+  // /**
+  //  * Get authorization headers with JWT token
+  //  */
+  // private getAuthHeaders(): HttpHeaders {
+  //   const token = this.authHelper.getToken();
+  //   return new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //     Authorization: token ? `Bearer ${token}` : '',
+  //   });
+  // }
 
   /**
    * Create a new review
@@ -95,7 +93,7 @@ export class ReviewService {
    */
   createReview(dto: CreateReviewDto): Observable<Review> {
     return this.http
-      .post<ApiResponse<Review>>(this.apiUrl, dto, { headers: this.getAuthHeaders() })
+      .post<ApiResponse<Review>>(this.apiUrl, dto)
       .pipe(map((response) => this.convertDates(response.data)));
   }
 
@@ -105,10 +103,7 @@ export class ReviewService {
    */
   getMyReviews(page: number = 1, pageSize: number = 20): Observable<Review[]> {
     return this.http
-      .get<PaginatedResponse<Review>>(
-        `${this.apiUrl}/my-reviews?page=${page}&pageSize=${pageSize}`,
-        { headers: this.getAuthHeaders() }
-      )
+      .get<PaginatedResponse<Review>>(`${this.apiUrl}/my-reviews?page=${page}&pageSize=${pageSize}`)
       .pipe(map((response) => response.data.map((review) => this.convertDates(review))));
   }
 
@@ -117,18 +112,14 @@ export class ReviewService {
    * GET /api/Reviews/pending
    */
   getPendingReviews(): Observable<PendingReviewDto[]> {
-    return this.http
-      .get<ApiResponse<PendingReviewDto[]>>(`${this.apiUrl}/pending`, {
-        headers: this.getAuthHeaders(),
-      })
-      .pipe(
-        map((response) =>
-          response.data.map((pending) => ({
-            ...pending,
-            completedAt: new Date(pending.completedAt),
-          }))
-        )
-      );
+    return this.http.get<ApiResponse<PendingReviewDto[]>>(`${this.apiUrl}/pending`).pipe(
+      map((response) =>
+        response.data.map((pending) => ({
+          ...pending,
+          completedAt: new Date(pending.completedAt),
+        }))
+      )
+    );
   }
 
   /**
@@ -137,7 +128,7 @@ export class ReviewService {
    */
   getReviewById(reviewId: string): Observable<Review> {
     return this.http
-      .get<ApiResponse<Review>>(`${this.apiUrl}/${reviewId}`, { headers: this.getAuthHeaders() })
+      .get<ApiResponse<Review>>(`${this.apiUrl}/${reviewId}`)
       .pipe(map((response) => this.convertDates(response.data)));
   }
 
@@ -147,9 +138,7 @@ export class ReviewService {
    */
   updateReview(reviewId: string, dto: UpdateReviewDto): Observable<Review> {
     return this.http
-      .put<ApiResponse<Review>>(`${this.apiUrl}/${reviewId}`, dto, {
-        headers: this.getAuthHeaders(),
-      })
+      .put<ApiResponse<Review>>(`${this.apiUrl}/${reviewId}`, dto)
       .pipe(map((response) => this.convertDates(response.data)));
   }
 
@@ -159,7 +148,7 @@ export class ReviewService {
    */
   deleteReview(reviewId: string): Observable<void> {
     return this.http
-      .delete<ApiResponse<null>>(`${this.apiUrl}/${reviewId}`, { headers: this.getAuthHeaders() })
+      .delete<ApiResponse<null>>(`${this.apiUrl}/${reviewId}`)
       .pipe(map(() => void 0));
   }
 
@@ -174,8 +163,7 @@ export class ReviewService {
   ): Observable<Review[]> {
     return this.http
       .get<PaginatedResponse<Review>>(
-        `${this.apiUrl}/driver/${driverId}?page=${page}&pageSize=${pageSize}`,
-        { headers: this.getAuthHeaders() }
+        `${this.apiUrl}/driver/${driverId}?page=${page}&pageSize=${pageSize}`
       )
       .pipe(map((response) => response.data.map((review) => this.convertDates(review))));
   }
@@ -186,9 +174,7 @@ export class ReviewService {
    */
   getDriverRatingStats(driverId: string): Observable<DriverRatingDto> {
     return this.http
-      .get<ApiResponse<DriverRatingDto>>(`${this.apiUrl}/driver/${driverId}/stats`, {
-        headers: this.getAuthHeaders(),
-      })
+      .get<ApiResponse<DriverRatingDto>>(`${this.apiUrl}/driver/${driverId}/stats`)
       .pipe(map((response) => response.data));
   }
 
