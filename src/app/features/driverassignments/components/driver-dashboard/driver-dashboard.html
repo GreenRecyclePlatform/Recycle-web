@@ -3,8 +3,13 @@
 
 <div class="dashboard-layout">
 
-  <!-- Sidebar -->
-  <app-driver-sidebar></app-driver-sidebar>
+
+  <app-driver-sidebar 
+    [driverName]="sidebarData.name"
+    [driverRole]="sidebarData.role"
+    [driverImage]="sidebarData.image"
+    [driverRating]="sidebarData.rating">
+  </app-driver-sidebar>
 
   <!-- Main Content -->
   <div class="main-content">
@@ -314,8 +319,8 @@
       }
 
     </div> <!-- page-content -->      
-    </div>
   </div>
+</div>
 
 
 

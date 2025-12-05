@@ -133,6 +133,9 @@ export class Navbar implements OnInit, OnDestroy {
 
     // Logout from auth service
     this.authService.logout();
+   
+    this.router.navigate([' ']);
+  
   }
 
   /**

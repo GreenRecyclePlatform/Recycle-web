@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { DashpickupDriverservice } from '../../services/DashpickupDriverservice';
 import { AuthService } from '../../../../core/services/authservice'; 
+import { DriverProfileService } from '../../services/driverprofileservice'; // ⬅️ جديد
+import { DriverProfileResponse } from '../../models/Profiledriver'; // ⬅️ جديد
 import { 
   Pickup, 
   PickupStats, 
@@ -14,14 +16,13 @@ import {
   getStatusLabel,
   getStatusClass,
   StatCard,
-  
 } from '../../models/DashpickupDriver';
 import { Navbar } from '../../../../shared/components/navbar/navbar';
 
 @Component({
   selector: 'app-driver-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, DriverSidebar,Navbar],
+  imports: [CommonModule, FormsModule, DriverSidebar, Navbar],
   templateUrl: './driver-dashboard.html',
   styleUrls: ['./driver-dashboard.css']
 })
@@ -48,10 +49,18 @@ export class DriverDashboard implements OnInit, OnDestroy {
   errorMessage: string = '';
   successMessage: string = '';
 
+  sidebarData = {
+    name: '',
+    role: 'Driver',
+    image: null as string | null,
+    rating: 0
+  };
+
   constructor(
     private dashpickupDriverservice: DashpickupDriverservice,
     private authService: AuthService,
-    private router: Router 
+    private router: Router,
+    private driverProfileService: DriverProfileService 
   ) {}
 
   ngOnInit(): void {
@@ -62,16 +71,12 @@ export class DriverDashboard implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
-  //
+//
 
   checkDriverAccess(): void {
     const token = this.authService.getToken();
     const isDriver = this.authService.isDriver();
     const userId = this.authService.getUserIdFromToken();
-
-    console.log('🔐 Token exists:', !!token);
-    console.log('🔐 User ID:', userId);
-    console.log('🔐 Is Driver:', isDriver);
 
     if (!token) {
       this.errorMessage = 'Please login to access your dashboard';
@@ -85,8 +90,33 @@ export class DriverDashboard implements OnInit, OnDestroy {
       return;
     }
 
-    console.log('✅ Driver access confirmed - loading dashboard');
     this.loadData();
+    this.loadDriverInfo();
+  }
+
+  private loadDriverInfo(): void {
+    const userId = this.authService.getUserIdFromToken();
+    if (!userId) {
+      console.warn('⚠️ No user ID found');
+      return;
+    }
+
+    this.driverProfileService.getDriverProfile(userId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: DriverProfileResponse) => {
+          this.sidebarData = {
+            name: `${response.firstName} ${response.lastName}`,
+            role: 'Driver',
+            image: response.profileImageUrl,
+            rating: response.rating
+          };
+        },
+        error: (error) => {
+          console.error( error);
+          this.sidebarData.name = 'Driver'; 
+        }
+      });
   }
 
   private loadData(): void {
@@ -100,12 +130,11 @@ export class DriverDashboard implements OnInit, OnDestroy {
           this.pickups = pickups;
           this.applyFilters();
           this.isLoading = false;
-          console.log( pickups.length);
         },
         error: (err) => {
           this.errorMessage = err.message || 'Failed to load data';
           this.isLoading = false;
-          console.error( err);
+          console.error(err);
           
           if (err.message && (err.message.includes('Unauthorized') || err.message.includes('403'))) {
           }
@@ -185,12 +214,11 @@ export class DriverDashboard implements OnInit, OnDestroy {
           this.successMessage = 'Assignment rejected';
           this.applyFilters();
           this.autoHideSuccess();
-          console.log( this.selectedPickupId);
         },
         error: (err) => {
           this.isProcessing = false;
           this.errorMessage = err.message;
-          console.error( err);
+          console.error(err);
         }
       });
   }
@@ -227,7 +255,7 @@ export class DriverDashboard implements OnInit, OnDestroy {
         error: (err) => {
           this.isProcessing = false;
           this.errorMessage = err.message;
-          console.error( err);
+          console.error(err);
         }
       });
   }

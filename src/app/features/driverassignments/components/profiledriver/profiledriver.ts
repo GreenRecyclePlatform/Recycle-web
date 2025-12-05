@@ -49,7 +49,7 @@ export class Profiledriver implements OnInit {
     totalPickups: 0,
     rating: 0,
     completionRate: 0,
-    totalEarnings: '₹0',
+    totalEarnings: 'EG0',
     isAvailable: false
   };
 
