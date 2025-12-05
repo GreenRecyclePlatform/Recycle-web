@@ -4,6 +4,14 @@
  
 
 <div class="container-fluid py-4">
+  <!-- Loading Overlay -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="spinner-border text-success" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3">Loading settings...</p>
+  </div>
+
   <div class="mb-4">
     <h1 class="text-dark mb-2">Platform Settings</h1>
     <p class="text-muted">Configure and manage platform settings</p>
@@ -139,8 +147,15 @@
       <div class="d-flex justify-content-end">
         <button
           class="btn btn-success"
-          (click)="handleSaveSettings('Platform')">
-          <i class="bi bi-save me-2"></i>Save Platform Settings
+          (click)="handleSaveSettings('Platform')"
+          [disabled]="isSaving">
+          <span *ngIf="!isSaving">
+            <i class="bi bi-save me-2"></i>Save Platform Settings
+          </span>
+          <span *ngIf="isSaving">
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Saving...
+          </span>
         </button>
       </div>
     </div>
@@ -260,8 +275,15 @@
       <div class="d-flex justify-content-end">
         <button
           class="btn btn-success"
-          (click)="handleSaveSettings('Pricing')">
-          <i class="bi bi-save me-2"></i>Save Pricing Settings
+          (click)="handleSaveSettings('Pricing')"
+          [disabled]="isSaving">
+          <span *ngIf="!isSaving">
+            <i class="bi bi-save me-2"></i>Save Pricing Settings
+          </span>
+          <span *ngIf="isSaving">
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Saving...
+          </span>
         </button>
       </div>
     </div>
@@ -389,8 +411,15 @@
       <div class="d-flex justify-content-end">
         <button
           class="btn btn-success"
-          (click)="handleSaveSettings('Notification')">
-          <i class="bi bi-save me-2"></i>Save Notification Settings
+          (click)="handleSaveSettings('Notification')"
+          [disabled]="isSaving">
+          <span *ngIf="!isSaving">
+            <i class="bi bi-save me-2"></i>Save Notification Settings
+          </span>
+          <span *ngIf="isSaving">
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Saving...
+          </span>
         </button>
       </div>
     </div>
@@ -499,8 +528,15 @@
       <div class="d-flex justify-content-end">
         <button
           class="btn btn-success"
-          (click)="handleSaveSettings('Operational')">
-          <i class="bi bi-save me-2"></i>Save Operational Settings
+          (click)="handleSaveSettings('Operational')"
+          [disabled]="isSaving">
+          <span *ngIf="!isSaving">
+            <i class="bi bi-save me-2"></i>Save Operational Settings
+          </span>
+          <span *ngIf="isSaving">
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Saving...
+          </span>
         </button>
       </div>
     </div>
@@ -577,8 +613,15 @@
       <div class="d-flex justify-content-end">
         <button
           class="btn btn-success"
-          (click)="handleSaveSettings('Payment')">
-          <i class="bi bi-save me-2"></i>Save Payment Settings
+          (click)="handleSaveSettings('Payment')"
+          [disabled]="isSaving">
+          <span *ngIf="!isSaving">
+            <i class="bi bi-save me-2"></i>Save Payment Settings
+          </span>
+          <span *ngIf="isSaving">
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Saving...
+          </span>
         </button>
       </div>
     </div>
