@@ -33,13 +33,13 @@ export class AllDrivers implements OnInit {
   // Statistics
   totalDrivers: number = 0;
   activeDrivers: number = 0;
-  onDutyToday: number = 0;
   averageRating: number = 0;
 
   // Loading and error states
   isLoading: boolean = false;
   errorMessage: string = '';
-  successMessage: string = ''; 
+  successMessage: string = '';
+  driverToDelete: Driver | null = null; 
 
   constructor(
     private driverService: Alldriverservice,
@@ -54,11 +54,7 @@ export class AllDrivers implements OnInit {
   checkAdminAccess(): void {
     const token = this.authService.getToken();
     const isAdmin = this.authService.isAdmin();
-    const userId = this.authService.getUserIdFromToken();
 
-    console.log('🔐 Token exists:', !!token);
-    console.log('🔐 User ID:', userId);
-    console.log('🔐 Is Admin:', isAdmin);
 
     if (!token) {
       this.errorMessage = 'Please login to access this page';
@@ -103,7 +99,6 @@ export class AllDrivers implements OnInit {
   calculateStatistics(): void {
     this.totalDrivers = this.drivers.length;
     this.activeDrivers = this.drivers.filter(d => d.status === 'active').length;
-    this.onDutyToday = this.drivers.filter(d => d.pickups.todayCount > 0).length;
     
     const totalRating = this.drivers.reduce((sum, d) => sum + d.rating, 0);
     this.averageRating = this.drivers.length > 0 ? 
@@ -123,8 +118,7 @@ export class AllDrivers implements OnInit {
       const matchesSearch = !this.searchQuery || 
         driver.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
         driver.phone.includes(this.searchQuery) ||
-        driver.location.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        (driver.idNumber && driver.idNumber.includes(this.searchQuery));
+        driver.location.toLowerCase().includes(this.searchQuery.toLowerCase()) 
       
       const matchesStatus = this.selectedStatus === 'All Status' || 
         driver.status === this.selectedStatus.toLowerCase();
@@ -133,9 +127,6 @@ export class AllDrivers implements OnInit {
     });
   }
 
-  getStatusBadgeClass(status: string): string {
-    return status.toLowerCase();
-  }
 
   onDeleteDriver(driver: Driver): void {
     if (!this.authService.isAdmin()) {
@@ -143,8 +134,19 @@ export class AllDrivers implements OnInit {
       return;
     }
 
-    if (confirm(`Are you sure you want to delete ${driver.name}? This action cannot be undone.`)) {
-      this.deleteDriver(driver);
+    // Store driver to delete 
+    this.driverToDelete = driver;
+    const modalElement = document.getElementById('deleteDriverModal');
+    if (modalElement) {
+      const modal = new (window as any).bootstrap.Modal(modalElement);
+      modal.show();
+    }
+  }
+
+  confirmDelete(): void {
+    if (this.driverToDelete) {
+      this.deleteDriver(this.driverToDelete);
+      this.driverToDelete = null;
     }
   }
 

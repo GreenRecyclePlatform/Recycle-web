@@ -30,11 +30,38 @@ import { LoginPage } from './features/auth/login-page/login-page';
 import { RegistrationPage } from './features/auth/registration-page/registration-page';
 import { ForgotPasswordPage } from './features/auth/forgot-password/forgot-password';
 import { ResetPassword } from './features/auth/reset-password/reset-password';
-import { Profiledriver } from './features/driverassignments/components/profiledriver/profiledriver';
+import { TestNotificationsComponent } from './pages/test-notifications/test-notifications.component';
+import { Settings } from './features/admin/settings/settings';
+import { ManageMaterials } from './features/manage-materials/manage-materials';
 
 export const routes: Routes = [
-  // Public routes
-  { path: '', component: LandingPage },
+
+    
+
+   {
+    path: 'admin',
+    children: [
+      { path: 'drivers', component: AllDrivers },  
+      { path: 'assign-drivers', component: AssignDriver },  
+      {path:'settings',component:Settings},
+      {path:'manage-materials',component:ManageMaterials}
+    ]
+   },
+   
+
+   {
+      path:'driver',
+      children:[
+ { path: 'DashBoardDrivers', component: DriverDashboard },
+    { path: 'DriverProfile', component: Profiledriver },
+
+      ]
+
+   },
+   
+
+
+    { path: '', component: LandingPage },
   { path: 'login', component: LoginPage },
   { path: 'register', component: RegistrationPage },
   { path: 'forgot-password', component: ForgotPasswordPage },

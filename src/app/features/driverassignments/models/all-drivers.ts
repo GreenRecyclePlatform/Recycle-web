@@ -29,10 +29,7 @@ export interface Driver {
   avatarColor: string;
   phone: string;
   location: string;
-  vehicle: {
-    type: string;
-    number: string;
-  };
+
   rating: number;
   pickups: {
     total: number;
@@ -41,23 +38,6 @@ export interface Driver {
   status: 'active' | 'inactive';
   profileImageUrl?: string;
   idNumber?: string;
-}
-
-// Helper function to generate avatar color
-export function generateAvatarColor(name: string): string {
-  const colors = [
-    '#2D6A4F', // Primary Green
-    '#1976d2', // Blue
-    '#00acc1', // Teal
-    '#f57c00', // Orange
-    '#7b1fa2', // Purple
-    '#c62828', // Red
-    '#558b2f', // Light Green
-    '#5e35b1'  // Deep Purple
-  ];
-  
-  const index = name.charCodeAt(0) % colors.length;
-  return colors[index];
 }
 
 // Helper function to get initials
@@ -80,13 +60,10 @@ export function mapDriverProfileToDriver(profile: DriverProfileResponse): Driver
     id: profile.id,
     name: fullName,
     initials: getInitials(fullName),
-    avatarColor: generateAvatarColor(fullName),
+    avatarColor: '#2D6A4F',
     phone: profile.phonenumber || 'N/A', 
     location: location,
-    vehicle: {
-      type: 'Unknown',
-      number: 'N/A'
-    },
+   
     rating: profile.rating,
     pickups: {
       total: profile.totalTrips,

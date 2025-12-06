@@ -2,6 +2,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../../../core/services/authservice';
 
 interface NavItem {
   icon: string;
@@ -29,7 +30,7 @@ export class DriverSidebar implements OnInit {
     {
       icon: 'bi-truck',
       label: 'My Pickups',
-      route: '/DashBoardDrivers',
+      route: 'driver/DashBoardDrivers',
     },
     {
       icon: 'bi-wallet2',
@@ -39,11 +40,11 @@ export class DriverSidebar implements OnInit {
     {
       icon: 'bi-person',
       label: 'Profile',
-      route: '/DriverProfile'
+      route: 'driver/DriverProfile'
     }
   ];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router,private authService: AuthService,) {}
 
   ngOnInit(): void {
     if (!this.driverInitials || this.driverInitials === 'D') {
@@ -74,5 +75,10 @@ export class DriverSidebar implements OnInit {
 
   getFormattedRating(): string {
     return this.driverRating ? this.driverRating.toFixed(1) : '0.0';
+  }
+  
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

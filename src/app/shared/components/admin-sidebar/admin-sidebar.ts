@@ -14,7 +14,7 @@ import { AuthService } from '../../../core/services/authservice';
 export class AdminSidebarComponent {
   adminName: string = 'Admin User';
   adminRole: string = 'Admin';
-  notificationCount: number = 8;
+ // notificationCount: number = 8;
 
   constructor(private authService: AuthService, private router: Router) {}
 

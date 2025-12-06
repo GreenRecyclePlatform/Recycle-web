@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MaterialService } from '../../core/services/material.service';
 import { Material } from '../../core/models/material.model';
+import { Navbar } from '../../shared/components/navbar/navbar';
+import { AdminSidebarComponent } from '../../shared/components/admin-sidebar/admin-sidebar';
 
 @Component({
   selector: 'app-manage-materials',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,Navbar,AdminSidebarComponent],
   templateUrl: './manage-materials.html',
   styleUrl: './manage-materials.css',
 })

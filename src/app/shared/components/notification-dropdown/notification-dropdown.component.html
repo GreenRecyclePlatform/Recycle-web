@@ -1,7 +1,10 @@
 <div class="notification-dropdown">
   <!-- Header -->
   <div class="dropdown-header">
-    <h3>Notifications</h3>
+    <h3>
+      Notifications
+      <span class="notification-count" *ngIf="totalCount > 0">({{ totalCount }})</span>
+    </h3>
     <div class="header-actions">
       <button 
         class="filter-btn" 
@@ -40,7 +43,7 @@
   <!-- Notifications List -->
   <div class="notifications-list" *ngIf="!loading && !error">
     <!-- Empty State -->
-    <div *ngIf="notifications.length === 0" class="empty-state">
+    <div *ngIf="displayedNotifications.length === 0" class="empty-state">
       <i class="fas fa-bell-slash"></i>
       <p>No notifications</p>
       <small>You're all caught up!</small>
@@ -48,18 +51,20 @@
 
     <!-- Notification Items -->
     <app-notification-item
-      *ngFor="let notification of notifications; trackBy: trackByNotificationId"
+      *ngFor="let notification of displayedNotifications; trackBy: trackByNotificationId"
       [notification]="notification"
       (read)="markAsRead($event)"
       (delete)="deleteNotification($event)">
     </app-notification-item>
   </div>
 
-  <!-- Footer -->
-  <div class="dropdown-footer" *ngIf="notifications.length > 0 && !loading">
-    <a routerLink="/notifications" class="view-all-link" (click)="close.emit()">
-      View All Notifications
-      <i class="fas fa-arrow-right"></i>
-    </a>
+  <!-- Footer with Show All button -->
+  <div class="dropdown-footer" *ngIf="hasMore && !loading && !error">
+    <button 
+      class="view-all-btn" 
+      (click)="showAllNotifications()">
+      Show All {{ totalCount }} Notifications
+      <i class="fas fa-chevron-down"></i>
+    </button>
   </div>
 </div>
