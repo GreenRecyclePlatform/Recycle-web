@@ -25,6 +25,19 @@
   font-size: 1.25rem;
   color: #6c757d;
 }
+.loading-state,
+.error-state {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.125rem;
+}
+.loading-state {
+  color: #6c757d;
+}
+
+.error-state {
+  color: #dc3545;
+}
 
 .price-grid {
   display: grid;

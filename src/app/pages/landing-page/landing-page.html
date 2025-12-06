@@ -72,35 +72,30 @@
   <!-- Materials Section -->
   <section id="materials" class="materials">
     <div class="section-header">
-      <h2>Material Price List</h2>
-      <p class="section-subtitle">Competitive rates for all recyclable materials</p>
+      <h2>Popular Materials</h2>
+      <p class="section-subtitle">
+        <!-- 🆕 Dynamic subtitle based on state -->
+        {{ showAllMaterials ? 'All available recyclable materials' : 'Top-paying recyclable materials' }}
+      </p>
     </div>
 
-    <!-- Category Filters -->
-    <div class="category-filters">
-      <button
-        *ngFor="let category of categories"
-        [class.active]="selectedCategory === category"
-        (click)="selectCategory(category)"
-        class="filter-btn"
-      >
-        {{ category }}
-      </button>
-    </div>
+    <!-- 🆕 REMOVED: Category Filters -->
 
     <!-- Loading State -->
     <div *ngIf="loading" class="loading-state">
+      <div class="spinner"></div>
       <p>Loading materials...</p>
     </div>
 
     <!-- Materials Grid -->
     <div class="materials-grid" *ngIf="!loading">
-      <div class="material-card" *ngFor="let material of filteredMaterials">
+      <!-- 🆕 Changed from filteredMaterials to displayedMaterials -->
+      <div class="material-card" *ngFor="let material of displayedMaterials">
         <div class="material-image">
           <img
-            [src]="material.image || 'https://via.placeholder.com/400?text=' + material.name"
+            [src]="material.imageUrl || 'https://via.placeholder.com/400x400?text=' + material.name"
             [alt]="material.name"
-            onerror="this.src='https://via.placeholder.com/400?text=Material'"
+            (error)="$event.target.src='https://via.placeholder.com/400x400?text=Material'"
           />
         </div>
         <div class="material-content">
@@ -112,12 +107,24 @@
     </div>
 
     <!-- Empty State -->
-    <div *ngIf="!loading && filteredMaterials.length === 0" class="empty-state">
-      <p>No materials found in this category.</p>
+    <div *ngIf="!loading && materials.length === 0" class="empty-state">
+      <p>No materials available at the moment.</p>
     </div>
 
-    <div class="materials-cta">
-      <button class="btn btn-primary" routerLink="/register">Start Recycling Now</button>
+    <!-- 🆕 CTA Buttons Container -->
+    <div class="materials-cta" *ngIf="!loading && materials.length > 0">
+      <!-- 🆕 Show All / Show Less Button (only if more than 6 materials) -->
+      <button
+        *ngIf="materials.length > 6"
+        class="btn btn-outline"
+        (click)="toggleShowAll()">
+        {{ showAllMaterials ? '← Show Less' : 'View All Materials →' }}
+      </button>
+
+      <!-- Start Recycling Button -->
+      <button class="btn btn-primary" routerLink="/register">
+        Start Recycling Now
+      </button>
     </div>
   </section>
 
