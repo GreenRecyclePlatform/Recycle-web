@@ -31,8 +31,7 @@ interface FAQ {
 export class LandingPage implements OnInit {
   materials: Material[] = [];
   loading: boolean = false;
-  categories = ['All', 'Plastic', 'Metal', 'Paper', 'Glass', 'Electronics'];
-  selectedCategory = 'All';
+  showAllMaterials: boolean = false; // 🆕 Toggle for showing all materials
 
   testimonials: Testimonial[] = [
     {
@@ -104,7 +103,8 @@ export class LandingPage implements OnInit {
     this.loading = true;
     this.materialService.getActiveMaterials().subscribe({
       next: (data) => {
-        this.materials = data;
+        // 🆕 Sort materials by price (highest first) for better showcase
+        this.materials = data.sort((a, b) => b.pricePerKg - a.pricePerKg);
         this.loading = false;
       },
       error: (error) => {
@@ -114,19 +114,14 @@ export class LandingPage implements OnInit {
     });
   }
 
-  get filteredMaterials() {
-    if (this.selectedCategory === 'All') {
-      return this.materials;
-    }
-
-    // Filter by material name containing the category
-    return this.materials.filter((material) =>
-      material.name.toLowerCase().includes(this.selectedCategory.toLowerCase())
-    );
+  // 🆕 Get materials to display (6 by default, all when showAll is true)
+  get displayedMaterials(): Material[] {
+    return this.showAllMaterials ? this.materials : this.materials.slice(0, 6);
   }
 
-  selectCategory(category: string) {
-    this.selectedCategory = category;
+  // 🆕 Toggle show all materials
+  toggleShowAll(): void {
+    this.showAllMaterials = !this.showAllMaterials;
   }
 
   toggleFAQ(index: number) {
@@ -136,7 +131,7 @@ export class LandingPage implements OnInit {
   scrollToSection(sectionId: string) {
     const element = document.getElementById(sectionId);
     if (element) {
-      const navbarHeight = 64; // Height of navbar in pixels (4rem)
+      const navbarHeight = 64;
       const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
       const offsetPosition = elementPosition - navbarHeight;
 

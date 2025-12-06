@@ -4,7 +4,9 @@ export interface Material {
   description?: string;
   unit?: string;
   icon: string;
-  image: string;
+  image?: string;
+  imageUrl?: string;
+  imageLocalPath?: string;
   buyingPrice: number;
   sellingPrice: number;
   pricePerKg: number;
