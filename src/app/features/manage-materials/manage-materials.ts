@@ -3,13 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MaterialService } from '../../core/services/material.service';
 import { Material } from '../../core/models/material.model';
-import { Navbar } from '../../shared/components/navbar/navbar';
-import { AdminSidebarComponent } from '../../shared/components/admin-sidebar/admin-sidebar';
 
 @Component({
   selector: 'app-manage-materials',
   standalone: true,
-  imports: [CommonModule, FormsModule,Navbar,AdminSidebarComponent],
+  imports: [CommonModule, FormsModule], // ✅ REMOVED Navbar and AdminSidebarComponent
   templateUrl: './manage-materials.html',
   styleUrl: './manage-materials.css',
 })
@@ -21,10 +19,9 @@ export class ManageMaterials implements OnInit {
   showMaterialModal = false;
   showEmojiPicker = false;
 
-  // 🆕 Loading states
-  isLoading = false;        // For initial page load
-  isSaving = false;         // For create/update operations
-  isDeleting = false;       // For delete operation
+  isLoading = false;
+  isSaving = false;
+  isDeleting = false;
 
   recyclingEmojis = [
     '♻️', '📦', '📄', '🗞️', '📰', '🧻',
@@ -74,17 +71,17 @@ export class ManageMaterials implements OnInit {
   }
 
   loadMaterials(): void {
-    this.isLoading = true; // 🆕 Start loading
+    this.isLoading = true;
 
     this.materialService.getMaterials().subscribe({
       next: (data) => {
         this.materials = data;
-        this.isLoading = false; // 🆕 Stop loading
+        this.isLoading = false;
         console.log('📋 Materials loaded:', data);
       },
       error: (error) => {
         console.error('❌ Error loading materials:', error);
-        this.isLoading = false; // 🆕 Stop loading on error
+        this.isLoading = false;
         alert('Failed to load materials. Please try again.');
       }
     });
@@ -185,7 +182,6 @@ export class ManageMaterials implements OnInit {
   }
 
   saveMaterial(): void {
-    // Validation
     if (!this.materialForm.name.trim()) {
       alert('Please enter material name');
       return;
@@ -203,14 +199,13 @@ export class ManageMaterials implements OnInit {
       return;
     }
 
-    this.isSaving = true; // 🆕 Start saving
+    this.isSaving = true;
 
     console.log('💾 Saving Material...');
     console.log('📝 Form Data:', this.materialForm);
     console.log('🖼️ Image File:', this.imageFile);
 
     if (this.isEditMode && this.selectedMaterial) {
-      // UPDATE MATERIAL
       this.materialService.updateMaterial(
         this.selectedMaterial.id,
         this.materialForm,
@@ -218,33 +213,32 @@ export class ManageMaterials implements OnInit {
       ).subscribe({
         next: (response) => {
           console.log('✅ Material updated successfully:', response);
-          this.isSaving = false; // 🆕 Stop saving
+          this.isSaving = false;
           this.loadMaterials();
           this.closeModal();
           alert('Material updated successfully!');
         },
         error: (error) => {
           console.error('❌ Error updating material:', error);
-          this.isSaving = false; // 🆕 Stop saving on error
+          this.isSaving = false;
           alert(`Failed to update material: ${error.message}`);
         }
       });
     } else {
-      // CREATE MATERIAL
       this.materialService.createMaterial(
         this.materialForm,
         this.imageFile
       ).subscribe({
         next: (response) => {
           console.log('✅ Material created successfully:', response);
-          this.isSaving = false; // 🆕 Stop saving
+          this.isSaving = false;
           this.loadMaterials();
           this.closeModal();
           alert('Material added successfully!');
         },
         error: (error) => {
           console.error('❌ Error creating material:', error);
-          this.isSaving = false; // 🆕 Stop saving on error
+          this.isSaving = false;
           alert(`Failed to add material: ${error.message}`);
         }
       });
@@ -253,19 +247,19 @@ export class ManageMaterials implements OnInit {
 
   deleteMaterial(): void {
     if (this.selectedMaterial) {
-      this.isDeleting = true; // 🆕 Start deleting
+      this.isDeleting = true;
 
       this.materialService.deleteMaterial(this.selectedMaterial.id).subscribe({
         next: () => {
           console.log('✅ Material deleted successfully');
-          this.isDeleting = false; // 🆕 Stop deleting
+          this.isDeleting = false;
           this.loadMaterials();
           this.closeModal();
           alert('Material deleted successfully!');
         },
         error: (error) => {
           console.error('❌ Error deleting material:', error);
-          this.isDeleting = false; // 🆕 Stop deleting on error
+          this.isDeleting = false;
           alert('Failed to delete material. Please try again.');
         }
       });

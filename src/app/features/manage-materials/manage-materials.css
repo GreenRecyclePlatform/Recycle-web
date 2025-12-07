@@ -1,5 +1,5 @@
 .manage-materials-page {
-  padding: 0.95rem 2.25rem;
+  padding: 2rem 2.25rem;
   background-color: transparent;
   min-height: 100vh;
 }
@@ -45,6 +45,7 @@
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(45, 106, 79, 0.3);
 }
+
 
 /* Empty State */
 .empty-state {

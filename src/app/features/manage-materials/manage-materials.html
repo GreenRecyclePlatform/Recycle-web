@@ -1,60 +1,53 @@
-<app-navbar></app-navbar>
-
-<!-- 🆕 Loading State -->
-<div *ngIf="isLoading" class="loading-container">
-  <div class="spinner"></div>
-  <p>Loading materials...</p>
-</div>
-
-<!-- Materials Grid -->
-<div class="materials-grid" *ngIf="!isLoading && materials.length > 0">
-  <div class="material-card" *ngFor="let material of materials; let i = index">
-    <div class="material-image-container">
-      <img
-        [src]="material.imageUrl || 'https://via.placeholder.com/400x400?text=No+Image'"
-        [alt]="material.name"
-        class="material-image"
-        (error)="$event.target.src = 'https://via.placeholder.com/400x400?text=No+Image'"
-      />
+<div class="manage-materials-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Manage Materials</h1>
+      <p class="page-description">Add, edit, and manage recyclable materials</p>
     </div>
-    <button class="btn btn-primary add-material-btn" (click)="openAddModal()">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
+    <button class="add-material-btn" (click)="openAddModal()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="12" y1="5" x2="12" y2="19"></line>
         <line x1="5" y1="12" x2="19" y2="12"></line>
       </svg>
       Add New Material
     </button>
+  </div>
 
-    <div class="material-content">
-      <div class="material-icon-section">
-        <span class="material-emoji">{{ material.icon }}</span>
-        <h3 class="material-name">
-          {{ material.name }}
-          <span *ngIf="material.description" class="material-variant">
-            ({{ material.description }})
-          </span>
-        </h3>
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading materials...</p>
+  </div>
+
+  <!-- Materials Grid -->
+  <div class="materials-grid" *ngIf="!isLoading && materials.length > 0">
+    <div class="material-card" *ngFor="let material of materials">
+      <div class="material-image-container">
+        <img
+          [src]="material.imageUrl || 'https://via.placeholder.com/400x400?text=No+Image'"
+          [alt]="material.name"
+          class="material-image"
+          (error)="$event.target.src = 'https://via.placeholder.com/400x400?text=No+Image'"
+        />
       </div>
 
       <div class="material-content">
         <div class="material-icon-section">
           <span class="material-emoji">{{ material.icon }}</span>
-          <h3 class="material-name">{{ material.name }}</h3>
+          <h3 class="material-name">
+            {{ material.name }}
+            <span *ngIf="material.description" class="material-variant">
+              ({{ material.description }})
+            </span>
+          </h3>
         </div>
+
         <div class="detail-row">
           <span class="detail-label">Price Per Kg:</span>
           <span class="detail-value">₹{{ material.pricePerKg }}/kg</span>
         </div>
+
         <div class="detail-row">
           <span class="detail-label">Status:</span>
           <span
@@ -67,38 +60,16 @@
 
         <div class="material-actions">
           <button class="btn btn-outline-secondary btn-sm" (click)="openEditModal(material)">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
             </svg>
             Edit
           </button>
           <button class="btn btn-outline-danger btn-sm" (click)="openDeleteModal(material)">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="3 6 5 6 21 6"></polyline>
-              <path
-                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
-              ></path>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
             </svg>
             Delete
           </button>
@@ -124,20 +95,12 @@
           <div>
             <h5 class="modal-title">{{ isEditMode ? 'Edit Material' : 'Add New Material' }}</h5>
             <p class="modal-subtitle">
-              {{
-                isEditMode
-                  ? 'Update material information and pricing'
-                  : 'Enter details for the new material'
-              }}
+              {{ isEditMode ? 'Update material information and pricing' : 'Enter details for the new material' }}
             </p>
           </div>
-          <button
-            type="button"
-            class="btn-close"
-            (click)="closeModal()"
-            [disabled]="isSaving"
-          ></button>
+          <button type="button" class="btn-close" (click)="closeModal()" [disabled]="isSaving"></button>
         </div>
+
         <div class="modal-body">
           <form>
             <!-- Image Upload Section -->
@@ -146,114 +109,43 @@
               <div class="image-upload-container">
                 <div class="image-preview" *ngIf="imagePreview">
                   <img [src]="imagePreview" alt="Preview" />
-                  <button
-                    type="button"
-                    class="remove-image-btn"
-                    (click)="removeImage()"
-                    [disabled]="isSaving"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
+                  <button type="button" class="remove-image-btn" (click)="removeImage()" [disabled]="isSaving">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <line x1="18" y1="6" x2="6" y2="18"></line>
                       <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
                   </button>
                 </div>
                 <label class="image-upload-btn" *ngIf="!imagePreview" [class.disabled]="isSaving">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                     <circle cx="8.5" cy="8.5" r="1.5"></circle>
                     <polyline points="21 15 16 10 5 21"></polyline>
                   </svg>
                   <span>Click to upload image from device</span>
-                  <input
-                    type="file"
-                    id="imageInput"
-                    accept="image/*"
-                    (change)="onImageSelect($event)"
-                    [disabled]="isSaving"
-                    hidden
-                  />
+                  <input type="file" id="imageInput" accept="image/*" (change)="onImageSelect($event)" [disabled]="isSaving" hidden />
                 </label>
               </div>
-              <label class="image-upload-btn" *ngIf="!imagePreview">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                  <polyline points="21 15 16 10 5 21"></polyline>
-                </svg>
-                <span>Click to upload image from device</span>
-                <input type="file" accept="image/*" (change)="onImageSelect($event)" hidden />
-              </label>
+              <small class="form-text text-muted">Recommended: Square images (1:1 ratio), JPG or PNG, max 5MB</small>
             </div>
-            <small class="form-text text-muted"
-              >Recommended: Square images (1:1 ratio), JPG or PNG, max 5MB</small
-            >
 
             <div class="row mb-3">
               <div class="col-md-8">
                 <label class="form-label">Material Name *</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  [(ngModel)]="materialForm.name"
-                  name="name"
-                  placeholder="e.g., Paper"
-                  [disabled]="isSaving"
-                  required
-                />
+                <input type="text" class="form-control" [(ngModel)]="materialForm.name" name="name" placeholder="e.g., Paper" [disabled]="isSaving" required />
               </div>
               <div class="col-md-4">
                 <label class="form-label">Icon/Emoji *</label>
                 <div class="emoji-input-container">
-                  <div
-                    class="emoji-display-wrapper"
-                    (click)="toggleEmojiPicker()"
-                    [class.disabled]="isSaving"
-                  >
+                  <div class="emoji-display-wrapper" (click)="toggleEmojiPicker()" [class.disabled]="isSaving">
                     <span class="emoji-display-icon">{{ materialForm.icon }}</span>
                     <span class="emoji-display-text">Click to change</span>
                   </div>
 
-                  <div
-                    class="emoji-picker"
-                    *ngIf="showEmojiPicker"
-                    (click)="$event.stopPropagation()"
-                  >
+                  <div class="emoji-picker" *ngIf="showEmojiPicker" (click)="$event.stopPropagation()">
                     <div class="emoji-picker-header">
                       <span>Select an Icon</span>
-                      <button type="button" class="emoji-close-btn" (click)="toggleEmojiPicker()">
-                        ×
-                      </button>
+                      <button type="button" class="emoji-close-btn" (click)="toggleEmojiPicker()">×</button>
                     </div>
                     <div class="emoji-grid">
                       <button
@@ -274,58 +166,21 @@
 
             <div class="mb-3">
               <label class="form-label">Description</label>
-              <textarea
-                class="form-control"
-                rows="3"
-                [(ngModel)]="materialForm.description"
-                name="description"
-                placeholder="e.g., Books, Newspapers, Cardboard"
-                [disabled]="isSaving"
-              ></textarea>
+              <textarea class="form-control" rows="3" [(ngModel)]="materialForm.description" name="description" placeholder="e.g., Books, Newspapers, Cardboard" [disabled]="isSaving"></textarea>
             </div>
 
             <div class="row mb-3">
               <div class="col-md-4">
                 <label class="form-label">Buying Price (₹/kg) *</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  [(ngModel)]="materialForm.buyingPrice"
-                  name="buyingPrice"
-                  placeholder="25"
-                  min="0"
-                  step="0.01"
-                  [disabled]="isSaving"
-                  required
-                />
+                <input type="number" class="form-control" [(ngModel)]="materialForm.buyingPrice" name="buyingPrice" placeholder="25" min="0" step="0.01" [disabled]="isSaving" required />
               </div>
               <div class="col-md-4">
                 <label class="form-label">Selling Price (₹/kg) *</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  [(ngModel)]="materialForm.sellingPrice"
-                  name="sellingPrice"
-                  placeholder="35"
-                  min="0"
-                  step="0.01"
-                  [disabled]="isSaving"
-                  required
-                />
+                <input type="number" class="form-control" [(ngModel)]="materialForm.sellingPrice" name="sellingPrice" placeholder="35" min="0" step="0.01" [disabled]="isSaving" required />
               </div>
               <div class="col-md-4">
                 <label class="form-label">Price Per Kg (₹/kg) *</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  [(ngModel)]="materialForm.pricePerKg"
-                  name="pricePerKg"
-                  placeholder="30"
-                  min="0"
-                  step="0.01"
-                  [disabled]="isSaving"
-                  required
-                />
+                <input type="number" class="form-control" [(ngModel)]="materialForm.pricePerKg" name="pricePerKg" placeholder="30" min="0" step="0.01" [disabled]="isSaving" required />
               </div>
             </div>
 
@@ -339,31 +194,15 @@
                 [disabled]="isSaving"
               />
               <label class="form-check-label" for="statusSwitch">
-                Active Status -
-                <span class="text-muted"
-                  >Material will be {{ materialForm.status === 'active' ? 'visible' : 'hidden' }} to
-                  users</span
-                >
+                Active Status - <span class="text-muted">Material will be {{ materialForm.status === 'active' ? 'visible' : 'hidden' }} to users</span>
               </label>
             </div>
           </form>
         </div>
+
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            (click)="closeModal()"
-            [disabled]="isSaving"
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="saveMaterial()"
-            [disabled]="isSaving"
-          >
-            <!-- 🆕 Loading spinner in button -->
+          <button type="button" class="btn btn-secondary" (click)="closeModal()" [disabled]="isSaving">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="saveMaterial()" [disabled]="isSaving">
             <span *ngIf="isSaving" class="button-spinner"></span>
             <span *ngIf="!isSaving">{{ isEditMode ? 'Save Changes' : 'Add Material' }}</span>
             <span *ngIf="isSaving">{{ isEditMode ? 'Saving...' : 'Adding...' }}</span>
@@ -371,59 +210,30 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div class="modal-backdrop" *ngIf="showDeleteModal" (click)="closeModal()"></div>
-    <div class="modal" [class.show]="showDeleteModal" *ngIf="showDeleteModal">
-      <div class="modal-dialog" (click)="$event.stopPropagation()">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Delete Material</h5>
-            <button
-              type="button"
-              class="btn-close"
-              (click)="closeModal()"
-              [disabled]="isDeleting"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div class="delete-confirmation">
-              <div class="warning-icon">⚠️</div>
-              <p>
-                Are you sure you want to delete <strong>"{{ selectedMaterial?.name }}"</strong>?
-              </p>
-              <p class="text-muted">
-                This action cannot be undone and will permanently remove this material from your
-                system.
-              </p>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              (click)="closeModal()"
-              [disabled]="isDeleting"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              class="btn btn-danger"
-              (click)="deleteMaterial()"
-              [disabled]="isDeleting"
-            >
-              <!-- 🆕 Loading spinner in delete button -->
-              <span *ngIf="isDeleting" class="button-spinner"></span>
-              <span *ngIf="!isDeleting">Delete Material</span>
-              <span *ngIf="isDeleting">Deleting...</span>
-            </button>
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-backdrop" *ngIf="showDeleteModal" (click)="closeModal()"></div>
+  <div class="modal" [class.show]="showDeleteModal" *ngIf="showDeleteModal">
+    <div class="modal-dialog" (click)="$event.stopPropagation()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Material</h5>
+          <button type="button" class="btn-close" (click)="closeModal()" [disabled]="isDeleting"></button>
+        </div>
+        <div class="modal-body">
+          <div class="delete-confirmation">
+            <div class="warning-icon">⚠️</div>
+            <p>Are you sure you want to delete <strong>"{{ selectedMaterial?.name }}"</strong>?</p>
+            <p class="text-muted">This action cannot be undone and will permanently remove this material from your system.</p>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
-          <button type="button" class="btn btn-danger" (click)="deleteMaterial()">
-            Delete Material
+          <button type="button" class="btn btn-secondary" (click)="closeModal()" [disabled]="isDeleting">Cancel</button>
+          <button type="button" class="btn btn-danger" (click)="deleteMaterial()" [disabled]="isDeleting">
+            <span *ngIf="isDeleting" class="button-spinner"></span>
+            <span *ngIf="!isDeleting">Delete Material</span>
+            <span *ngIf="isDeleting">Deleting...</span>
           </button>
         </div>
       </div>

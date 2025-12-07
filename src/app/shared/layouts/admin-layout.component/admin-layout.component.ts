@@ -30,7 +30,6 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Load user data from localStorage/sessionStorage
     this.loadUserData();
 
     // Subscribe to notification count for sidebar badge
@@ -41,12 +40,8 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Load user data from storage
-   */
   private loadUserData(): void {
     try {
-      // Try to get user data from localStorage or sessionStorage
       const userDataStr = localStorage.getItem('userData') || sessionStorage.getItem('userData');
 
       if (userDataStr) {
@@ -54,7 +49,6 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
         this.adminName = userData.name || userData.username || 'Admin User';
         this.adminRole = userData.role || 'Admin';
       } else {
-        // Fallback: Try to decode token to get user info
         const token = localStorage.getItem('token') || sessionStorage.getItem('token');
         if (token) {
           const payload = this.decodeToken(token);
@@ -64,13 +58,9 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
       }
     } catch (error) {
       console.error('Error loading user data:', error);
-      // Keep default values if error occurs
     }
   }
 
-  /**
-   * Decode JWT token to extract user information
-   */
   private decodeToken(token: string): any {
     try {
       const payload = token.split('.')[1];
@@ -81,15 +71,23 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Logout user and redirect to home
-   */
   logout(): void {
+    // Stop SignalR connection
+    this.signalRService.stopConnection().then(() => {
+      console.log('✅ SignalR disconnected');
+    });
+
+    // Clear notification state
+    this.notificationService.clearState();
+
     // Clear storage
     localStorage.removeItem('token');
     localStorage.removeItem('userData');
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('userData');
+
+    // Logout from auth service
+    this.authService.logout();
 
     // Navigate to landing page
     this.router.navigate(['/']);
