@@ -34,6 +34,7 @@ import { TestNotificationsComponent } from './pages/test-notifications/test-noti
 import { Settings } from './features/admin/settings/settings';
 import { ManageMaterials } from './features/manage-materials/manage-materials';
 import { Profiledriver } from './features/driverassignments/components/profiledriver/profiledriver';
+import { adminGuard } from './core/guards/admin-guard';
 
 export const routes: Routes = [
   //{
@@ -87,16 +88,16 @@ export const routes: Routes = [
       import('./shared/layouts/admin-layout.component/admin-layout.component').then(
         (m) => m.AdminLayoutComponent
       ),
-    // canActivate: [adminGuard], // Uncomment when auth is ready
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'drivers', component: AllDrivers },
       { path: 'assign-drivers', component: AssignDriver },
-      {
-        path: 'manage-materials',
-        loadComponent: () =>
-          import('./features/manage-materials/manage-materials').then((m) => m.ManageMaterials),
-      },
+      { path: 'manage-materials', component: ManageMaterials },
+      // {
+      //   path: 'manage-materials',
+      //   loadComponent: () =>
+      //     import('./features/manage-materials/manage-materials').then((m) => m.ManageMaterials),
+      // },
       {
         path: 'settings',
         loadComponent: () => import('./features/admin/settings/settings').then((m) => m.Settings),
