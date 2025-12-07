@@ -112,11 +112,17 @@ input:focus {
 
 .next {
   padding: 8px 12px;
-  color: white;
+  color: #ffffff !important;
   background-color: var(--primary-green) !important;
-  font-size: 14px;
+  font-size: 0.875rem;
+  font-weight: 500;
   border-radius: calc(0.625rem - 2px);
+  gap: calc(00.25rem * 2);
 }
+.next:hover {
+  background-color: rgba(45, 106, 79, 0.9) !important;
+}
+
 .create {
   padding: 8px 16px;
   color: white !important;

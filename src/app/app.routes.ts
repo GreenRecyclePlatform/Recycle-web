@@ -33,35 +33,28 @@ import { ResetPassword } from './features/auth/reset-password/reset-password';
 import { TestNotificationsComponent } from './pages/test-notifications/test-notifications.component';
 import { Settings } from './features/admin/settings/settings';
 import { ManageMaterials } from './features/manage-materials/manage-materials';
+import { Profiledriver } from './features/driverassignments/components/profiledriver/profiledriver';
 
 export const routes: Routes = [
+  //{
+  //   path: 'admin',
+  //   children: [
+  //     { path: 'drivers', component: AllDrivers },
+  //     { path: 'assign-drivers', component: AssignDriver },
+  //     { path: 'settings', component: Settings },
+  //     { path: 'manage-materials', component: ManageMaterials },
+  //   ],
+  // },
 
-    
-
-   {
-    path: 'admin',
+  {
+    path: 'driver',
     children: [
-      { path: 'drivers', component: AllDrivers },  
-      { path: 'assign-drivers', component: AssignDriver },  
-      {path:'settings',component:Settings},
-      {path:'manage-materials',component:ManageMaterials}
-    ]
-   },
-   
+      { path: 'DashBoardDrivers', component: DriverDashboard },
+      { path: 'DriverProfile', component: Profiledriver },
+    ],
+  },
 
-   {
-      path:'driver',
-      children:[
- { path: 'DashBoardDrivers', component: DriverDashboard },
-    { path: 'DriverProfile', component: Profiledriver },
-
-      ]
-
-   },
-   
-
-
-    { path: '', component: LandingPage },
+  { path: '', component: LandingPage },
   { path: 'login', component: LoginPage },
   { path: 'register', component: RegistrationPage },
   { path: 'forgot-password', component: ForgotPasswordPage },

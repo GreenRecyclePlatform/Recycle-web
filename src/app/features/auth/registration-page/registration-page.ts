@@ -287,11 +287,6 @@ export class RegistrationPage {
       return;
     }
 
-    // const { password, confirmPassword } = this.registrationForm.value;
-    // if (password !== confirmPassword) {
-    //   this.snackBar.open('Passwords do not match', 'Close', { duration: 3000 });
-    //   return;
-    // }
     const registerRequest: RegisterRequest = {
       firstName: this.registrationForm.value.firstName,
       lastName: this.registrationForm.value.lastName,
