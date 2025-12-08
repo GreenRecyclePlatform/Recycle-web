@@ -46,7 +46,6 @@
   box-shadow: 0 4px 12px rgba(45, 106, 79, 0.3);
 }
 
-
 /* Empty State */
 .empty-state {
   text-align: center;
@@ -158,12 +157,20 @@
   font-weight: 600;
 }
 
-.buying-price {
+/* ✅ UPDATED: Price display colors in material cards */
+.customer-price {
   color: #2D6A4F;
+  font-weight: 600;
 }
 
-.selling-price {
+.wholesale-price {
   color: #0077B6;
+  font-weight: 600;
+}
+
+.profit-margin {
+  color: #28a745;
+  font-weight: 700;
 }
 
 .badge {
@@ -225,7 +232,8 @@
   background-color: #dc3545;
   color: white;
 }
-/* 🆕 Loading Container */
+
+/* Loading Container */
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -245,7 +253,7 @@
   font-weight: 500;
 }
 
-/* 🆕 Spinner Animation */
+/* Spinner Animation */
 .spinner {
   width: 50px;
   height: 50px;
@@ -260,7 +268,7 @@
   100% { transform: rotate(360deg); }
 }
 
-/* 🆕 Button Spinner */
+/* Button Spinner */
 .button-spinner {
   display: inline-block;
   width: 14px;
@@ -273,7 +281,7 @@
   vertical-align: middle;
 }
 
-/* 🆕 Disabled State */
+/* Disabled State */
 .btn:disabled,
 .image-upload-btn.disabled,
 .emoji-display-wrapper.disabled {
@@ -282,13 +290,14 @@
   pointer-events: none;
 }
 
-/* 🆕 Material Variant Display */
+/* Material Variant Display */
 .material-variant {
   font-size: 0.875rem;
   font-weight: 400;
   color: #6c757d;
   margin-left: 0.25rem;
 }
+
 /* Image Upload */
 .image-upload-container {
   border: 2px dashed #dee2e6;
@@ -669,11 +678,6 @@
   margin-bottom: 0.5rem;
 }
 
-.text-muted {
-  color: #6c757d;
-  font-size: 0.875rem;
-}
-
 /* Form Styles */
 .form-label {
   font-weight: 500;
@@ -731,6 +735,40 @@
 
 .mb-3 { margin-bottom: 1rem; }
 .mb-4 { margin-bottom: 1.5rem; }
+
+/* ✅ NEW: Price hint styling */
+.price-hint {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #6c757d;
+  margin-top: 0.25rem;
+}
+
+/* ✅ NEW: Profit info box */
+.profit-info-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  border-left: 4px solid #28a745;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  animation: slideIn 0.3s ease;
+}
+
+.profit-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #155724;
+}
+
+.profit-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #28a745;
+}
 
 /* Buttons */
 .btn {
@@ -825,5 +863,15 @@
   .emoji-option {
     font-size: 1.5rem;
     padding: 0.5rem;
+  }
+
+  .profit-info-box {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .price-hint {
+    font-size: 0.7rem;
   }
 }
