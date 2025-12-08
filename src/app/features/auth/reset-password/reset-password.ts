@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import {
   MatCard,
@@ -20,6 +21,7 @@ import { passwordSpecialValidator } from '../../../core/validators/passwordSpeci
 @Component({
   selector: 'app-reset-password',
   imports: [
+    CommonModule,
     MatCard,
     MatCardHeader,
     LucideAngularModule,
@@ -37,6 +39,17 @@ export class ResetPassword {
   token: string | null = null;
   resetPasswordForm: FormGroup;
   ArrowLeft = ArrowLeft;
+
+  showPassword = false;
+  showConfirmPassword = false;
+
+  togglePassword(flag: string | null = null): void {
+    if (flag === 'confirm') {
+      this.showConfirmPassword = !this.showConfirmPassword;
+      return;
+    }
+    this.showPassword = !this.showPassword;
+  }
 
   constructor(
     private fb: FormBuilder,
