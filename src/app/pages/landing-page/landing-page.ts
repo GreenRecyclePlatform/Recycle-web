@@ -1,6 +1,5 @@
 //neww
-
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MaterialService } from '../../core/services/material.service';
@@ -31,7 +30,8 @@ interface FAQ {
 export class LandingPage implements OnInit {
   materials: Material[] = [];
   loading: boolean = false;
-  showAllMaterials: boolean = false; // 🆕 Toggle for showing all materials
+  showAllMaterials: boolean = false;
+  showBackToTop: boolean = false; // 🆕 Control back to top button visibility
 
   testimonials: Testimonial[] = [
     {
@@ -99,12 +99,19 @@ export class LandingPage implements OnInit {
     this.loadMaterials();
   }
 
+  // 🆕 Listen to scroll events to show/hide back to top button
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    // Show button after scrolling down 300px
+    this.showBackToTop = window.pageYOffset > 300;
+  }
+
   loadMaterials(): void {
     this.loading = true;
     this.materialService.getActiveMaterials().subscribe({
       next: (data) => {
-        // 🆕 Sort materials by price (highest first) for better showcase
-        this.materials = data.sort((a, b) => b.pricePerKg - a.pricePerKg);
+        // Sort materials by price (highest first) for better showcase
+        this.materials = data.sort((a, b) => b.buyingPrice - a.buyingPrice);
         this.loading = false;
       },
       error: (error) => {
@@ -114,12 +121,12 @@ export class LandingPage implements OnInit {
     });
   }
 
-  // 🆕 Get materials to display (6 by default, all when showAll is true)
+  // Get materials to display (6 by default, all when showAll is true)
   get displayedMaterials(): Material[] {
     return this.showAllMaterials ? this.materials : this.materials.slice(0, 6);
   }
 
-  // 🆕 Toggle show all materials
+  // Toggle show all materials
   toggleShowAll(): void {
     this.showAllMaterials = !this.showAllMaterials;
   }
@@ -131,7 +138,7 @@ export class LandingPage implements OnInit {
   scrollToSection(sectionId: string) {
     const element = document.getElementById(sectionId);
     if (element) {
-      const navbarHeight = 64;
+      const navbarHeight = 80; // 🆕 Updated to match fixed navbar height
       const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
       const offsetPosition = elementPosition - navbarHeight;
 
@@ -140,5 +147,13 @@ export class LandingPage implements OnInit {
         behavior: 'smooth'
       });
     }
+  }
+
+  // 🆕 Scroll to top function
+  scrollToTop(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }
 }

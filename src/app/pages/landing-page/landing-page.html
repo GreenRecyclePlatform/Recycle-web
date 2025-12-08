@@ -1,6 +1,17 @@
 <div class="landing-page">
   <app-navbar [transparent]="true"></app-navbar>
 
+  <!-- 🆕 Back to Top Button -->
+  <button
+    class="back-to-top"
+    [class.show]="showBackToTop"
+    (click)="scrollToTop()"
+    aria-label="Back to top">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
   <!-- Hero Section -->
   <section class="hero">
     <div class="hero-overlay"></div>
@@ -27,8 +38,7 @@
       </div>
       <div class="hero-image">
         <img
-                       src= "https://static.vecteezy.com/system/resources/thumbnails/053/633/645/small_2x/colorful-recycling-bins-in-a-lush-garden-with-bright-sunlight-free-photo.jpg"
-
+          src="https://static.vecteezy.com/system/resources/thumbnails/053/633/645/small_2x/colorful-recycling-bins-in-a-lush-garden-with-bright-sunlight-free-photo.jpg"
           alt="Recycling"
           onerror="this.src='https://via.placeholder.com/600x400?text=Recycling'"
         />
@@ -39,65 +49,62 @@
   <!-- How It Works Section -->
   <section id="how-it-works" class="how-it-works">
     <div class="container">
-        <!-- Section Header -->
-        <div class="section-header">
-            <div class="section-badge">
-                <span>🍃</span>
-                <span>SIMPLE PROCESS</span>
-            </div>
-            <h2>How It Works</h2>
-            <p class="section-subtitle">Simple, fast, and rewarding</p>
+      <!-- Section Header -->
+      <div class="section-header">
+        <div class="section-badge">
+          <span>🍃</span>
+          <span>SIMPLE PROCESS</span>
         </div>
+        <h2>How It Works</h2>
+        <p class="section-subtitle">Simple, fast, and rewarding</p>
+      </div>
 
-        <!-- Steps -->
-        <div class="steps-wrapper">
-            <div class="steps-grid">
-                
-                <!-- Step 1 -->
-                <div class="step-card">
-                    <div class="step-number">1</div>
-                    <div class="icon-container">
-                        <i class="bi bi-cloud-upload"></i>
-                    </div>
-                    <h3>Submit Materials</h3>
-                    <p>Upload photos of your recyclables and get an instant price estimate from our AI-powered system</p>
-                    <div class="highlight-box">
-                        <p>✓ Instant AI estimation</p>
-                    </div>
-                </div>
+      <!-- Steps -->
+      <div class="steps-wrapper">
+        <div class="steps-grid">
 
-                <!-- Step 2 -->
-                <div class="step-card">
-                    <div class="step-number">2</div>
-                    <div class="icon-container">
-                        <i class="bi bi-calendar-check"></i>
-                    </div>
-                    <h3>Schedule Pickup</h3>
-                    <p>Choose a convenient time slot and our verified driver will collect from your doorstep at no extra cost</p>
-                    <div class="highlight-box">
-                        <p>✓ Free doorstep pickup</p>
-                    </div>
-                </div>
-
-                <!-- Step 3 -->
-                <div class="step-card">
-                    <div class="step-number">3</div>
-                    <div class="icon-container">
-                        <i class="bi bi-cash-coin"></i>
-                    </div>
-                    <h3>Get Paid</h3>
-                    <p>Receive instant payment after verification directly to your account with zero processing fees</p>
-                    <div class="highlight-box">
-                        <p>✓ Instant payment transfer</p>
-                    </div>
-                </div>
-
+          <!-- Step 1 -->
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <div class="icon-container">
+              <i class="bi bi-cloud-upload"></i>
             </div>
-        </div>
+            <h3>Submit Materials</h3>
+            <p>Upload photos of your recyclables and get an instant price estimate from our AI-powered system</p>
+            <div class="highlight-box">
+              <p>✓ Instant AI estimation</p>
+            </div>
+          </div>
 
-        
+          <!-- Step 2 -->
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <div class="icon-container">
+              <i class="bi bi-calendar-check"></i>
+            </div>
+            <h3>Schedule Pickup</h3>
+            <p>Choose a convenient time slot and our verified driver will collect from your doorstep at no extra cost</p>
+            <div class="highlight-box">
+              <p>✓ Free doorstep pickup</p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <div class="icon-container">
+              <i class="bi bi-cash-coin"></i>
+            </div>
+            <h3>Get Paid</h3>
+            <p>Receive instant payment after verification directly to your account with zero processing fees</p>
+            <div class="highlight-box">
+              <p>✓ Instant payment transfer</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
-
   </section>
 
   <!-- Materials Section -->
@@ -105,12 +112,9 @@
     <div class="section-header">
       <h2>Popular Materials</h2>
       <p class="section-subtitle">
-        <!-- 🆕 Dynamic subtitle based on state -->
         {{ showAllMaterials ? 'All available recyclable materials' : 'Top-paying recyclable materials' }}
       </p>
     </div>
-
-    <!-- 🆕 REMOVED: Category Filters -->
 
     <!-- Loading State -->
     <div *ngIf="loading" class="loading-state">
@@ -120,7 +124,6 @@
 
     <!-- Materials Grid -->
     <div class="materials-grid" *ngIf="!loading">
-      <!-- 🆕 Changed from filteredMaterials to displayedMaterials -->
       <div class="material-card" *ngFor="let material of displayedMaterials">
         <div class="material-image">
           <img
@@ -132,7 +135,7 @@
         <div class="material-content">
           <div class="material-icon">{{ material.icon }}</div>
           <h3>{{ material.name }}</h3>
-          <p class="material-price">₹{{ material.pricePerKg }}/kg</p>
+          <p class="material-price">₹{{ material.buyingPrice }}/kg</p>
         </div>
       </div>
     </div>
@@ -142,9 +145,9 @@
       <p>No materials available at the moment.</p>
     </div>
 
-    <!-- 🆕 CTA Buttons Container -->
+    <!-- CTA Buttons Container -->
     <div class="materials-cta" *ngIf="!loading && materials.length > 0">
-      <!-- 🆕 Show All / Show Less Button (only if more than 6 materials) -->
+      <!-- Show All / Show Less Button -->
       <button
         *ngIf="materials.length > 6"
         class="btn btn-outline"
