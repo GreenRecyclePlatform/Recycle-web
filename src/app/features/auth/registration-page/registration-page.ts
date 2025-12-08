@@ -369,6 +369,7 @@ export class RegistrationPage {
       },
       error: (error) => {
         console.log(error);
+        this.snackBar.open(error, 'Close', { duration: 3000 });
       },
     });
   }

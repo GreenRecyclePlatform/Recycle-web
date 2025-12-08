@@ -183,3 +183,8 @@ mat-card {
   border: 1px solid #e0e0e0 !important;
   border-radius: calc(0.625rem + 4px) !important;
 }
+
+input[type='checkbox'] {
+  outline: none;
+  accent-color: black; /* changes the checkmark and the filled background when checked */
+}

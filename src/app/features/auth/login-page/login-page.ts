@@ -161,6 +161,7 @@ export class LoginPage implements OnDestroy {
       error: (error) => {
         console.log(error);
         this.snackBar.open(error, 'Close', { duration: 3000 });
+        this.isLoading = false;
       },
     });
 
