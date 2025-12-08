@@ -43,9 +43,22 @@
           </h3>
         </div>
 
+        <!-- ✅ UPDATED: Show Customer Price (what you pay customers) -->
         <div class="detail-row">
-          <span class="detail-label">Price Per Kg:</span>
-          <span class="detail-value">₹{{ material.pricePerKg }}/kg</span>
+          <span class="detail-label">Customer Price:</span>
+          <span class="detail-value customer-price">₹{{ material.buyingPrice }}/kg</span>
+        </div>
+
+        <!-- ✅ NEW: Show Wholesale Price (what plants pay you) -->
+        <div class="detail-row">
+          <span class="detail-label">Wholesale Price:</span>
+          <span class="detail-value wholesale-price">₹{{ material.sellingPrice }}/kg</span>
+        </div>
+
+        <!-- ✅ NEW: Show Profit Margin -->
+        <div class="detail-row">
+          <span class="detail-label">Profit Margin:</span>
+          <span class="detail-value profit-margin">₹{{ material.sellingPrice - material.buyingPrice }}/kg</span>
         </div>
 
         <div class="detail-row">
@@ -169,19 +182,48 @@
               <textarea class="form-control" rows="3" [(ngModel)]="materialForm.description" name="description" placeholder="e.g., Books, Newspapers, Cardboard" [disabled]="isSaving"></textarea>
             </div>
 
+            <!-- ✅ UPDATED PRICING SECTION - Only 2 fields now -->
             <div class="row mb-3">
-              <div class="col-md-4">
-                <label class="form-label">Buying Price (₹/kg) *</label>
-                <input type="number" class="form-control" [(ngModel)]="materialForm.buyingPrice" name="buyingPrice" placeholder="25" min="0" step="0.01" [disabled]="isSaving" required />
+              <div class="col-md-6">
+                <label class="form-label">
+                  Customer Price (₹/kg) *
+                  <span class="price-hint">💰 What you pay customers</span>
+                </label>
+                <input
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="materialForm.buyingPrice"
+                  name="buyingPrice"
+                  placeholder="25"
+                  min="0"
+                  step="0.01"
+                  [disabled]="isSaving"
+                  required
+                />
               </div>
-              <div class="col-md-4">
-                <label class="form-label">Selling Price (₹/kg) *</label>
-                <input type="number" class="form-control" [(ngModel)]="materialForm.sellingPrice" name="sellingPrice" placeholder="35" min="0" step="0.01" [disabled]="isSaving" required />
+              <div class="col-md-6">
+                <label class="form-label">
+                  Wholesale Price (₹/kg) *
+                  <span class="price-hint">🏭 What plants pay you</span>
+                </label>
+                <input
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="materialForm.sellingPrice"
+                  name="sellingPrice"
+                  placeholder="35"
+                  min="0"
+                  step="0.01"
+                  [disabled]="isSaving"
+                  required
+                />
               </div>
-              <div class="col-md-4">
-                <label class="form-label">Price Per Kg (₹/kg) *</label>
-                <input type="number" class="form-control" [(ngModel)]="materialForm.pricePerKg" name="pricePerKg" placeholder="30" min="0" step="0.01" [disabled]="isSaving" required />
-              </div>
+            </div>
+
+            <!-- ✅ NEW: Show calculated profit margin in real-time -->
+            <div class="profit-info-box" *ngIf="materialForm.buyingPrice > 0 && materialForm.sellingPrice > 0">
+              <div class="profit-label">📊 Profit Margin:</div>
+              <div class="profit-value">₹{{ calculateProfitMargin() }}/kg</div>
             </div>
 
             <div class="form-check form-switch mb-3">

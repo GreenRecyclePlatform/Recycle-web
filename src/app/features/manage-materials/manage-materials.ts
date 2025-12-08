@@ -7,7 +7,7 @@ import { Material } from '../../core/models/material.model';
 @Component({
   selector: 'app-manage-materials',
   standalone: true,
-  imports: [CommonModule, FormsModule], // ✅ REMOVED Navbar and AdminSidebarComponent
+  imports: [CommonModule, FormsModule],
   templateUrl: './manage-materials.html',
   styleUrl: './manage-materials.css',
 })
@@ -56,7 +56,7 @@ export class ManageMaterials implements OnInit {
     unit: 'kg',
     buyingPrice: 0,
     sellingPrice: 0,
-    pricePerKg: 0,
+    pricePerKg: 0, // ✅ Still kept for backend, but hidden from UI
     status: 'active' as 'active' | 'inactive',
     image: ''
   };
@@ -104,7 +104,7 @@ export class ManageMaterials implements OnInit {
       unit: material.unit || 'kg',
       buyingPrice: material.buyingPrice,
       sellingPrice: material.sellingPrice,
-      pricePerKg: material.pricePerKg,
+      pricePerKg: material.pricePerKg, // ✅ Load existing value but won't show in UI
       status: material.status,
       image: material.imageUrl || ''
     };
@@ -139,10 +139,12 @@ export class ManageMaterials implements OnInit {
     return this.emojiTitles[emoji] || 'Icon';
   }
 
-  calculatePricePerKg(): void {
+  // ✅ Calculate profit margin for display (optional helper)
+  calculateProfitMargin(): number {
     if (this.materialForm.buyingPrice > 0 && this.materialForm.sellingPrice > 0) {
-      this.materialForm.pricePerKg = (this.materialForm.buyingPrice + this.materialForm.sellingPrice) / 2;
+      return this.materialForm.sellingPrice - this.materialForm.buyingPrice;
     }
+    return 0;
   }
 
   onImageSelect(event: any): void {
@@ -187,17 +189,20 @@ export class ManageMaterials implements OnInit {
       return;
     }
     if (this.materialForm.buyingPrice <= 0) {
-      alert('Please enter a valid buying price');
+      alert('Please enter a valid customer price');
       return;
     }
     if (this.materialForm.sellingPrice <= 0) {
-      alert('Please enter a valid selling price');
+      alert('Please enter a valid wholesale price');
       return;
     }
     if (this.materialForm.sellingPrice <= this.materialForm.buyingPrice) {
-      alert('Selling price must be greater than buying price');
+      alert('Wholesale price must be greater than customer price');
       return;
     }
+
+    // ✅ Auto-calculate pricePerKg before sending (kept for backend compatibility)
+    this.materialForm.pricePerKg = (this.materialForm.buyingPrice + this.materialForm.sellingPrice) / 2;
 
     this.isSaving = true;
 
