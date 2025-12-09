@@ -12,7 +12,7 @@ export interface DriverProfileResponse {
   isAvailable: boolean;
   totalTrips: number;
   createdAt: string;
-  phonenumber: string;  // Backend returns lowercase
+  phonenumber: string; 
   email: string;
   address: {
     street: string;
@@ -22,12 +22,11 @@ export interface DriverProfileResponse {
   };
 }
 
-// ✅ FIXED: phoneNumber with capital N to match backend DTO
 export interface UpdateDriverProfileRequest {
   firstName: string;
   lastName: string;
   profileImageUrl?: string;
-  phoneNumber: string;  // ⬅️ Capital N to match backend UpdateDriverProfileDto
+  phoneNumber: string;  
   email: string;
   address: {
     street: string;
@@ -37,7 +36,6 @@ export interface UpdateDriverProfileRequest {
   };
 }
 
-// Internal component interfaces (no changes)
 export interface DriverProfile {
   FirstName: string;
   LastName: string;

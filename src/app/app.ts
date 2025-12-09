@@ -4,14 +4,17 @@ import { AuthService } from './core/services/authservice';
 import { Subject, takeUntil } from 'rxjs';
 import { RouterOutlet } from '@angular/router';
 import { RouterModule } from '@angular/router';
-
+import { Chatbot } from "./shared/components/chatbot/chatbot";
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.html',
   styleUrls: ['./app.css'],
-  imports: [RouterOutlet],
-
+  standalone: true,
+  imports: [RouterOutlet, Chatbot],
+  template: `
+    <router-outlet />
+    <app-chatbot />  
+  `
 })
 export class App implements OnInit, OnDestroy {
   title = 'RecycleHub';

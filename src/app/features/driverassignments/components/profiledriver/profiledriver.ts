@@ -44,7 +44,7 @@ export class Profiledriver implements OnInit {
     address: '',
     profileImage: null
   };
-
+    originalData: DriverProfile = { ...this.profileData };
   stats: DriverStats = {
     totalPickups: 0,
     rating: 0,
@@ -53,7 +53,6 @@ export class Profiledriver implements OnInit {
     isAvailable: false
   };
 
-  originalData: DriverProfile = { ...this.profileData };
   private apiResponse: DriverProfileResponse | null = null;
 
   constructor(
@@ -74,11 +73,6 @@ export class Profiledriver implements OnInit {
     const isDriver = this.authService.isDriver();
     const isAdmin = this.authService.isAdmin();
 
-    console.log('🔐 Token exists:', !!token);
-    console.log('🔐 User ID:', userId);
-    console.log('🔐 Role:', userRole);
-    console.log('🔐 Is Driver:', isDriver);
-    console.log('🔐 Is Admin:', isAdmin);
 
     if (!token) {
       this.errorMessage = 'Please login to access your profile';
@@ -91,14 +85,13 @@ export class Profiledriver implements OnInit {
       return;
     }
 
-    if (!isDriver && !isAdmin) {
+    if (!isDriver) {
       this.errorMessage = 'You need Driver privileges to access this page';
       console.warn('⚠️ Not a driver - access denied');
       return;
     }
 
     this.driverId = userId;
-    console.log( this.driverId);
     this.loadDriverProfile();
   }
 
@@ -110,10 +103,6 @@ export class Profiledriver implements OnInit {
       next: (response: DriverProfileResponse) => {
         this.apiResponse = response;
         this.driverProfileId = response.id; 
-        
-        console.log( response);
-        console.log( this.driverProfileId);
-        
         this.profileData = {
           FirstName: response.firstName,
           LastName: response.lastName,
@@ -190,7 +179,7 @@ export class Profiledriver implements OnInit {
       this.saveChanges();
     } else {
       this.originalData = { ...this.profileData };
-      this.isEditing = true;
+      this.isEditing = true;//show input fields to Edit 
     }
   }
 
@@ -228,6 +217,7 @@ export class Profiledriver implements OnInit {
         }
         
         this.sidebarData.name = `${this.profileData.FirstName} ${this.profileData.LastName}`;
+
         
         this.originalData = { ...this.profileData };
         this.selectedImage = null;
@@ -240,18 +230,31 @@ export class Profiledriver implements OnInit {
       error: (error) => {
         console.error(error);
         
-       
-        if (error.error) {
-          this.errorMessage = JSON.stringify(error.error, null, 2);
-        } else {
-          this.errorMessage = 'Failed to save changes. Please try again.';
-        }
+       this.errorMessage = error.error.message || 'Something went wrong';
+        
         
         this.isSaving = false;
         
       }
     });
   }
+
+
+  private parseAddress(address: string): { street: string; city: string; governorate: string; postalCode: string } {
+    if (!this.apiResponse) {
+      const parts = address.split(',').map(p => p.trim());
+      return {
+        street: parts[0] || '',
+        city: parts[1] || '',
+        governorate: parts[2] || '',
+        postalCode: parts[3] || ''
+      };
+    }
+    
+    return this.apiResponse.address;
+  }
+
+
 
   cancelEdit(): void {
     this.profileData = { ...this.originalData };
@@ -289,24 +292,10 @@ export class Profiledriver implements OnInit {
     fileInput?.click();
   }
 
-  private parseAddress(address: string): { street: string; city: string; governorate: string; postalCode: string } {
-    if (!this.apiResponse) {
-      const parts = address.split(',').map(p => p.trim());
-      return {
-        street: parts[0] || '',
-        city: parts[1] || '',
-        governorate: parts[2] || '',
-        postalCode: parts[3] || ''
-      };
-    }
-    
-    return this.apiResponse.address;
-  }
-
   private calculateEarnings(totalTrips: number): string {
-    const earningsPerTrip = 134;
+    const earningsPerTrip = 150;
     const total = totalTrips * earningsPerTrip;
-    return `EG${total.toLocaleString('en-IN')}`;
+    return `EG${total.toLocaleString('en-US')}`;
   }
 
   private uploadImage(file: File): void {
