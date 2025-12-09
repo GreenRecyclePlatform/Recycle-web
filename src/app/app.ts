@@ -8,6 +8,7 @@ import { Chatbot } from "./shared/components/chatbot/chatbot";
 
 @Component({
   selector: 'app-root',
+  styleUrls: ['./app.css'],
   standalone: true,
   imports: [RouterOutlet, Chatbot],
   template: `
