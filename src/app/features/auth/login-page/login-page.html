@@ -73,16 +73,24 @@
 
         <div class="w-100">
           <label>Password</label>
-          <!-- <mat-form-field appearance="outline" class="w-100"> -->
-          <!-- <mat-label>Password</mat-label> -->
-          <input
-            [class.error-border]="hasError('password')"
-            matInput
-            type="password"
-            placeholder="••••••••"
-            formControlName="password"
-            required
-          />
+          <div class="relative">
+            <input
+              [class.error-border]="hasError('password')"
+              matInput
+              [type]="showPassword ? 'text' : 'password'"
+              placeholder="••••••••"
+              formControlName="password"
+              required
+            />
+            <button
+              type="button"
+              class="position-absolute top-50 end-0 translate-middle-y btn btn-link p-0 pe-3"
+              style="border: none; box-shadow: none"
+              (click)="togglePassword()"
+            >
+              <i class="bi passicon" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+            </button>
+          </div>
           @if(hasError('password')){
 
           <p class="error text-danger mb-0 d-flex gap-1 mt-2 align-items-center">
@@ -109,8 +117,11 @@
         </div>
 
         <div class="login-options">
-          <mat-checkbox formControlName="rememberMe">Remember me</mat-checkbox>
-          <a routerLink="/forgot-password" class="small text-primary text-decoration-none"
+          <span></span>
+          <a
+            routerLink="/forgot-password"
+            class="small text-primary text-decoration-none"
+            style="color: var(--primary-green) !important"
             >Forgot password?</a
           >
         </div>

@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './material-price-list.component.html',
-  styleUrl: './material-price-list.component.css'
+styleUrls: ['./material-price-list.component.css']
 })
 export class MaterialPriceListComponent implements OnInit {
   materials: Material[] = [];
@@ -29,17 +29,36 @@ export class MaterialPriceListComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
+    console.log('🔍 Starting to load materials...');
+
     this.materialService.getActiveMaterials().subscribe({
       next: (data: Material[]) => {
+        console.log('✅ Materials received:', data);
+        console.log('📊 Total materials:', data.length);
+
+        // Log each material's image info
+        data.forEach((material, index) => {
+          console.log(`Material ${index + 1}:`, {
+            name: material.name,
+            imageUrl: material.imageUrl,
+            hasImage: !!material.imageUrl
+          });
+        });
+
         this.materials = data;
         this.loading = false;
       },
-      error: (error: Error) => {
-        console.error('Error loading materials:', error);
+      error: (error: any) => {
+        console.error('❌ Error loading materials:', error);
         this.error = 'Failed to load materials. Please try again later.';
         this.loading = false;
       }
     });
+  }
+
+  onImageError(event: any): void {
+    console.error('🖼️ Image failed to load:', event.target.src);
+    event.target.src = 'https://via.placeholder.com/400x400?text=No+Image';
   }
 
   startRecycling(): void {

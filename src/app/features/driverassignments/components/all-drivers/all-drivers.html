@@ -1,10 +1,3 @@
-<div class="app-layout">
-  <app-navbar></app-navbar>
-  
-  <div class="main-container">
-    <app-admin-sidebar></app-admin-sidebar>
-    
-    <div class="content-area">
 <div class="all-drivers-container">
   <div class="container-fluid px-4 py-4">
     <!-- Header Section -->
@@ -27,7 +20,7 @@
       {{ errorMessage }}
       <button type="button" class="btn-close" (click)="errorMessage = ''" aria-label="Close"></button>
     </div>
-    
+
     <!-- Success Message -->
     <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show d-flex align-items-center shadow-sm" role="alert">
       <mat-icon class="me-2">check_circle_outline</mat-icon>
@@ -50,7 +43,7 @@
             </div>
             <h5 class="mb-3 fw-bold">Delete Driver?</h5>
             <p class="text-muted mb-4">
-              Are you sure you want to delete <strong>{{ driverToDelete?.name }}</strong>? 
+              Are you sure you want to delete <strong>{{ driverToDelete?.name }}</strong>?
               <br>This action cannot be undone.
             </p>
             <div class="d-flex gap-3 justify-content-center">
@@ -129,10 +122,10 @@
             <span class="search-icon">
               <mat-icon class="text-muted">search</mat-icon>
             </span>
-            <input 
+            <input
               type="text"
               class="form-control form-control-lg search-input"
-              placeholder="Search by name, ID number, or location..." 
+              placeholder="Search by name, ID number, or location..."
               [(ngModel)]="searchQuery"
               (input)="onSearch()">
           </div>
@@ -143,9 +136,9 @@
             <span class="filter-icon">
               <mat-icon class="text-muted">filter_list</mat-icon>
             </span>
-            <select 
+            <select
               class="form-select form-select-lg filter-select"
-              [(ngModel)]="selectedStatus" 
+              [(ngModel)]="selectedStatus"
               (change)="onStatusChange()">
               <option value="All Status">All Status</option>
               <option value="active">Active</option>
@@ -180,13 +173,13 @@
                   <td class="ps-4 py-4">
                     <div class="d-flex align-items-center gap-3">
                       <div *ngIf="driver.profileImageUrl; else avatarInitials">
-                        <img [src]="driver.profileImageUrl" 
+                        <img [src]="driver.profileImageUrl"
                              alt="{{ driver.name }}"
                              class="driver-avatar rounded-circle"
                              style="object-fit: cover;">
                       </div>
                       <ng-template #avatarInitials>
-                        <div class="driver-avatar rounded-circle d-flex align-items-center justify-content-center text-white fw-semibold" 
+                        <div class="driver-avatar rounded-circle d-flex align-items-center justify-content-center text-white fw-semibold"
                              [style.background-color]="driver.avatarColor">
                           {{ driver.initials }}
                         </div>
@@ -234,7 +227,7 @@
 
                   <!-- Status -->
                   <td class="py-4">
-                    <span class="badge rounded-pill px-12 py-2" 
+                    <span class="badge rounded-pill px-12 py-2"
                           [ngClass]="(driver.status)">
                       {{ driver.status === 'active' ? 'Available' : 'Not Available' }}
                     </span>
@@ -242,9 +235,9 @@
 
                   <!-- Actions  -->
                   <td class="pe-3 py-4 text-center">
-                    <button 
-                      type="button" 
-                      class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1 mx-auto" 
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1 mx-auto"
                       (click)="onDeleteDriver(driver)"
                       title="Delete Driver">
                       <mat-icon style="font-size: 18px; width: 18px; height: 18px;">delete</mat-icon>
@@ -264,9 +257,6 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
     </div>
   </div>
 </div>
