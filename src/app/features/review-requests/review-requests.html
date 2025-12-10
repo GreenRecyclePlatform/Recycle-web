@@ -6,7 +6,7 @@
   </div>
 
   <!-- Status Filter -->
-  <!-- <div class="card mb-4">
+  <div class="card mb-4">
     <div class="card-body py-2">
       <select
         class="form-select status-filter"
@@ -20,7 +20,7 @@
         <option value="Completed">Completed</option>
       </select>
     </div>
-  </div> -->
+  </div>
 
   <!-- Requests Table -->
   <div class="card">
@@ -64,6 +64,8 @@
               <td>
                 <div>{{ request.preferredPickupDate }}</div>
               </td>
+              @if(this.statusFilter === 'Waiting'){
+
               <td>
                 <div class="btn-group" role="group">
                   <button
@@ -85,10 +87,11 @@
                     (click)="editRequest(request)"
                     title="Edit"
                   >
-                    <i class="bi bi-pencil"></i>
-                  </button> -->
+                  <i class="bi bi-pencil"></i>
+                </button> -->
                 </div>
               </td>
+              }
               <td>
                 <button class="btn btn-sm btn-link text-dark" (click)="toggleExpand(request)">
                   <i
