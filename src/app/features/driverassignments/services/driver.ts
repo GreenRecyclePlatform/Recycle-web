@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'; 
 import { Observable, throwError } from 'rxjs';
@@ -38,7 +37,7 @@ export class DriverService {
       map(drivers => drivers
         .filter(driver => driver.isAvailable) 
         .map(driver => ({
-          id: driver.userId || driver.id,
+          id: driver.id,  
           name: `${driver.firstName} ${driver.lastName}`,
           initials: this.getInitials(`${driver.firstName} ${driver.lastName}`),
           rating: driver.rating || 0,
@@ -105,7 +104,7 @@ export class DriverService {
       errorMessage = error.error?.message || `Error ${error.status}: ${error.message}`;
     }
     
-    console.error(' API Error:', errorMessage);
+    console.error('API Error:', errorMessage);
     return throwError(() => new Error(errorMessage));
   }
 }

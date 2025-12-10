@@ -12,22 +12,22 @@ export class DriverProfileService {
 
   constructor(private http: HttpClient) {}
 
-  // GET - with driverId parameter
-  getDriverProfile(driverId: string): Observable<DriverProfileResponse> {
-    return this.http.get<DriverProfileResponse>(`${this.apiUrl}/${driverId}`);
+  // ✅ GET Driver Profile by User ID
+  getDriverProfile(userId: string): Observable<DriverProfileResponse> {
+    return this.http.get<DriverProfileResponse>(`${this.apiUrl}/${userId}`);
   }
 
-  // PUT - with driverId parameter
-  updateDriverProfile(driverId: string, profileData: UpdateDriverProfileRequest): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${driverId}`, profileData);
+  // ✅ UPDATE Driver Profile by User ID
+  updateDriverProfile(userId: string, profileData: UpdateDriverProfileRequest): Observable<DriverProfileResponse> {
+    return this.http.put<DriverProfileResponse>(`${this.apiUrl}/${userId}`, profileData);
   }
 
-  //  PUT availability 
+  // ✅ UPDATE Availability
   updateAvailability(isAvailable: boolean): Observable<boolean> {
-    return this.http.put<boolean>(`${this.apiUrl}/availability`, isAvailable);
+    return this.http.put<boolean>(`${this.apiUrl}/availability`, { isAvailable });
   }
 
-  //  POST upload image 
+  // ✅ UPLOAD Profile Image
   uploadProfileImage(file: File): Observable<{imageUrl: string}> {
     const formData = new FormData();
     formData.append('file', file);
