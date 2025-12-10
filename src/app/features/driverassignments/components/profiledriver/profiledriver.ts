@@ -10,7 +10,7 @@ import { Navbar } from '../../../../shared/components/navbar/navbar';
 
 
 @Component({
-  imports: [FormsModule, CommonModule, DriverSidebar,Navbar],
+  imports: [FormsModule, CommonModule, DriverSidebar],
   selector: 'app-driver-profile',
   templateUrl: './profiledriver.html',
   styleUrls: ['./profiledriver.css']
@@ -44,7 +44,7 @@ export class Profiledriver implements OnInit {
     address: '',
     profileImage: null
   };
-    originalData: DriverProfile = { ...this.profileData };
+
   stats: DriverStats = {
     totalPickups: 0,
     rating: 0,
@@ -53,6 +53,7 @@ export class Profiledriver implements OnInit {
     isAvailable: false
   };
 
+  originalData: DriverProfile = { ...this.profileData };
   private apiResponse: DriverProfileResponse | null = null;
 
   constructor(
@@ -77,17 +78,20 @@ export class Profiledriver implements OnInit {
     if (!token) {
       this.errorMessage = 'Please login to access your profile';
       console.warn('⚠️ No token found - redirecting to login');
+      // this.router.navigate(['/login']);
       return;
     }
 
     if (!userId) {
       this.errorMessage = 'Unable to identify user';
+      console.error('❌ User ID not found in token');
       return;
     }
 
-    if (!isDriver) {
+    if (!isDriver && !isAdmin) {
       this.errorMessage = 'You need Driver privileges to access this page';
       console.warn('⚠️ Not a driver - access denied');
+      // this.router.navigate(['/unauthorized']);
       return;
     }
 
@@ -101,8 +105,21 @@ export class Profiledriver implements OnInit {
 
     this.driverProfileService.getDriverProfile(this.driverId).subscribe({
       next: (response: DriverProfileResponse) => {
+        console.log('📥 Full Response:', response);
+        
+        // ⬅️ تحقق إن الـ response موجود وفيه id
+        if (!response || !response.id) {
+          console.error('❌ No driver profile found for user:', this.driverId);
+          this.errorMessage = 'No driver profile found. Please contact support.';
+          this.isLoading = false;
+          return;
+        }
+        
         this.apiResponse = response;
-        this.driverProfileId = response.id; 
+        this.driverProfileId = response.id;
+        
+        console.log('🆔 Driver Profile ID:', this.driverProfileId);
+        
         this.profileData = {
           FirstName: response.firstName,
           LastName: response.lastName,
@@ -130,15 +147,16 @@ export class Profiledriver implements OnInit {
 
         this.originalData = { ...this.profileData };
         this.isLoading = false;
-        console.log( response.email);
+        console.log('✅ Profile loaded successfully for:', response.email);
       },
       error: (error) => {
-        console.error(error);
+        console.error('❌ Error loading driver profile:', error);
         this.errorMessage = 'Failed to load driver profile. Please try again.';
         this.isLoading = false;
         
         if (error.message && (error.message.includes('Unauthorized') || error.message.includes('403'))) {
           console.warn('⚠️ Unauthorized access - redirecting');
+          // this.router.navigate(['/login']);
         }
       }
     });
@@ -160,14 +178,14 @@ export class Profiledriver implements OnInit {
           'Availability disabled successfully!';
         this.isTogglingAvailability = false;
         
-        console.log( result);
+        console.log('✅ Availability updated to:', result);
         
         setTimeout(() => {
           this.successMessage = '';
         }, 3000);
       },
       error: (error) => {
-        console.error( error);
+        console.error('❌ Error updating availability:', error);
         this.errorMessage = 'Failed to update availability status. Please try again.';
         this.isTogglingAvailability = false;
       }
@@ -179,7 +197,7 @@ export class Profiledriver implements OnInit {
       this.saveChanges();
     } else {
       this.originalData = { ...this.profileData };
-      this.isEditing = true;//show input fields to Edit 
+      this.isEditing = true; //show input fields to Edit 
     }
   }
 
@@ -204,9 +222,12 @@ export class Profiledriver implements OnInit {
       }
     };
 
-   
-    this.driverProfileService.updateDriverProfile(this.driverProfileId, updateRequest).subscribe({
+    console.log('📤 Request Body:', JSON.stringify(updateRequest, null, 2));
+    console.log('🔑 User ID (driverId):', this.driverId);
+
+    this.driverProfileService.updateDriverProfile(this.driverId, updateRequest).subscribe({
       next: (response) => {
+        console.log('✅ Profile updated successfully:', response);
         this.successMessage = 'Profile updated successfully!';
         this.isEditing = false;
         this.isSaving = false;
@@ -217,7 +238,6 @@ export class Profiledriver implements OnInit {
         }
         
         this.sidebarData.name = `${this.profileData.FirstName} ${this.profileData.LastName}`;
-
         
         this.originalData = { ...this.profileData };
         this.selectedImage = null;
@@ -228,33 +248,27 @@ export class Profiledriver implements OnInit {
         }, 3000);
       },
       error: (error) => {
-        console.error(error);
+        console.error('❌ Error updating profile:', error);
         
-       this.errorMessage = error.error.message || 'Something went wrong';
+        if (error.error && error.error.errors) {
+          console.error('🔴 Validation Errors:', error.error.errors);
+          console.error('🔴 Full Error Object:', JSON.stringify(error.error, null, 2));
+        }
         
+        if (error.error) {
+          this.errorMessage = JSON.stringify(error.error, null, 2);
+        } else {
+          this.errorMessage = 'Failed to save changes. Please try again.';
+        }
         
         this.isSaving = false;
         
+        if (error.message && error.message.includes('403')) {
+          this.errorMessage = 'You can only update your own profile';
+        }
       }
     });
   }
-
-
-  private parseAddress(address: string): { street: string; city: string; governorate: string; postalCode: string } {
-    if (!this.apiResponse) {
-      const parts = address.split(',').map(p => p.trim());
-      return {
-        street: parts[0] || '',
-        city: parts[1] || '',
-        governorate: parts[2] || '',
-        postalCode: parts[3] || ''
-      };
-    }
-    
-    return this.apiResponse.address;
-  }
-
-
 
   cancelEdit(): void {
     this.profileData = { ...this.originalData };
@@ -292,19 +306,34 @@ export class Profiledriver implements OnInit {
     fileInput?.click();
   }
 
+  private parseAddress(address: string): { street: string; city: string; governorate: string; postalCode: string } {
+    if (!this.apiResponse) {
+      const parts = address.split(',').map(p => p.trim());
+      return {
+        street: parts[0] || '',
+        city: parts[1] || '',
+        governorate: parts[2] || '',
+        postalCode: parts[3] || ''
+      };
+    }
+    
+    return this.apiResponse.address;
+  }
+
   private calculateEarnings(totalTrips: number): string {
     const earningsPerTrip = 150;
     const total = totalTrips * earningsPerTrip;
-    return `EG${total.toLocaleString('en-US')}`;
+    return `₹${total.toLocaleString('en-US')}`;
   }
 
   private uploadImage(file: File): void {
     this.driverProfileService.uploadProfileImage(file).subscribe({
       next: (response) => {
         this.previewImage = response.imageUrl;
+        console.log('✅ Image uploaded successfully:', response.imageUrl);
       },
       error: (error) => {
-        console.error( error);
+        console.error('❌ Error uploading image:', error);
         this.errorMessage = 'Failed to upload image. Please try again.';
       }
     });

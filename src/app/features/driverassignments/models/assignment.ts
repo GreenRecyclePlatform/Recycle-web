@@ -1,8 +1,9 @@
+// ✅ غيري requestId و driverId لـ PascalCase
 export interface AssignmentRequest {
-  requestId: string;
-  driverId: string;
+  RequestId: string;  
+  DriverId: string;  
 }
-///////////
+
 export interface PickupRequest {
   requestId: string;
   userId: string;
@@ -27,7 +28,7 @@ export interface Request {
   weight: number;
   status: string;
 }
-////////////////
+
 export interface DriverApiResponse {
   id: string;
   userId: string;
@@ -51,7 +52,7 @@ export interface DriverApiResponse {
 }
 
 export interface Driver {
-  id: string;
+  id: string;  
   name: string;
   initials: string;
   rating: number;
