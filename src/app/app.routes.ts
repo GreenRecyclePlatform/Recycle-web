@@ -35,6 +35,7 @@ import { Settings } from './features/admin/settings/settings';
 import { ManageMaterials } from './features/manage-materials/manage-materials';
 import { Profiledriver } from './features/driverassignments/components/profiledriver/profiledriver';
 import { adminGuard } from './core/guards/admin-guard';
+import { ReviewRequests } from './features/review-requests/review-requests';
 
 export const routes: Routes = [
   //{
@@ -93,6 +94,7 @@ export const routes: Routes = [
       { path: 'drivers', component: AllDrivers },
       { path: 'assign-drivers', component: AssignDriver },
       { path: 'manage-materials', component: ManageMaterials },
+      { path: 'review-requests', component: ReviewRequests },
       // {
       //   path: 'manage-materials',
       //   loadComponent: () =>
