@@ -45,33 +45,36 @@ export class DriverService {
   }
 
   getAvailableDrivers(): Observable<Driver[]> {
-    return this.http.get<any[]>(
-      `${this.apiUrl}/DriverProfiles`
-    ).pipe(
-      map(drivers => drivers
-        .filter(driver => driver.isAvailable) 
-        .map(driver => ({
-          id: driver.id,  
-          name: `${driver.firstName} ${driver.lastName}`,
-          initials: this.getInitials(`${driver.firstName} ${driver.lastName}`),
-          rating: driver.rating || 0,
-          currentLocation: driver.address 
-            ? `${driver.address.city}, ${driver.address.governorate}` 
-            : 'Available',
-          phone: driver.phonenumber || driver.phoneNumber || 'N/A',
-          todayPickups: driver.totalTrips || 0,
-          profileImageUrl: driver.profileImageUrl || null 
-         }))
+    return this.http.get<any[]>(`${this.apiUrl}/DriverProfiles`).pipe(
+      map((drivers) =>
+        drivers
+          .filter((driver) => driver.isAvailable)
+          .map((driver) => ({
+            id: driver.id,
+            name: `${driver.firstName} ${driver.lastName}`,
+            initials: this.getInitials(`${driver.firstName} ${driver.lastName}`),
+            rating: driver.rating || 0,
+            currentLocation: driver.address
+              ? `${driver.address.city}, ${driver.address.governorate}`
+              : 'Available',
+            phone: driver.phonenumber || driver.phoneNumber || 'N/A',
+            todayPickups: driver.totalTrips || 0,
+            profileImageUrl: driver.profileImageUrl || null,
+          }))
       ),
       catchError(this.handleError)
     );
   }
 
-  getWaitingRequests(): Observable<WaitingRequest[]> {
-    return this.http.get<WaitingRequest[]>(`${this.apiUrl}/PickupRequests/Waiting`).pipe(
-      tap((requests) => console.log('Fetched waiting requests:', requests.length)),
-      catchError(this.handleError)
-    );
+  getWaitingRequests(status: string): Observable<WaitingRequest[]> {
+    return this.http
+      .get<WaitingRequest[]>(`${this.apiUrl}/PickupRequests/Waiting`, {
+        params: { status },
+      })
+      .pipe(
+        tap((requests) => console.log('Fetched waiting requests:', requests.length)),
+        catchError(this.handleError)
+      );
   }
 
   getApprovedRequests(): Observable<Request[]> {
@@ -90,7 +93,6 @@ export class DriverService {
     );
   }
 
- 
   assignRequestToDriver(assignment: AssignmentRequest): Observable<any> {
     return this.http
       .post(`${this.apiUrl}/DriverAssignments/assign`, assignment)
@@ -138,7 +140,7 @@ export class DriverService {
     } else {
       errorMessage = error.error?.message || `Error ${error.status}: ${error.message}`;
     }
-    
+
     console.error('API Error:', errorMessage);
     return throwError(() => new Error(errorMessage));
   }

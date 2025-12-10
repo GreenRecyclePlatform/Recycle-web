@@ -16,11 +16,11 @@ export class ReviewRequests implements OnInit {
   constructor(private driverService: DriverService) {}
 
   ngOnInit(): void {
-    this.loadData();
+    this.loadData('Waiting');
   }
 
-  loadData(): void {
-    this.driverService.getWaitingRequests().subscribe({
+  loadData(status: string): void {
+    this.driverService.getWaitingRequests(status).subscribe({
       next: (requests) => {
         this.WaitingRequests = requests;
         console.log('✅ Requests loaded:', requests);
@@ -47,7 +47,7 @@ export class ReviewRequests implements OnInit {
     this.driverService.UpdatingStatus(request.id, { NewStatus: 'Pending' }).subscribe({
       next: () => {
         console.log('Request status updated successfully');
-        this.loadData(); // Refresh the list after approval
+        this.loadData('Waiting'); // Refresh the list after approval
       },
       error: (error) => {
         console.error('Error updating request status:', error);
@@ -62,7 +62,7 @@ export class ReviewRequests implements OnInit {
     this.driverService.UpdatingStatus(request.id, { NewStatus: 'Cancelled' }).subscribe({
       next: () => {
         console.log('Request status updated successfully');
-        this.loadData(); // Refresh the list after approval
+        this.loadData('ًWaiting'); // Refresh the list after approval
       },
       error: (error) => {
         console.error('Error updating request status:', error);
@@ -76,6 +76,12 @@ export class ReviewRequests implements OnInit {
   //   // Add your edit logic here
   //   // Example: this.router.navigate(['/edit', request.id]);
   // }
+
+  onStatusChange(): void {
+    console.log('Status filter changed to:', this.statusFilter);
+
+    this.loadData(this.statusFilter);
+  }
 
   getTotalWeight(materials: Material[]): string {
     const total = materials.reduce((sum, material) => {
