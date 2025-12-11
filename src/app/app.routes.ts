@@ -34,6 +34,7 @@ import { ResetPassword } from './features/auth/reset-password/reset-password';
 import { Profiledriver } from './features/driverassignments/components/profiledriver/profiledriver';
 import { TestNotificationsComponent } from './pages/test-notifications/test-notifications.component';
 import { Settings } from './features/admin/settings/settings';
+import { supplierRoutes } from './features/supplier/supplier.routes';
 import { ManageMaterials } from './features/manage-materials/manage-materials';
 
 export const routes: Routes = [
@@ -70,7 +71,12 @@ export const routes: Routes = [
   { path: 'reset-password', component: ResetPassword },
 
   
-
+{
+    path: 'supplier',
+    children: supplierRoutes,
+    // Add Auth Guard here if needed
+    // canActivate: [AuthGuard]
+  },
   {
     path: 'reviews',
     loadChildren: () => import('./features/reviews/reviews.routes').then((m) => m.REVIEW_ROUTES),
