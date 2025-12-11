@@ -32,6 +32,7 @@ import { ForgotPasswordPage } from './features/auth/forgot-password/forgot-passw
 import { ResetPassword } from './features/auth/reset-password/reset-password';
 import { TestNotificationsComponent } from './pages/test-notifications/test-notifications.component';
 import { Settings } from './features/admin/settings/settings';
+import { supplierRoutes } from './features/supplier/supplier.routes';
 import { ManageMaterials } from './features/manage-materials/manage-materials';
 import { Profiledriver } from './features/driverassignments/components/profiledriver/profiledriver';
 import { adminGuard } from './core/guards/admin-guard';
@@ -62,6 +63,13 @@ export const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordPage },
   { path: 'reset-password', component: ResetPassword },
 
+  
+{
+    path: 'supplier',
+    children: supplierRoutes,
+    // Add Auth Guard here if needed
+    // canActivate: [AuthGuard]
+  },
   // Driver routes
   { path: 'DashBoardDrivers', component: DriverDashboard },
   { path: 'DriverProfile', component: Profiledriver },
