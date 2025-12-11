@@ -35,7 +35,7 @@ import { Settings } from './features/admin/settings/settings';
 import { ManageMaterials } from './features/manage-materials/manage-materials';
 import { Profiledriver } from './features/driverassignments/components/profiledriver/profiledriver';
 import { adminGuard } from './core/guards/admin-guard';
-
+import { AdminDashboardComponent } from './pages/admin-dashboard.component/admin-dashboard.component';
 export const routes: Routes = [
   //{
   //   path: 'admin',
@@ -50,6 +50,7 @@ export const routes: Routes = [
   {
     path: 'driver',
     children: [
+
       { path: 'DashBoardDrivers', component: DriverDashboard },
       { path: 'DriverProfile', component: Profiledriver },
     ],
@@ -89,8 +90,15 @@ export const routes: Routes = [
         (m) => m.AdminLayoutComponent
       ),
     children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'drivers', component: AllDrivers },
+
+   { path: '',redirectTo: 'dashboard', pathMatch: 'full'},
+       {
+        path: 'dashboard',
+        component: AdminDashboardComponent, 
+        data: { title: 'Dashboard' }
+      },
+
+           { path: 'drivers', component: AllDrivers },
       { path: 'assign-drivers', component: AssignDriver },
       { path: 'manage-materials', component: ManageMaterials },
       // {
