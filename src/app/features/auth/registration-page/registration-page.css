@@ -112,11 +112,30 @@ input:focus {
 
 .next {
   padding: 8px 12px;
-  color: white;
+  color: #ffffff !important;
   background-color: var(--primary-green) !important;
-  font-size: 14px;
+  font-size: 0.875rem;
+  font-weight: 500;
   border-radius: calc(0.625rem - 2px);
+  gap: calc(00.25rem * 2);
 }
+.back {
+  display: flex;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: calc(0.625rem - 2px);
+  border: 1px solid #e0e0e0 !important;
+  justify-content: center;
+  gap: calc(00.25rem * 2);
+}
+.back:hover {
+  background-color: rgba(108, 117, 125, 0.1) !important;
+}
+.next:hover {
+  background-color: rgba(45, 106, 79, 0.9) !important;
+}
+
 .create {
   padding: 8px 16px;
   color: white !important;
@@ -153,4 +172,19 @@ input:focus {
 input.error-border {
   outline: 3px solid #dc3545;
   outline-offset: 2px;
+}
+
+.passicon {
+  color: #0a0a0a;
+}
+
+mat-card {
+  box-shadow: none !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: calc(0.625rem + 4px) !important;
+}
+
+input[type='checkbox'] {
+  outline: none;
+  accent-color: black; /* changes the checkmark and the filled background when checked */
 }

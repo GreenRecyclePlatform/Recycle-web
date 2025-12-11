@@ -1,0 +1,352 @@
+<app-navbar></app-navbar>
+
+<!-- Loading Spinner -->
+<div *ngIf="isLoading" class="loading-overlay">
+  <div class="spinner"></div>
+  <p>Loading profile...</p>
+</div>
+
+<!-- Error Message -->
+<div *ngIf="errorMessage" class="alert alert-error">
+  {{ errorMessage }}
+  <button class="alert-close" (click)="errorMessage = null">×</button>
+</div>
+
+<!-- Success Message -->
+<div *ngIf="successMessage" class="alert alert-success">
+  {{ successMessage }}
+  <button class="alert-close" (click)="successMessage = null">×</button>
+</div>
+
+<div class="page-wrapper">
+  <div class="profile-container">
+    <!-- Header Section -->
+    <div class="profile-header">
+      <div class="header-content">
+        <div class="profile-avatar">
+          <div class="avatar-circle">
+            <span class="avatar-initials">{{ getInitials() }}</span>
+          </div>
+        </div>
+
+        <div class="profile-title">
+          <h1>My Profile</h1>
+          <p class="subtitle">Manage your account information and preferences</p>
+        </div>
+
+        <button
+          class="btn-edit-profile"
+          (click)="toggleEditMode()"
+          [class.active]="isEditMode"
+          [disabled]="!profile"
+        >
+          <span class="edit-icon">✏️</span>
+          {{ isEditMode ? 'Cancel' : 'Edit Profile' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon recycle-icon">♻️</div>
+        <div class="stat-content">
+          <h3 class="stat-label">Total Requests</h3>
+          <p class="stat-value">{{ getStats().totalRequests }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon pickup-icon">📦</div>
+        <div class="stat-content">
+          <h3 class="stat-label">Completed Pickups</h3>
+          <p class="stat-value">{{ getStats().completedPickups }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon earnings-icon">💰</div>
+        <div class="stat-content">
+          <h3 class="stat-label">Total Earnings</h3>
+          <p class="stat-value">{{ formatCurrency(getStats().totalEarnings) }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon impact-icon">🌱</div>
+        <div class="stat-content">
+          <h3 class="stat-label">Impact Score</h3>
+          <p class="stat-value">{{ getStats().impactScore }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Personal Information Section -->
+    <div class="section-card">
+      <h2 class="section-title">Personal Information</h2>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">
+            <span class="label-icon">👤</span>
+            First Name *
+          </label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="editForm.firstName"
+            [disabled]="!isEditMode"
+            placeholder="Enter your first name"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <span class="label-icon">👤</span>
+            Last Name *
+          </label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="editForm.lastName"
+            [disabled]="!isEditMode"
+            placeholder="Enter your last name"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <span class="label-icon">✉️</span>
+            Email Address *
+          </label>
+          <input
+            type="email"
+            class="form-input"
+            [value]="profile?.email || ''"
+            disabled
+            placeholder="your.email@example.com"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <span class="label-icon">📱</span>
+            Phone Number *
+          </label>
+          <input
+            type="tel"
+            class="form-input"
+            [(ngModel)]="editForm.phoneNumber"
+            [disabled]="!isEditMode"
+            placeholder="+20 123 456 7890"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <span class="label-icon">📅</span>
+            Date of Birth *
+          </label>
+          <input
+            type="date"
+            class="form-input"
+            [(ngModel)]="editForm.dateOfBirth"
+            [disabled]="!isEditMode"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <span class="label-icon">📅</span>
+            Member Since
+          </label>
+          <input type="text" class="form-input" [value]="formatDate(getMemberSince())" disabled />
+        </div>
+
+        <div class="form-group full-width">
+          <label class="form-label">
+            <span class="label-icon">📍</span>
+            Street Address
+          </label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="editForm.street"
+            [disabled]="!isEditMode"
+            placeholder="Enter your street address"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <span class="label-icon">🏙️</span>
+            City
+          </label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="editForm.city"
+            [disabled]="!isEditMode"
+            placeholder="Cairo"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <span class="label-icon">🗺️</span>
+            Governorate
+          </label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="editForm.governorate"
+            [disabled]="!isEditMode"
+            placeholder="Cairo"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <span class="label-icon">📮</span>
+            Postal Code
+          </label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="editForm.postalCode"
+            [disabled]="!isEditMode"
+            placeholder="11511"
+          />
+        </div>
+      </div>
+
+      <div class="form-actions" *ngIf="isEditMode">
+        <button class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+        <button class="btn btn-primary" (click)="saveProfile()">Save Changes</button>
+      </div>
+    </div>
+
+    <!-- Notification Preferences Section -->
+    <div class="section-card" *ngIf="profile?.notificationPreferences">
+      <h2 class="section-title">Notification Preferences</h2>
+
+      <div class="preferences-list">
+        <div class="preference-item">
+          <div class="preference-info">
+            <h3 class="preference-title">Email Notifications</h3>
+            <p class="preference-description">Receive updates about your pickups via email</p>
+          </div>
+          <label class="toggle-switch">
+            <input
+              type="checkbox"
+              [checked]="profile?.notificationPreferences?.emailNotifications ?? false"
+              (change)="toggleNotification('emailNotifications')"
+            />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="preference-item">
+          <div class="preference-info">
+            <h3 class="preference-title">SMS Notifications</h3>
+            <p class="preference-description">Get text messages for important updates</p>
+          </div>
+          <label class="toggle-switch">
+            <input
+              type="checkbox"
+              [checked]="profile?.notificationPreferences?.smsNotifications ?? false"
+              (change)="toggleNotification('smsNotifications')"
+            />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="preference-item">
+          <div class="preference-info">
+            <h3 class="preference-title">Pickup Reminders</h3>
+            <p class="preference-description">Reminders 1 hour before scheduled pickup</p>
+          </div>
+          <label class="toggle-switch">
+            <input
+              type="checkbox"
+              [checked]="profile?.notificationPreferences?.pickupReminders ?? false"
+              (change)="toggleNotification('pickupReminders')"
+            />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="preference-item">
+          <div class="preference-info">
+            <h3 class="preference-title">Marketing Emails</h3>
+            <p class="preference-description">Tips, news, and special offers</p>
+          </div>
+          <label class="toggle-switch">
+            <input
+              type="checkbox"
+              [checked]="profile?.notificationPreferences?.marketingEmails ?? false"
+              (change)="toggleNotification('marketingEmails')"
+            />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+      <!-- ✅ Achievements Section - 100% API-DRIVEN -->
+    <div class="section-card" *ngIf="hasAchievements()">
+      <h2 class="section-title">Achievements & Badges</h2>
+
+      <div class="achievements-grid">
+        <div
+          *ngFor="let achievement of getAchievements()"
+          class="achievement-card"
+          [class.unlocked]="achievement.unlocked"
+          [class.locked]="!achievement.unlocked"
+        >
+          <div class="achievement-icon">{{ achievement.icon }}</div>
+          <h3 class="achievement-title">{{ achievement.title }}</h3>
+          <p class="achievement-description">{{ achievement.description }}</p>
+
+          <div class="achievement-status" *ngIf="achievement.unlocked">
+            <span class="status-badge unlocked">Unlocked</span>
+            <span class="earned-date">Earned on {{ formatDate(achievement.earnedDate) }}</span>
+          </div>
+
+          <div class="achievement-status" *ngIf="!achievement.unlocked">
+            <span class="status-badge locked">🔒 Locked</span>
+            <span class="earned-date">Keep going to unlock!</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ✅ Show message if no achievements -->
+      <div *ngIf="!hasAchievements()" class="no-achievements">
+        <p>🎯 Complete your first pickup to start earning achievements!</p>
+      </div>
+    </div>
+
+    <!-- Environmental Impact Section -->
+    <div class="section-card impact-card">
+      <h2 class="section-title">Your Environmental Impact</h2>
+
+      <div class="impact-grid">
+        <div class="impact-stat">
+          <div class="impact-value">{{ getEnvironmentalImpact().materialsRecycled }} kg</div>
+          <div class="impact-label">Materials Recycled</div>
+        </div>
+
+        <div class="impact-stat">
+          <div class="impact-value">{{ getEnvironmentalImpact().co2Saved }} kg</div>
+          <div class="impact-label">CO₂ Saved</div>
+        </div>
+
+        <div class="impact-stat">
+          <div class="impact-value">{{ getEnvironmentalImpact().treesEquivalent }}</div>
+          <div class="impact-label">Trees Equivalent</div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>

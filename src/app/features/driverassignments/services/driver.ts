@@ -1,52 +1,92 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http'; 
+import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { Request, PickupRequest, Driver } from '../models/assignment';
 import { AssignmentRequest } from '../models/assignment';
 import { environment } from '../../../../environments/environment';
+import { AddressDto } from '../../../core/models/auth-response';
+
+export interface Material {
+  materialName: string;
+  estimatedWeight: string;
+}
+
+export interface WaitingRequest {
+  id: string;
+  userName: string;
+  preferredPickupDate: string;
+  preferredPickupTime: string;
+  address: AddressDto;
+  phoneNumber: string;
+  requestMaterials: Material[];
+  totalEstimatedWeight: number;
+  status: string;
+  expanded: boolean | false;
+}
+
+export interface newStatus {
+  NewStatus: string;
+}
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DriverService {
   private readonly apiUrl = `${environment.apiUrl}`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getApprovedRequests(): Observable<Request[]> {
-    return this.http.get<PickupRequest[]>(
-      `${this.apiUrl}/PickupRequests/status/Pending`
-    ).pipe(
-      map(requests => requests.map(req => ({
-        id: req.requestId,
-        customerName: req.userName,
-        address: req.fullAddress,
-        material: this.getMaterialsText(req.materials),
-        weight: req.totalEstimatedWeight,
-        status: req.status
-      }))),
+  UpdatingStatus(id: string, newstatus: newStatus): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/PickupRequests/${id}/status`, newstatus).pipe(
+      tap(() => console.log('checked request status:', id)),
       catchError(this.handleError)
     );
   }
 
   getAvailableDrivers(): Observable<Driver[]> {
-    return this.http.get<any[]>(
-      `${this.apiUrl}/DriverProfiles`
-    ).pipe(
-      map(drivers => drivers
-        .filter(driver => driver.isAvailable) 
-        .map(driver => ({
-          id: driver.id,  
-          name: `${driver.firstName} ${driver.lastName}`,
-          initials: this.getInitials(`${driver.firstName} ${driver.lastName}`),
-          rating: driver.rating || 0,
-          currentLocation: driver.address 
-            ? `${driver.address.city}, ${driver.address.governorate}` 
-            : 'Available',
-          phone: driver.phonenumber || driver.phoneNumber || 'N/A',
-          todayPickups: driver.totalTrips || 0,
-          profileImageUrl: driver.profileImageUrl || null 
+    return this.http.get<any[]>(`${this.apiUrl}/DriverProfiles`).pipe(
+      map((drivers) =>
+        drivers
+          .filter((driver) => driver.isAvailable)
+          .map((driver) => ({
+            id: driver.id,
+            name: `${driver.firstName} ${driver.lastName}`,
+            initials: this.getInitials(`${driver.firstName} ${driver.lastName}`),
+            rating: driver.rating || 0,
+            currentLocation: driver.address
+              ? `${driver.address.city}, ${driver.address.governorate}`
+              : 'Available',
+            phone: driver.phonenumber || driver.phoneNumber || 'N/A',
+            todayPickups: driver.totalTrips || 0,
+            profileImageUrl: driver.profileImageUrl || null,
+          }))
+      ),
+      catchError(this.handleError)
+    );
+  }
+
+  getWaitingRequests(status: string): Observable<WaitingRequest[]> {
+    return this.http
+      .get<WaitingRequest[]>(`${this.apiUrl}/PickupRequests/Waiting`, {
+        params: { status },
+      })
+      .pipe(
+        tap((requests) => console.log('Fetched waiting requests:', requests.length)),
+        catchError(this.handleError)
+      );
+  }
+
+  getApprovedRequests(): Observable<Request[]> {
+    return this.http.get<PickupRequest[]>(`${this.apiUrl}/PickupRequests/status/Pending`).pipe(
+      map((requests) =>
+        requests.map((req) => ({
+          id: req.requestId,
+          customerName: req.userName,
+          address: req.fullAddress,
+          material: this.getMaterialsText(req.materials),
+          weight: req.totalEstimatedWeight,
+          status: req.status,
         }))
       ),
       catchError(this.handleError)
@@ -54,19 +94,16 @@ export class DriverService {
   }
 
   assignRequestToDriver(assignment: AssignmentRequest): Observable<any> {
-    return this.http.post(
-      `${this.apiUrl}/DriverAssignments/assign`,
-      assignment
-    ).pipe(
-      catchError(this.handleError)
-    );
+    return this.http
+      .post(`${this.apiUrl}/DriverAssignments/assign`, assignment)
+      .pipe(catchError(this.handleError));
   }
 
   private getMaterialsText(materials: any[]): string {
     if (!materials || materials.length === 0) {
       return 'Mixed Materials';
     }
-    return materials.map(m => m.materialName || m.name).join(', ');
+    return materials.map((m) => m.materialName || m.name).join(', ');
   }
 
   private getInitials(name: string): string {
@@ -80,10 +117,10 @@ export class DriverService {
 
   private handleError(error: any) {
     let errorMessage = 'An unknown error occurred fetching data from the server.';
-    
+
     if (error.status === 400) {
       errorMessage = 'Errors in the submitted data';
-      
+
       if (error.error?.errors) {
         const validationErrors = Object.values(error.error.errors).flat().join(', ');
         errorMessage += ': ' + validationErrors;
@@ -103,9 +140,8 @@ export class DriverService {
     } else {
       errorMessage = error.error?.message || `Error ${error.status}: ${error.message}`;
     }
-    
+
     console.error('API Error:', errorMessage);
     return throwError(() => new Error(errorMessage));
   }
 }
-

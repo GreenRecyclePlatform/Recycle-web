@@ -1,68 +1,163 @@
 /* Navbar Component Styles */
+
+/* ========== CSS Variables ========== */
+:host {
+  --primary-green: #2D6A4F;
+  --primary-green-dark: #1e4d38;
+  --white: #FFFFFF;
+  --gray-50: #F9FAFB;
+  --gray-100: #F3F4F6;
+  --gray-200: #E5E7EB;
+  --gray-600: #4B5563;
+  --gray-800: #1F2937;
+  --radius-lg: 0.5rem;
+}
+
+/* ========== Navbar Container - STICKY ========== */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: white;
+  border-bottom: 1px solid var(--gray-200);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
 .bg-white-95 {
   background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
 }
 
+/* ========== Logo Container ========== */
 .logo-container {
   width: 2.5rem;
   height: 2.5rem;
+  background-color: var(--primary-green);
+  transition: all 0.2s ease;
+}
+
+.logo-container:hover {
+  background-color: var(--primary-green-dark);
+  transform: scale(1.05);
 }
 
 nav a {
   cursor: pointer;
 }
 
-.register-button {
-  background-color: #2d6a4f;
-  padding: 8px 16px;
-  color: white;
-  border-radius: calc(0.625rem - 2px);
-  border-color: #0000001a;
+/* ========== Navigation Links ========== */
+.nav-link {
+  position: relative;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.2s ease;
   font-weight: 500;
-  font-size: 14px;
-  border: none;
-  cursor: pointer;
+  font-size: 0.9375rem;
+  color: var(--gray-600);
+  border-radius: var(--radius-lg);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: var(--primary-green);
   transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-link:hover {
+  color: var(--primary-green) !important;
+  background-color: var(--gray-100);
+}
+
+.nav-link:hover::after {
+  width: calc(100% - 1.5rem);
+}
+
+/* ========== Primary Button (Get Started / Register) ========== */
+.register-button {
+  background-color: var(--primary-green);
+  padding: 0.75rem 1rem;
+  color: white;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .register-button:hover {
-  background-color: #1e4d38;
+  background-color: var(--primary-green-dark);
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.25);
 }
 
-.logout-btn {
-  background-color: #2d6a4f;
-  padding: 8px 16px;
-  color: white;
-  border-radius: calc(0.625rem - 2px);
-  border-color: #0000001a;
+.register-button:active {
+  transform: translateY(0);
+}
+
+/* ========== Login Button ========== */
+button[mat-button] {
+  color: var(--gray-600);
   font-weight: 500;
-  font-size: 14px;
+  font-size: 0.9375rem;
+  border-radius: var(--radius-lg);
+  transition: all 0.2s ease;
+}
+
+button[mat-button]:hover {
+  background-color: var(--gray-100);
+  color: var(--primary-green);
+}
+
+/* ========== Logout Button ========== */
+.logout-btn {
+  background-color: var(--primary-green);
+  padding: 0.75rem 1rem;
+  color: white;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200);
+  font-weight: 500;
+  font-size: 0.9375rem;
   display: flex;
   align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .logout-btn:hover {
-  background-color: #1e4d38 !important;
+  background-color: var(--primary-green-dark) !important;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.25);
 }
 
+.logout-btn:active {
+  transform: translateY(0);
+}
+
+/* ========== User Avatar ========== */
 .user-avatar-nav {
   width: 2rem;
   height: 2rem;
   font-size: 0.875rem;
+  background-color: var(--primary-green);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
 }
 
-.hover-primary-green:hover {
-  color: #2d6a4f !important;
-}
-
-.transition-colors {
-  transition: color 0.2s;
-}
-
-/* Notification Bell Styles */
+/* ========== Notification Bell ========== */
 .notification-bell-wrapper {
   position: relative;
 }
@@ -72,15 +167,18 @@ nav a {
   width: 40px !important;
   height: 40px !important;
   border-radius: 50% !important;
-  transition: all 0.3s ease !important;
+  transition: all 0.2s ease !important;
+  color: var(--gray-600) !important;
 }
 
 .notification-bell-btn:hover {
-  background-color: rgba(45, 106, 79, 0.1) !important;
+  background-color: var(--gray-100) !important;
+  color: var(--primary-green) !important;
 }
 
 .notification-bell-btn.active {
-  background-color: rgba(45, 106, 79, 0.15) !important;
+  background-color: var(--gray-100) !important;
+  color: var(--primary-green) !important;
 }
 
 .notification-badge {
@@ -94,6 +192,7 @@ nav a {
   right: 2px !important;
   transform: scale(1);
   animation: pulse 2s infinite;
+  background-color: #DC2626 !important;
 }
 
 @keyframes pulse {
@@ -106,7 +205,7 @@ nav a {
   }
 }
 
-/* Notification Dropdown Container */
+/* ========== Notification Dropdown Container ========== */
 .notification-dropdown-container {
   position: absolute;
   top: calc(100% + 8px);
@@ -114,8 +213,33 @@ nav a {
   z-index: 1000;
 }
 
-/* Mobile Responsive */
+/* ========== Utility Classes ========== */
+.hover-primary-green:hover {
+  color: var(--primary-green) !important;
+}
+
+.transition-colors {
+  transition: color 0.2s ease;
+}
+
+/* ========== Smooth Scroll ========== */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ========== Responsive Design ========== */
 @media (max-width: 768px) {
+  .nav-link {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .register-button,
+  .logout-btn {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+  }
+
   .logout-btn span {
     display: none;
   }
@@ -125,10 +249,35 @@ nav a {
     width: 90vw;
     max-width: 400px;
   }
+
+  .logo-container {
+    width: 2rem;
+    height: 2rem;
+  }
 }
 
-/* Ensure dropdown appears above other content */
-nav {
-  position: relative;
-  z-index: 100;
+@media (max-width: 480px) {
+  nav {
+    padding: 0.5rem 0;
+  }
+
+  .register-button,
+  .logout-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+}
+
+/* ========== Focus States for Accessibility ========== */
+.nav-link:focus,
+.register-button:focus,
+.logout-btn:focus,
+.notification-bell-btn:focus {
+  outline: 2px solid var(--primary-green);
+  outline-offset: 2px;
+}
+
+button[mat-button]:focus {
+  outline: 2px solid var(--primary-green);
+  outline-offset: 2px;
 }
