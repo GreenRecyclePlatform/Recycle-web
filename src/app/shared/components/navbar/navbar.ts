@@ -38,6 +38,8 @@ export class Navbar implements OnInit, OnDestroy {
   unreadCount = 0;
   isNotificationDropdownOpen = false;
   mobileMenuOpen = false;
+  username: string | null = '';
+  role: string | null = '';
 
   private destroy$ = new Subject<void>();
 
@@ -56,6 +58,8 @@ export class Navbar implements OnInit, OnDestroy {
       // Initialize notifications when user is authenticated
       if (status) {
         this.initializeNotifications();
+        this.username = this.authService.getUserName();
+        this.role = this.authService.userRole;
       } else {
         this.cleanup();
       }
@@ -133,9 +137,8 @@ export class Navbar implements OnInit, OnDestroy {
 
     // Logout from auth service
     this.authService.logout();
-   
+
     this.router.navigate([' ']);
-  
   }
 
   /**
@@ -174,7 +177,7 @@ export class Navbar implements OnInit, OnDestroy {
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }
   }

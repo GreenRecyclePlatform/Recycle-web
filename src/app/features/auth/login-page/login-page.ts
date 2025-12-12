@@ -156,6 +156,7 @@ export class LoginPage implements OnDestroy {
     this.authService.login(loginRequest).subscribe({
       next: (response) => {
         this.initializeNotifications(response.accessToken);
+
         this.router.navigate(['/']);
       },
       error: (error) => {
