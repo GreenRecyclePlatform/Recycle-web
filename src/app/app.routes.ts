@@ -1,25 +1,3 @@
-// import { Routes } from '@angular/router';
-
-// export const routes: Routes = [
-//   {
-//     path: 'reviews',
-//     loadChildren: () => import('./features/reviews/reviews.routes').then((m) => m.REVIEW_ROUTES),
-//   },
-//   {
-//     path: '',
-//     redirectTo: '/reviews',
-//     pathMatch: 'full',
-//   },
-//   {
-//     path: '**',
-//     redirectTo: '/reviews',
-//   },
-// ];
-// //
-
-// reviews.routes.ts
-// app.routes.ts
-// src/app/app.routes.ts
 import { Routes } from '@angular/router';
 import { AllDrivers } from './features/driverassignments/components/all-drivers/all-drivers';
 import { AssignDriver } from './features/driverassignments/components/assign-driver/assign-driver';
@@ -89,7 +67,14 @@ export const routes: Routes = [
       import('./features/pickup-requests/pickup-requests-routing.module').then(
         (m) => m.PickupRequestsRoutingModule
       ),
-    canActivate: [authGuard],
+    //canActivate: [authGuard],
+  },
+  // Payments Module
+  {
+    path: 'payments',
+    loadChildren: () => import('./features/payments/payments-routing.module')
+      .then(m => m.PaymentsRoutingModule),
+    //canActivate: [authGuard]
   },
 
   // Admin routes - COMBINED INTO ONE

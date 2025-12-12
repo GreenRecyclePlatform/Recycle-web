@@ -33,4 +33,24 @@ export const API_ENDPOINTS = {
   DRIVERPROFILE: {
     Create: '/DriverProfiles',
   },
+  //=======================Payment endpoint======================
+  // Payment endpoints matching backend
+  PAYMENTS: {
+    getAll: '/Payment',
+    getById: (id: string) => `/Payment/${id}`,
+    getUserPayments: (userId: string) => `/Payment/user/${userId}`,
+    create: '/Payment',
+    approve: (id: string) => `/Payment/${id}/approve`,
+    reject: (id: string) => `/Payment/${id}/reject`,
+    requestPayout: '/Payment/request-payout',
+    getPayPalStatus: (id: string) => `/Payment/${id}/paypal-status`,
+  },
+  PAYMENT_METHODS: {
+    getAll: '/PaymentMethods',
+    getById: (id: string) => `/PaymentMethods/${id}`,
+    create: '/PaymentMethods',
+    update: (id: string) => `/PaymentMethods/${id}`,
+    delete: (id: string) => `/PaymentMethods/${id}`,
+    setDefault: (id: string) => `/PaymentMethods/${id}/set-default`,
+  }
 };
