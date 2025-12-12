@@ -10,7 +10,7 @@ import { Navbar } from '../../../../shared/components/navbar/navbar';
 
 
 @Component({
-  imports: [FormsModule, CommonModule, DriverSidebar,Navbar],
+  imports: [FormsModule, CommonModule, DriverSidebar],
   selector: 'app-driver-profile',
   templateUrl: './profiledriver.html',
   styleUrls: ['./profiledriver.css']
@@ -74,31 +74,28 @@ export class Profiledriver implements OnInit {
     const isDriver = this.authService.isDriver();
     const isAdmin = this.authService.isAdmin();
 
-    console.log('🔐 Token exists:', !!token);
-    console.log('🔐 User ID:', userId);
-    console.log('🔐 Role:', userRole);
-    console.log('🔐 Is Driver:', isDriver);
-    console.log('🔐 Is Admin:', isAdmin);
 
     if (!token) {
       this.errorMessage = 'Please login to access your profile';
       console.warn('⚠️ No token found - redirecting to login');
+      // this.router.navigate(['/login']);
       return;
     }
 
     if (!userId) {
       this.errorMessage = 'Unable to identify user';
+      console.error('❌ User ID not found in token');
       return;
     }
 
     if (!isDriver && !isAdmin) {
       this.errorMessage = 'You need Driver privileges to access this page';
       console.warn('⚠️ Not a driver - access denied');
+      // this.router.navigate(['/unauthorized']);
       return;
     }
 
     this.driverId = userId;
-    console.log( this.driverId);
     this.loadDriverProfile();
   }
 
@@ -108,11 +105,20 @@ export class Profiledriver implements OnInit {
 
     this.driverProfileService.getDriverProfile(this.driverId).subscribe({
       next: (response: DriverProfileResponse) => {
-        this.apiResponse = response;
-        this.driverProfileId = response.id; 
+        console.log('📥 Full Response:', response);
         
-        console.log( response);
-        console.log( this.driverProfileId);
+        // ⬅️ تحقق إن الـ response موجود وفيه id
+        if (!response || !response.id) {
+          console.error('❌ No driver profile found for user:', this.driverId);
+          this.errorMessage = 'No driver profile found. Please contact support.';
+          this.isLoading = false;
+          return;
+        }
+        
+        this.apiResponse = response;
+        this.driverProfileId = response.id;
+        
+        console.log('🆔 Driver Profile ID:', this.driverProfileId);
         
         this.profileData = {
           FirstName: response.firstName,
@@ -141,15 +147,16 @@ export class Profiledriver implements OnInit {
 
         this.originalData = { ...this.profileData };
         this.isLoading = false;
-        console.log( response.email);
+        console.log('✅ Profile loaded successfully for:', response.email);
       },
       error: (error) => {
-        console.error(error);
+        console.error('❌ Error loading driver profile:', error);
         this.errorMessage = 'Failed to load driver profile. Please try again.';
         this.isLoading = false;
         
         if (error.message && (error.message.includes('Unauthorized') || error.message.includes('403'))) {
           console.warn('⚠️ Unauthorized access - redirecting');
+          // this.router.navigate(['/login']);
         }
       }
     });
@@ -171,14 +178,14 @@ export class Profiledriver implements OnInit {
           'Availability disabled successfully!';
         this.isTogglingAvailability = false;
         
-        console.log( result);
+        console.log('✅ Availability updated to:', result);
         
         setTimeout(() => {
           this.successMessage = '';
         }, 3000);
       },
       error: (error) => {
-        console.error( error);
+        console.error('❌ Error updating availability:', error);
         this.errorMessage = 'Failed to update availability status. Please try again.';
         this.isTogglingAvailability = false;
       }
@@ -190,7 +197,7 @@ export class Profiledriver implements OnInit {
       this.saveChanges();
     } else {
       this.originalData = { ...this.profileData };
-      this.isEditing = true;
+      this.isEditing = true; //show input fields to Edit 
     }
   }
 
@@ -215,9 +222,12 @@ export class Profiledriver implements OnInit {
       }
     };
 
-   
-    this.driverProfileService.updateDriverProfile(this.driverProfileId, updateRequest).subscribe({
+    console.log('📤 Request Body:', JSON.stringify(updateRequest, null, 2));
+    console.log('🔑 User ID (driverId):', this.driverId);
+
+    this.driverProfileService.updateDriverProfile(this.driverId, updateRequest).subscribe({
       next: (response) => {
+        console.log('✅ Profile updated successfully:', response);
         this.successMessage = 'Profile updated successfully!';
         this.isEditing = false;
         this.isSaving = false;
@@ -238,9 +248,13 @@ export class Profiledriver implements OnInit {
         }, 3000);
       },
       error: (error) => {
-        console.error(error);
+        console.error('❌ Error updating profile:', error);
         
-       
+        if (error.error && error.error.errors) {
+          console.error('🔴 Validation Errors:', error.error.errors);
+          console.error('🔴 Full Error Object:', JSON.stringify(error.error, null, 2));
+        }
+        
         if (error.error) {
           this.errorMessage = JSON.stringify(error.error, null, 2);
         } else {
@@ -249,6 +263,9 @@ export class Profiledriver implements OnInit {
         
         this.isSaving = false;
         
+        if (error.message && error.message.includes('403')) {
+          this.errorMessage = 'You can only update your own profile';
+        }
       }
     });
   }
@@ -304,18 +321,19 @@ export class Profiledriver implements OnInit {
   }
 
   private calculateEarnings(totalTrips: number): string {
-    const earningsPerTrip = 134;
+    const earningsPerTrip = 150;
     const total = totalTrips * earningsPerTrip;
-    return `EG${total.toLocaleString('en-IN')}`;
+    return `₹${total.toLocaleString('en-US')}`;
   }
 
   private uploadImage(file: File): void {
     this.driverProfileService.uploadProfileImage(file).subscribe({
       next: (response) => {
         this.previewImage = response.imageUrl;
+        console.log('✅ Image uploaded successfully:', response.imageUrl);
       },
       error: (error) => {
-        console.error( error);
+        console.error('❌ Error uploading image:', error);
         this.errorMessage = 'Failed to upload image. Please try again.';
       }
     });

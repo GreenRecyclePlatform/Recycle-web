@@ -45,6 +45,12 @@ export class LoginPage implements OnDestroy {
   isLoading = false; // ✅ Added missing property
   private destroy$ = new Subject<void>(); // ✅ Added missing property
 
+  showPassword = false;
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -155,6 +161,7 @@ export class LoginPage implements OnDestroy {
       error: (error) => {
         console.log(error);
         this.snackBar.open(error, 'Close', { duration: 3000 });
+        this.isLoading = false;
       },
     });
 

@@ -152,18 +152,26 @@ html {
   flex-wrap: wrap;
   gap: 1rem;
 }
-
 .hero-image {
   display: flex;
-  margin-right: -150pt;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+  position: relative;
+  width: 100%;
 }
 
 .hero-image img {
-  width: 200%;
+  width: 100%;
+  height: auto;
   border-radius: 1.5rem;
-  box-shadow: 0 25px 50px -12px rgba(224, 213, 213, 0.4);
+  box-shadow: 
+    0 0 60px 20px rgba(255, 255, 255, 0.4),
+    0 0 100px 40px rgba(255, 255, 255, 0.2),
+    0 25px 50px -12px rgba(0, 0, 0, 0.3);
+  object-fit: cover;
+  transform: none;
 }
-
 /* Buttons */
 .btn {
   display: inline-flex;
