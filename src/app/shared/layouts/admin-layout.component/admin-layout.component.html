@@ -19,6 +19,24 @@
 
       <!-- Navigation Menu -->
       <nav class="sidebar-nav">
+               <!-- NEW: Dashboard Link -->
+        <a routerLink="/admin/dashboard"
+           routerLinkActive="active"
+           class="nav-item"
+           [routerLinkActiveOptions]="{exact: true}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+        <a routerLink="/admin/assign-drivers"
+           routerLinkActive="active"
+           class="nav-item"
+           [routerLinkActiveOptions]="{exact: false}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <a
           routerLink="/admin/review-requests"
           routerLinkActive="active"
