@@ -1,0 +1,329 @@
+<div class="container mx-auto mt-8 px-4 max-w-7xl">
+    <!-- Header -->
+    <div class="mb-6">
+        <button (click)="goBack()" class="text-gray-600 hover:text-gray-900 flex items-center gap-2 mb-4 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            Back to Dashboard
+        </button>
+        <h1 class="text-3xl font-bold text-[#212529] mb-2">Manage Withdrawal Requests</h1>
+        <p class="text-gray-600">Review and process pending withdrawal requests</p>
+    </div>
+
+    <!-- Loading State -->
+    @if (isLoading) {
+    <div class="text-center py-12">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#2D6A4F]"></div>
+        <p class="mt-4 text-gray-600">Loading withdrawal requests...</p>
+    </div>
+    }
+
+    <!-- Error State -->
+    @if (error && !isLoading) {
+    <div class="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center justify-between mb-6">
+        <span class="text-red-800">{{ error }}</span>
+        <button (click)="loadWithdrawals()"
+            class="bg-red-100 hover:bg-red-200 text-red-800 px-4 py-2 rounded-lg transition">
+            Retry
+        </button>
+    </div>
+    }
+
+    <!-- Main Content -->
+    @if (!isLoading && !error) {
+    <div class="grid lg:grid-cols-2 gap-6">
+        <!-- Pending Withdrawals Column -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="bg-yellow-50 border-b border-yellow-200 p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Pending Requests
+                        </h2>
+                        <p class="text-sm text-gray-600 mt-1">Awaiting approval</p>
+                    </div>
+                    <div class="text-3xl font-bold text-yellow-600">
+                        {{ pendingWithdrawals.length }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6">
+                @if (pendingWithdrawals.length === 0) {
+                <div class="text-center py-12">
+                    <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p class="text-gray-500">No pending withdrawal requests</p>
+                </div>
+                } @else {
+                <div class="space-y-4">
+                    @for (withdrawal of pendingWithdrawals; track withdrawal.paymentId) {
+                    <div class="border border-gray-200 rounded-lg p-4 hover:border-[#2D6A4F] transition relative">
+                        <!-- Urgent Badge -->
+                        @if (isUrgent(withdrawal.createdAt)) {
+                        <div class="absolute top-2 right-2">
+                            <span
+                                class="bg-red-100 text-red-700 text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                                Urgent
+                            </span>
+                        </div>
+                        }
+
+                        <!-- User Info -->
+                        <div class="mb-3">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div
+                                    class="w-10 h-10 bg-[#2D6A4F] rounded-full flex items-center justify-center text-white font-semibold">
+                                    {{ withdrawal.userName.charAt(0).toUpperCase() }}
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-900">{{ withdrawal.userName }}</p>
+                                    <p class="text-sm text-gray-500">{{ getTimeSince(withdrawal.createdAt) }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Amount -->
+                        <div class="mb-3 p-3 bg-gray-50 rounded-lg">
+                            <p class="text-sm text-gray-600 mb-1">Withdrawal Amount</p>
+                            <p class="text-2xl font-bold text-[#2D6A4F]">{{ formatCurrency(withdrawal.amount) }}</p>
+                        </div>
+
+                        <!-- Payment Method -->
+                        @if (withdrawal.paymentMethod) {
+                        <div class="mb-3">
+                            <p class="text-sm text-gray-600 mb-1">Payment Method</p>
+                            <p class="text-gray-900 font-medium flex items-center gap-2">
+                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                </svg>
+                                {{ withdrawal.paymentMethod }}
+                            </p>
+                        </div>
+                        }
+
+                        <!-- Request Details -->
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-600 mb-1">Request ID</p>
+                            <p class="text-xs font-mono text-gray-700 bg-gray-100 px-2 py-1 rounded">
+                                {{ withdrawal.paymentId.substring(0, 16) }}...
+                            </p>
+                        </div>
+
+                        <!-- Description -->
+                        @if (withdrawal.description) {
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-700">{{ withdrawal.description }}</p>
+                        </div>
+                        }
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-2">
+                            <button (click)="approveWithdrawal(withdrawal.paymentId)"
+                                class="flex-1 bg-[#2D6A4F] hover:bg-[#2D6A4F]/90 text-white px-4 py-2 rounded-lg transition font-medium flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
+                                Approve
+                            </button>
+                            <button (click)="rejectWithdrawal(withdrawal.paymentId)"
+                                class="flex-1 bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-lg transition font-medium flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                                Reject
+                            </button>
+                            <button (click)="viewDetails(withdrawal.paymentId)"
+                                class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+
+        <!-- Processing Withdrawals Column -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="bg-blue-50 border-b border-blue-200 p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            Processing
+                        </h2>
+                        <p class="text-sm text-gray-600 mt-1">Being transferred</p>
+                    </div>
+                    <div class="text-3xl font-bold text-blue-600">
+                        {{ processingWithdrawals.length }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6">
+                @if (processingWithdrawals.length === 0) {
+                <div class="text-center py-12">
+                    <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    <p class="text-gray-500">No withdrawals being processed</p>
+                </div>
+                } @else {
+                <div class="space-y-4">
+                    @for (withdrawal of processingWithdrawals; track withdrawal.paymentId) {
+                    <div class="border border-blue-200 rounded-lg p-4 bg-blue-50/30">
+                        <!-- User Info -->
+                        <div class="mb-3">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div
+                                    class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
+                                    {{ withdrawal.userName.charAt(0).toUpperCase() }}
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-900">{{ withdrawal.userName }}</p>
+                                    <p class="text-sm text-gray-500">Processing since {{
+                                        getTimeSince(withdrawal.processedAt || withdrawal.createdAt) }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Amount -->
+                        <div class="mb-3 p-3 bg-white rounded-lg border border-blue-200">
+                            <p class="text-sm text-gray-600 mb-1">Withdrawal Amount</p>
+                            <p class="text-2xl font-bold text-blue-600">{{ formatCurrency(withdrawal.amount) }}</p>
+                        </div>
+
+                        <!-- Payment Method -->
+                        @if (withdrawal.paymentMethod) {
+                        <div class="mb-3">
+                            <p class="text-sm text-gray-600 mb-1">Payment Method</p>
+                            <p class="text-gray-900 font-medium">{{ withdrawal.paymentMethod }}</p>
+                        </div>
+                        }
+
+                        <!-- Request ID -->
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-600 mb-1">Request ID</p>
+                            <p
+                                class="text-xs font-mono text-gray-700 bg-white px-2 py-1 rounded border border-blue-200">
+                                {{ withdrawal.paymentId.substring(0, 16) }}...
+                            </p>
+                        </div>
+
+                        <!-- Processing Indicator -->
+                        <div class="mb-4 p-3 bg-blue-100 rounded-lg border border-blue-200">
+                            <div class="flex items-center gap-2 text-blue-800">
+                                <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                    </path>
+                                </svg>
+                                <span class="text-sm font-medium">Transfer in progress...</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-2">
+                            <button (click)="completeWithdrawal(withdrawal.paymentId)"
+                                class="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition font-medium flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Mark Complete
+                            </button>
+                            <button (click)="viewDetails(withdrawal.paymentId)"
+                                class="bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg transition border border-blue-200">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Card -->
+    <div class="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-6">
+        <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div class="flex-1">
+                <h3 class="font-semibold text-blue-900 mb-2">Withdrawal Processing Guidelines</h3>
+                <ul class="space-y-2 text-sm text-blue-800">
+                    <li class="flex items-start gap-2">
+                        <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span><strong>Approve:</strong> Moves withdrawal to Processing and initiates bank
+                            transfer</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span><strong>Reject:</strong> Cancels withdrawal request with reason</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span><strong>Complete:</strong> Confirms successful transfer with transaction ID</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <span><strong>Urgent:</strong> Requests older than 24 hours require immediate attention</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    }
+</div>
