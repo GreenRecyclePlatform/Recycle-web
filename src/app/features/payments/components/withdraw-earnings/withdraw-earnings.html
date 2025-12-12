@@ -1,0 +1,397 @@
+<div class="min-h-screen bg-[#F8F9FA] py-8">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <!-- Header -->
+        <div class="mb-8">
+            <button (click)="cancel()"
+                class="text-gray-600 hover:text-gray-900 flex items-center gap-2 mb-4 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+                Back to Payment History
+            </button>
+            <h1 class="text-3xl font-bold text-[#212529] mb-2">Withdraw Earnings</h1>
+            <p class="text-gray-600">Transfer your available balance to your bank account</p>
+        </div>
+
+        <!-- Error Alert -->
+        @if (error) {
+        <div class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex items-start gap-3">
+            <svg class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p class="text-red-800">{{ error }}</p>
+        </div>
+        }
+
+        <form [formGroup]="withdrawalForm" (ngSubmit)="onSubmit()">
+            <div class="grid lg:grid-cols-3 gap-6">
+                <!-- Main Form Column -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Available Balance Card -->
+                    @if (summary) {
+                    <div class="bg-gradient-to-br from-[#2D6A4F] to-[#1e4d38] text-white rounded-xl shadow-lg p-6">
+                        <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                            </svg>
+                            Available Balance
+                        </h2>
+                        <div class="flex items-baseline gap-2 mb-4">
+                            <p class="text-4xl font-bold">{{ formatCurrency(summary.availableBalance) }}</p>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 text-sm opacity-90">
+                            <div>
+                                <p class="opacity-75 mb-1">Total Earnings</p>
+                                <p class="font-semibold">{{ formatCurrency(summary.totalEarnings) }}</p>
+                            </div>
+                            <div>
+                                <p class="opacity-75 mb-1">Withdrawn</p>
+                                <p class="font-semibold">{{ formatCurrency(summary.totalWithdrawals) }}</p>
+                            </div>
+                            <div>
+                                <p class="opacity-75 mb-1">Pending</p>
+                                <p class="font-semibold">{{ formatCurrency(summary.pendingAmount) }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    }
+
+                    <!-- Withdrawal Amount Card -->
+                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                        <div class="p-6 border-b border-gray-200">
+                            <h2 class="text-xl font-semibold text-[#212529]">Withdrawal Amount</h2>
+                        </div>
+                        <div class="p-6 space-y-4">
+                            <div>
+                                <label for="amount" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Amount (EGP) <span class="text-red-500">*</span>
+                                </label>
+                                <div class="relative">
+                                    <span
+                                        class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">EGP</span>
+                                    <input type="number" id="amount" formControlName="amount" min="50" step="0.01"
+                                        placeholder="0.00"
+                                        class="w-full pl-16 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] outline-none transition-all text-lg font-semibold"
+                                        [class.border-red-500]="withdrawalForm.get('amount')?.invalid && withdrawalForm.get('amount')?.touched">
+                                </div>
+                                @if (withdrawalForm.get('amount')?.invalid && withdrawalForm.get('amount')?.touched) {
+                                <p class="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Minimum withdrawal amount is EGP 50.00
+                                </p>
+                                }
+                            </div>
+
+                            <!-- Quick Amount Buttons -->
+                            @if (summary) {
+                            <div>
+                                <p class="text-sm text-gray-600 mb-2">Quick select:</p>
+                                <div class="grid grid-cols-4 gap-2">
+                                    <button type="button" (click)="setWithdrawalAmount(0.25)"
+                                        class="px-3 py-2 bg-[#F8F9FA] hover:bg-[#2D6A4F] hover:text-white rounded-lg transition text-sm font-medium">
+                                        25%
+                                    </button>
+                                    <button type="button" (click)="setWithdrawalAmount(0.5)"
+                                        class="px-3 py-2 bg-[#F8F9FA] hover:bg-[#2D6A4F] hover:text-white rounded-lg transition text-sm font-medium">
+                                        50%
+                                    </button>
+                                    <button type="button" (click)="setWithdrawalAmount(0.75)"
+                                        class="px-3 py-2 bg-[#F8F9FA] hover:bg-[#2D6A4F] hover:text-white rounded-lg transition text-sm font-medium">
+                                        75%
+                                    </button>
+                                    <button type="button" (click)="setWithdrawalAmount(1)"
+                                        class="px-3 py-2 bg-[#F8F9FA] hover:bg-[#2D6A4F] hover:text-white rounded-lg transition text-sm font-medium">
+                                        100%
+                                    </button>
+                                </div>
+                            </div>
+                            }
+
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
+                                <p class="flex items-start gap-2">
+                                    <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span>Minimum withdrawal amount is EGP 50.00. Withdrawals are typically processed
+                                        within 1-3 business days.</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method Card -->
+                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                        <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                            <h2 class="text-xl font-semibold text-[#212529]">Payment Method</h2>
+                            <button type="button" (click)="toggleAddPaymentMethod()"
+                                class="text-[#2D6A4F] hover:text-[#1e4d38] text-sm font-medium flex items-center gap-1">
+                                @if (!showAddPaymentMethod) {
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4" />
+                                </svg>
+                                <span>Add New</span>
+                                } @else {
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                                <span>Cancel</span>
+                                }
+                            </button>
+                        </div>
+                        <div class="p-6">
+                            @if (!showAddPaymentMethod) {
+                            <!-- Select Existing Method -->
+                            <div>
+                                <label for="paymentMethodId" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Select Payment Method <span class="text-red-500">*</span>
+                                </label>
+                                <select id="paymentMethodId" formControlName="paymentMethodId"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] outline-none transition-all"
+                                    [class.border-red-500]="withdrawalForm.get('paymentMethodId')?.invalid && withdrawalForm.get('paymentMethodId')?.touched">
+                                    <option value="">-- Select a payment method --</option>
+                                    @for (method of paymentMethods; track method.id) {
+                                    <option [value]="method.id">
+                                        {{ getMethodDisplayText(method) }}
+                                        @if (method.isDefault) { (Default) }
+                                    </option>
+                                    }
+                                </select>
+                                @if (withdrawalForm.get('paymentMethodId')?.invalid &&
+                                withdrawalForm.get('paymentMethodId')?.touched) {
+                                <p class="text-red-500 text-sm mt-1.5">Please select a payment method</p>
+                                }
+                            </div>
+
+                            @if (paymentMethods.length === 0) {
+                            <div
+                                class="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-sm text-yellow-800">
+                                <p>No payment methods found. Please add a payment method to continue.</p>
+                            </div>
+                            }
+                            } @else {
+                            <!-- Add New Payment Method Form -->
+                            <div [formGroup]="newMethodForm" class="space-y-4">
+                                <!-- Method Type Tabs -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Method Type</label>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <button type="button"
+                                            (click)="onMethodTypeChange(PaymentMethodType.BankAccount)"
+                                            [class.bg-[#2D6A4F]]="selectedMethodType === PaymentMethodType.BankAccount"
+                                            [class.text-white]="selectedMethodType === PaymentMethodType.BankAccount"
+                                            [class.bg-gray-100]="selectedMethodType !== PaymentMethodType.BankAccount"
+                                            class="px-4 py-2 rounded-lg transition font-medium text-sm">
+                                            Bank Account
+                                        </button>
+                                        <button type="button" (click)="onMethodTypeChange(PaymentMethodType.UPI)"
+                                            [class.bg-[#2D6A4F]]="selectedMethodType === PaymentMethodType.UPI"
+                                            [class.text-white]="selectedMethodType === PaymentMethodType.UPI"
+                                            [class.bg-gray-100]="selectedMethodType !== PaymentMethodType.UPI"
+                                            class="px-4 py-2 rounded-lg transition font-medium text-sm">
+                                            UPI/Instapay
+                                        </button>
+                                        <button type="button" (click)="onMethodTypeChange(PaymentMethodType.Wallet)"
+                                            [class.bg-[#2D6A4F]]="selectedMethodType === PaymentMethodType.Wallet"
+                                            [class.text-white]="selectedMethodType === PaymentMethodType.Wallet"
+                                            [class.bg-gray-100]="selectedMethodType !== PaymentMethodType.Wallet"
+                                            class="px-4 py-2 rounded-lg transition font-medium text-sm">
+                                            Mobile Wallet
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Account Name -->
+                                <div>
+                                    <label for="accountName" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Account Holder Name <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="accountName" formControlName="accountName"
+                                        placeholder="Enter full name as per records"
+                                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] outline-none transition-all">
+                                </div>
+
+                                <!-- Bank Account Fields -->
+                                @if (selectedMethodType === PaymentMethodType.BankAccount) {
+                                <div>
+                                    <label for="accountNumber" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Account Number <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="accountNumber" formControlName="accountNumber"
+                                        placeholder="Enter 10-18 digit account number"
+                                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] outline-none transition-all">
+                                </div>
+                                <div>
+                                    <label for="ifscCode" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Bank Code / SWIFT <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="ifscCode" formControlName="ifscCode"
+                                        placeholder="e.g., NBEGEGCXXXX"
+                                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] outline-none transition-all">
+                                </div>
+                                }
+
+                                <!-- UPI Fields -->
+                                @if (selectedMethodType === PaymentMethodType.UPI) {
+                                <div>
+                                    <label for="upiId" class="block text-sm font-medium text-gray-700 mb-2">
+                                        UPI ID / Instapay <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="upiId" formControlName="upiId" placeholder="yourname@bank"
+                                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] outline-none transition-all">
+                                </div>
+                                }
+
+                                <!-- Wallet Fields -->
+                                @if (selectedMethodType === PaymentMethodType.Wallet) {
+                                <div>
+                                    <label for="walletProvider" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Wallet Provider <span class="text-red-500">*</span>
+                                    </label>
+                                    <select id="walletProvider" formControlName="walletProvider"
+                                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] outline-none transition-all">
+                                        <option value="">-- Select provider --</option>
+                                        <option value="Vodafone Cash">Vodafone Cash</option>
+                                        <option value="Orange Money">Orange Money</option>
+                                        <option value="Etisalat Cash">Etisalat Cash</option>
+                                        <option value="Fawry">Fawry</option>
+                                    </select>
+                                </div>
+                                }
+
+                                <!-- Set as Default -->
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" id="isDefault" formControlName="isDefault"
+                                        class="w-4 h-4 text-[#2D6A4F] border-gray-300 rounded focus:ring-[#2D6A4F]">
+                                    <label for="isDefault" class="text-sm text-gray-700">Set as default payment
+                                        method</label>
+                                </div>
+
+                                <button type="button" (click)="addPaymentMethod()"
+                                    class="w-full bg-[#2D6A4F] hover:bg-[#2D6A4F]/90 text-white px-4 py-2.5 rounded-lg transition font-medium">
+                                    Add Payment Method
+                                </button>
+                            </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                        <div class="p-6 border-b border-gray-200">
+                            <h2 class="text-xl font-semibold text-[#212529]">Additional Notes (Optional)</h2>
+                        </div>
+                        <div class="p-6">
+                            <textarea id="notes" formControlName="notes" rows="3"
+                                placeholder="Any special instructions or notes..."
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] outline-none transition-all resize-none"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary Sidebar -->
+                <div class="lg:col-span-1">
+                    <div class="sticky top-6 space-y-6">
+                        <!-- Withdrawal Summary -->
+                        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                            <h3 class="font-semibold text-[#212529] mb-4">Withdrawal Summary</h3>
+                            <div class="space-y-3">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">Withdrawal Amount</span>
+                                    <span class="font-semibold">{{
+                                        formatCurrency(withdrawalForm.value.amount || 0) }}</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">Processing Fee</span>
+                                    <span class="font-semibold text-red-600">- {{
+                                        formatCurrency(calculateFee(withdrawalForm.value.amount || 0)) }}</span>
+                                </div>
+                                <div class="border-t border-gray-200 pt-3 flex justify-between">
+                                    <span class="font-semibold text-[#212529]">Net Amount</span>
+                                    <span class="font-bold text-[#2D6A4F] text-lg">{{
+                                        formatCurrency(calculateNetAmount(withdrawalForm.value.amount || 0)) }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Info Card -->
+                        <div class="bg-blue-50 rounded-xl border border-blue-200 p-4">
+                            <h4 class="font-semibold text-blue-900 mb-2 flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Important Information
+                            </h4>
+                            <ul class="space-y-2 text-sm text-blue-800">
+                                <li class="flex items-start gap-2">
+                                    <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    Processing time: 1-3 business days
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    2% processing fee (max EGP 20)
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    Minimum amount: EGP 50.00
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-4 mt-8">
+                <button type="button" (click)="cancel()"
+                    class="flex-1 bg-white hover:bg-gray-50 text-gray-700 px-6 py-3 rounded-lg transition font-semibold border border-gray-300">
+                    Cancel
+                </button>
+                <button type="submit" [disabled]="isSubmitting || withdrawalForm.invalid || !summary"
+                    class="flex-1 bg-[#2D6A4F] hover:bg-[#2D6A4F]/90 text-white px-6 py-3 rounded-lg transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2">
+                    @if (!isSubmitting) {
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span>Submit Withdrawal Request</span>
+                    }
+                    @if (isSubmitting) {
+                    <span class="flex items-center gap-2">
+                        <svg class="animate-spin w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                            </circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
+                        </svg>
+                        Processing...
+                    </span>
+                    }
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
