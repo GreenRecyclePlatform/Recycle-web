@@ -18,7 +18,7 @@ import {
 })
 export class PickupRequestService {
   // private readonly baseUrl = `${environment.apiUrl}/pickuprequests`;
-  private readonly baseUrl = `${environment.apiUrl}/PickupRequests`;
+  private readonly baseUrl = `${environment.apiUrl}/PickupRequests`; // changed to capital P and R to match backend
   constructor(private http: HttpClient) { }
 
   /**
