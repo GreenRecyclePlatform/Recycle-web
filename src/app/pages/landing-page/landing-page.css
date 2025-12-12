@@ -1,11 +1,67 @@
 .landing-page {
   min-height: 100vh;
-  background: white;
+  background: rgb(255, 255, 255);
+  padding-top: 80px; /* 🆕 Add padding to prevent content hiding under fixed navbar */
 }
 
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+}
+
+/* 🆕 Back to Top Button */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  background: #2d6a4f;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.4);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(100px);
+  transition: all 0.3s ease;
+}
+
+.back-to-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background: #1e4d37;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(45, 106, 79, 0.5);
+}
+
+.back-to-top:active {
+  transform: translateY(-2px);
+}
+
+.back-to-top svg {
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-8px);
+  }
+  60% {
+    transform: translateY(-4px);
+  }
 }
 
 /* Hero Section */
@@ -15,6 +71,8 @@ html {
   color: white;
   padding: 5rem 2rem;
   overflow: hidden;
+  margin-top: -80px; /* 🆕 Compensate for the padding-top */
+  padding-top: calc(5rem + 80px); /* 🆕 Add navbar height to hero padding */
 }
 
 .hero-overlay {
@@ -94,17 +152,26 @@ html {
   flex-wrap: wrap;
   gap: 1rem;
 }
-
 .hero-image {
-  display: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+  position: relative;
+  width: 100%;
 }
 
 .hero-image img {
   width: 100%;
-  border-radius: 1rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  height: auto;
+  border-radius: 1.5rem;
+  box-shadow: 
+    0 0 60px 20px rgba(255, 255, 255, 0.4),
+    0 0 100px 40px rgba(255, 255, 255, 0.2),
+    0 25px 50px -12px rgba(0, 0, 0, 0.3);
+  object-fit: cover;
+  transform: none;
 }
-
 /* Buttons */
 .btn {
   display: inline-flex;
@@ -152,6 +219,28 @@ html {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+.btn-outline {
+  background: transparent;
+  color: #2d6a4f;
+  border: 2px solid #2d6a4f;
+  padding: 0.875rem 2rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-outline:hover {
+  background: #2d6a4f;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.3);
+}
+
 .chevron {
   font-size: 1.5rem;
 }
@@ -174,58 +263,108 @@ html {
   color: #666;
 }
 
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(45, 106, 79, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 100px;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: #2d6a4f;
+  font-weight: 600;
+}
+
 /* How It Works Section */
 .how-it-works {
   padding: 5rem 2rem;
   background: #f8f9fa;
+}
+
+.container {
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.steps-wrapper {
+  position: relative;
+  padding: 2rem 0;
+}
+
+.steps-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 180px;
+  left: 16.66%;
+  right: 16.66%;
+  height: 3px;
+  background: linear-gradient(90deg, #2d6a4f 0%, #52b788 50%, #2d6a4f 100%);
+  z-index: 0;
 }
 
 .steps-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: 4rem;
 }
 
 .step-card {
-  text-align: center;
   background: white;
-  padding: 2rem;
-  border-radius: 0.625rem;
-  transition: all 0.3s ease;
+  border-radius: 24px;
+  padding: 3rem 2rem;
+  text-align: center;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border: 2px solid transparent;
 }
 
 .step-card:hover {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  transform: translateY(-5px);
+  transform: translateY(-15px);
+  box-shadow: 0 20px 40px rgba(45, 106, 79, 0.2);
+  border-color: #2d6a4f;
 }
 
-.step-icon {
-  width: 5rem;
-  height: 5rem;
+.step-number {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #2d6a4f 0%, #1e4d38 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 1.5rem;
-  font-size: 2.5rem;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: white;
+  box-shadow: 0 8px 25px rgba(45, 106, 79, 0.35);
+  border: 4px solid white;
 }
 
-.step-icon-green {
-  background: rgba(45, 106, 79, 0.1);
+.icon-container {
+  width: 140px;
+  height: 140px;
+  margin: 2rem auto 2rem;
+  background: linear-gradient(135deg, #2d6a4f 0%, #52b788 100%);
+  border-radius: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
 
-.step-icon-blue {
-  background: rgba(0, 119, 182, 0.1);
-}
-
-.step-icon-money {
-  background: rgba(16, 185, 129, 0.1);
+.icon-container i {
+  font-size: 5rem;
+  color: white;
 }
 
 .step-card h3 {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   color: #212529;
   margin-bottom: 0.75rem;
   font-weight: 600;
@@ -234,6 +373,21 @@ html {
 .step-card p {
   color: #666;
   line-height: 1.6;
+  margin-bottom: 0;
+}
+
+.highlight-box {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(45, 106, 79, 0.05) 0%, rgba(82, 183, 136, 0.05) 100%);
+  border-left: 4px solid #2d6a4f;
+  border-radius: 8px;
+}
+
+.highlight-box p {
+  margin: 0;
+  font-weight: 600;
+  color: #2d6a4f;
 }
 
 /* Materials Section */
@@ -241,37 +395,6 @@ html {
   padding: 5rem 2rem;
   max-width: 1200px;
   margin: 0 auto;
-}
-
-.category-filters {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 3rem;
-  flex-wrap: wrap;
-}
-
-.filter-btn {
-  padding: 0.75rem 1.5rem;
-  border: 2px solid #2d6a4f;
-  background: white;
-  color: #2d6a4f;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.filter-btn:hover {
-  background: rgba(45, 106, 79, 0.05);
-  transform: translateY(-2px);
-}
-
-.filter-btn.active {
-  background: #2d6a4f;
-  color: white;
-  box-shadow: 0 4px 8px rgba(45, 106, 79, 0.3);
 }
 
 .materials-grid {
@@ -313,6 +436,7 @@ html {
 
 .material-content {
   padding: 1.5rem;
+  text-align: center;
 }
 
 .material-icon {
@@ -331,18 +455,49 @@ html {
   font-size: 2rem;
   font-weight: 700;
   color: #2d6a4f;
+  margin: 0;
 }
 
 .materials-cta {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
   margin-top: 3rem;
 }
 
 .loading-state {
-  text-align: center;
-  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  min-height: 300px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #2d6a4f;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-state p {
   color: #666;
   font-size: 1.125rem;
+  margin: 0;
 }
 
 .empty-state {
@@ -677,10 +832,20 @@ html {
 
   .steps-grid {
     grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .steps-wrapper::before {
+    display: block;
   }
 
   .materials-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .materials-cta {
+    flex-direction: row;
+    justify-content: center;
   }
 
   .stats-grid {
@@ -707,5 +872,44 @@ html {
 
   .hero h1 {
     font-size: 4rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .landing-page {
+    padding-top: 70px;
+  }
+
+  .hero {
+    margin-top: -70px;
+    padding-top: calc(5rem + 70px);
+  }
+
+  .steps-wrapper::before {
+    display: none;
+  }
+
+  .back-to-top {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .section-header h2 {
+    font-size: 2rem;
+  }
+
+  .step-card {
+    padding: 2.5rem 1.5rem;
+  }
+
+  .icon-container {
+    width: 120px;
+    height: 120px;
+  }
+
+  .icon-container i {
+    font-size: 3rem;
   }
 }

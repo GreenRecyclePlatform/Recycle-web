@@ -69,6 +69,19 @@ export class RegistrationPage {
     { id: 'Driver', title: 'Driver', description: 'Collect materials and earn', icon: this.Truck },
   ];
 
+  showPassword = false;
+  showConfirmPassword = false;
+
+  submitted = false;
+
+  togglePassword(flag: string | null = null): void {
+    if (flag === 'confirm') {
+      this.showConfirmPassword = !this.showConfirmPassword;
+      return;
+    }
+    this.showPassword = !this.showPassword;
+  }
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -82,7 +95,7 @@ export class RegistrationPage {
         lastName: ['', [Validators.required, Validators.minLength(3)]],
         userName: ['', [Validators.required, Validators.minLength(3)]],
         email: ['', [Validators.required, Validators.email]],
-        phone: ['', Validators.required],
+        phone: ['', [Validators.required, Validators.pattern(/^(010|011|012|015)[0-9]{8}$/)]],
         birthDate: ['', Validators.required],
         password: [
           '',
@@ -145,7 +158,7 @@ export class RegistrationPage {
           duration: 3000,
         });
 
-        const page2Fields = ['street', 'governorate', 'city', 'postalcode'];
+        let page2Fields = ['street', 'governorate', 'city', 'postalcode'];
 
         page2Fields.forEach((field) => {
           const control = this.registrationForm.get(field);
@@ -154,6 +167,18 @@ export class RegistrationPage {
         });
         return;
       }
+    }
+    if (this.registrationForm.get('role')?.value === 'Driver') {
+      this.registrationForm
+        .get('IDNumber')
+        ?.setValidators([
+          Validators.required,
+          Validators.pattern(/^[23][0-9]{2}(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])[0-9]{7}$/),
+        ]);
+      this.registrationForm.get('IDNumber')?.updateValueAndValidity();
+    } else {
+      this.registrationForm.get('IDNumber')?.clearValidators();
+      this.registrationForm.get('IDNumber')?.updateValueAndValidity();
     }
     if (this.step < 2) {
       this.step++;
@@ -221,6 +246,7 @@ export class RegistrationPage {
       city: 'City',
       governorate: 'Governorate',
       postalcode: 'PostalCode',
+      IDNumber: 'ID Number',
     };
     return labels[fieldName] || fieldName;
   }
@@ -250,6 +276,14 @@ export class RegistrationPage {
       return 'Email is not Valid';
     }
 
+    if (field.errors['pattern']) {
+      if (fieldName === 'phone') {
+        return 'number is not valid Egyptian Number';
+      } else if (fieldName === 'IDNumber') {
+        return 'ID Number is not valid';
+      }
+    }
+
     if (field.errors['passwordUpper']) {
       return 'Password must contain uppercase character';
     }
@@ -269,6 +303,7 @@ export class RegistrationPage {
   }
 
   handleSubmit(): void {
+    this.submitted = true;
     const { street, city, governorate, postalcode } = this.registrationForm.value;
 
     if (!street || !city || !governorate || !postalcode) {
@@ -279,6 +314,14 @@ export class RegistrationPage {
         control?.markAsTouched();
       });
 
+      if (this.registrationForm.get('role')?.value === 'Driver') {
+        const { idNumber, ProfileImage } = this.registrationForm.value.IDNumber;
+        if (!idNumber || !ProfileImage) {
+          this.registrationForm.get('IDNumber')?.markAsTouched();
+          this.registrationForm.get('ProfileImage')?.markAsTouched();
+        }
+      }
+
       return;
     }
 
@@ -287,11 +330,6 @@ export class RegistrationPage {
       return;
     }
 
-    // const { password, confirmPassword } = this.registrationForm.value;
-    // if (password !== confirmPassword) {
-    //   this.snackBar.open('Passwords do not match', 'Close', { duration: 3000 });
-    //   return;
-    // }
     const registerRequest: RegisterRequest = {
       firstName: this.registrationForm.value.firstName,
       lastName: this.registrationForm.value.lastName,
@@ -331,6 +369,7 @@ export class RegistrationPage {
       },
       error: (error) => {
         console.log(error);
+        this.snackBar.open(error, 'Close', { duration: 3000 });
       },
     });
   }

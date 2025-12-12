@@ -1,6 +1,17 @@
 <div class="landing-page">
   <app-navbar [transparent]="true"></app-navbar>
 
+  <!-- 🆕 Back to Top Button -->
+  <button
+    class="back-to-top"
+    [class.show]="showBackToTop"
+    (click)="scrollToTop()"
+    aria-label="Back to top">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
   <!-- Hero Section -->
   <section class="hero">
     <div class="hero-overlay"></div>
@@ -27,7 +38,7 @@
       </div>
       <div class="hero-image">
         <img
-          src="https://img.houseui.com/media/blog-img/Managing_Clutter_Disposal.webp/"
+          src="https://static.vecteezy.com/system/resources/thumbnails/053/633/645/small_2x/colorful-recycling-bins-in-a-lush-garden-with-bright-sunlight-free-photo.jpg"
           alt="Recycling"
           onerror="this.src='https://via.placeholder.com/600x400?text=Recycling'"
         />
@@ -37,34 +48,61 @@
 
   <!-- How It Works Section -->
   <section id="how-it-works" class="how-it-works">
-    <div class="section-header">
-      <h2>How It Works</h2>
-      <p class="section-subtitle">Simple, fast, and rewarding</p>
-    </div>
-
-    <div class="steps-grid">
-      <div class="step-card">
-        <div class="step-icon step-icon-green">
-          <span>📤</span>
+    <div class="container">
+      <!-- Section Header -->
+      <div class="section-header">
+        <div class="section-badge">
+          <span>🍃</span>
+          <span>SIMPLE PROCESS</span>
         </div>
-        <h3>1. Submit Materials</h3>
-        <p>Upload photos of your recyclables and get an instant price estimate</p>
+        <h2>How It Works</h2>
+        <p class="section-subtitle">Simple, fast, and rewarding</p>
       </div>
 
-      <div class="step-card">
-        <div class="step-icon step-icon-blue">
-          <span>📅</span>
-        </div>
-        <h3>2. Schedule Pickup</h3>
-        <p>Choose a convenient time slot and our driver will collect from your doorstep</p>
-      </div>
+      <!-- Steps -->
+      <div class="steps-wrapper">
+        <div class="steps-grid">
 
-      <div class="step-card">
-        <div class="step-icon step-icon-money">
-          <span>💰</span>
+          <!-- Step 1 -->
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <div class="icon-container">
+              <i class="bi bi-cloud-upload"></i>
+            </div>
+            <h3>Submit Materials</h3>
+            <p>Upload photos of your recyclables and get an instant price estimate from our AI-powered system</p>
+            <div class="highlight-box">
+              <p>✓ Instant AI estimation</p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <div class="icon-container">
+              <i class="bi bi-calendar-check"></i>
+            </div>
+            <h3>Schedule Pickup</h3>
+            <p>Choose a convenient time slot and our verified driver will collect from your doorstep at no extra cost</p>
+            <div class="highlight-box">
+              <p>✓ Free doorstep pickup</p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <div class="icon-container">
+              <i class="bi bi-cash-coin"></i>
+            </div>
+            <h3>Get Paid</h3>
+            <p>Receive instant payment after verification directly to your account with zero processing fees</p>
+            <div class="highlight-box">
+              <p>✓ Instant payment transfer</p>
+            </div>
+          </div>
+
         </div>
-        <h3>3. Get Paid</h3>
-        <p>Receive instant payment after verification directly to your account</p>
       </div>
     </div>
   </section>
@@ -72,52 +110,55 @@
   <!-- Materials Section -->
   <section id="materials" class="materials">
     <div class="section-header">
-      <h2>Material Price List</h2>
-      <p class="section-subtitle">Competitive rates for all recyclable materials</p>
-    </div>
-
-    <!-- Category Filters -->
-    <div class="category-filters">
-      <button
-        *ngFor="let category of categories"
-        [class.active]="selectedCategory === category"
-        (click)="selectCategory(category)"
-        class="filter-btn"
-      >
-        {{ category }}
-      </button>
+      <h2>Popular Materials</h2>
+      <p class="section-subtitle">
+        {{ showAllMaterials ? 'All available recyclable materials' : 'Top-paying recyclable materials' }}
+      </p>
     </div>
 
     <!-- Loading State -->
     <div *ngIf="loading" class="loading-state">
+      <div class="spinner"></div>
       <p>Loading materials...</p>
     </div>
 
     <!-- Materials Grid -->
     <div class="materials-grid" *ngIf="!loading">
-      <div class="material-card" *ngFor="let material of filteredMaterials">
+      <div class="material-card" *ngFor="let material of displayedMaterials">
         <div class="material-image">
           <img
-            [src]="material.image || 'https://via.placeholder.com/400?text=' + material.name"
+            [src]="material.imageUrl || 'https://via.placeholder.com/400x400?text=' + material.name"
             [alt]="material.name"
-            onerror="this.src='https://via.placeholder.com/400?text=Material'"
+            (error)="$event.target.src='https://via.placeholder.com/400x400?text=Material'"
           />
         </div>
         <div class="material-content">
           <div class="material-icon">{{ material.icon }}</div>
           <h3>{{ material.name }}</h3>
-          <p class="material-price">₹{{ material.pricePerKg }}/kg</p>
+          <p class="material-price">₹{{ material.buyingPrice }}/kg</p>
         </div>
       </div>
     </div>
 
     <!-- Empty State -->
-    <div *ngIf="!loading && filteredMaterials.length === 0" class="empty-state">
-      <p>No materials found in this category.</p>
+    <div *ngIf="!loading && materials.length === 0" class="empty-state">
+      <p>No materials available at the moment.</p>
     </div>
 
-    <div class="materials-cta">
-      <button class="btn btn-primary" routerLink="/register">Start Recycling Now</button>
+    <!-- CTA Buttons Container -->
+    <div class="materials-cta" *ngIf="!loading && materials.length > 0">
+      <!-- Show All / Show Less Button -->
+      <button
+        *ngIf="materials.length > 6"
+        class="btn btn-outline"
+        (click)="toggleShowAll()">
+        {{ showAllMaterials ? '← Show Less' : 'View All Materials →' }}
+      </button>
+
+      <!-- Start Recycling Button -->
+      <button class="btn btn-primary" routerLink="/register">
+        Start Recycling Now
+      </button>
     </div>
   </section>
 

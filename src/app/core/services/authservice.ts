@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { User, UserRole } from '../models/usermodel';
@@ -79,7 +78,7 @@ export class AuthService {
   }
 
   // ✅ NEW METHODS للـ Roles والـ User Info
-  
+
   getUserRole(): string | null {
     return this.tokenService.getRole();
   }
@@ -89,7 +88,7 @@ export class AuthService {
   }
 
   getUserEmail(): string | null {
-    return this.tokenService.UserEmail()
+    return this.tokenService.UserEmail();
   }
 
   hasRole(role: string): boolean {
@@ -122,8 +121,8 @@ export class AuthService {
   }
 
   private handleAuthError(error: any): Observable<never> {
-    console.error('❌ Auth error:', error);
-    return throwError(() => error);
+    const errMsg = error.error?.message || error.error;
+    return throwError(() => errMsg);
   }
 
   resetpassword(reset: ResetPasswordRequest): Observable<ResetPasswordResponse> {

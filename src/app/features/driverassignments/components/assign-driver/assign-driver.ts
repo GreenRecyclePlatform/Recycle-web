@@ -5,14 +5,13 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AssignmentRequest, Driver, Request } from '../../models/assignment';
 import { DriverService } from '../../services/driver';
-import { AuthService } from '../../../../core/services/authservice'; 
+import { AuthService } from '../../../../core/services/authservice';
 import { Navbar } from '../../../../shared/components/navbar/navbar';
-import { AdminSidebarComponent } from '../../../../shared/components/admin-sidebar/admin-sidebar';
 
 @Component({
   selector: 'app-assign-driver',
   standalone: true,
-  imports: [CommonModule, FormsModule,Navbar, AdminSidebarComponent],
+  imports: [CommonModule, FormsModule,Navbar],
   templateUrl: './assign-driver.html',
   styleUrls: ['./assign-driver.css']
 })
@@ -22,7 +21,7 @@ export class AssignDriver implements OnInit {
   selectedRequest: Request | null = null;
   isLoading = false;
   errorMessage = '';
-  
+
   showConfirmModal = false;
   showSuccessModal = false;
   showErrorModal = false;
@@ -78,7 +77,7 @@ export class AssignDriver implements OnInit {
       error: (error) => {
         this.errorMessage = error.message || 'Failed to load requests';
         console.error('❌ Error loading requests:', error);
-        
+
         if (error.message.includes('Unauthorized')) {
           // this.router.navigate(['/login']);
         }
@@ -95,7 +94,7 @@ export class AssignDriver implements OnInit {
         this.errorMessage = error.message || 'Failed to load drivers';
         this.isLoading = false;
         console.error('❌ Error loading drivers:', error);
-        
+
         if (error.message.includes('Unauthorized')) {
           // this.router.navigate(['/login']);
         }
@@ -118,50 +117,50 @@ export class AssignDriver implements OnInit {
     this.showConfirmModal = true;
   }
 
-  confirmAssignment(): void {
-    if (!this.selectedRequest || !this.pendingDriver) {
-      return;
-    }
-
-    this.showConfirmModal = false;
-    this.isLoading = true;
-    this.errorMessage = '';
-
-    const assignment: AssignmentRequest = {
-      requestId: this.selectedRequest.id,
-      driverId: this.pendingDriver.id
-    };
-
-    const driver = this.pendingDriver;
-
-    this.driverService.assignRequestToDriver(assignment).subscribe({
-      next: (response) => {
-        console.log('✅ Assignment successful:', response);
-        
-        this.modalMessage = `Request ${this.selectedRequest?.id} has been assigned to Driver ${driver.name} successfully!`;
-        this.showSuccessModal = true;
-        
-        this.approvedRequests = this.approvedRequests.filter(
-          req => req.id !== this.selectedRequest?.id
-        );
-        
-        driver.todayPickups++;
-        
-        this.selectedRequest = null;
-        this.pendingDriver = null;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.errorMessage = error.message || 'Failed to assign request to driver';
-        this.isLoading = false;
-        console.error('❌ Error assigning request:', error);
-        
-        this.modalMessage = this.errorMessage;
-        this.showErrorModal = true;
-        this.pendingDriver = null;
-      }
-    });
+confirmAssignment(): void {
+  if (!this.selectedRequest || !this.pendingDriver) {
+    return;
   }
+
+  this.showConfirmModal = false;
+  this.isLoading = true;
+  this.errorMessage = '';
+
+  const assignment: AssignmentRequest = {
+    RequestId: this.selectedRequest.id,  
+    DriverId: this.pendingDriver.id   
+  };
+
+  const driver = this.pendingDriver;
+
+  this.driverService.assignRequestToDriver(assignment).subscribe({
+    next: (response) => {
+      console.log('✅ Assignment successful:', response);
+      
+      this.modalMessage = `Request ${this.selectedRequest?.id} has been assigned to Driver ${driver.name} successfully!`;
+      this.showSuccessModal = true;
+      
+      this.approvedRequests = this.approvedRequests.filter(
+        req => req.id !== this.selectedRequest?.id
+      );
+      
+      driver.todayPickups++;
+      
+      this.selectedRequest = null;
+      this.pendingDriver = null;
+      this.isLoading = false;
+    },
+    error: (error) => {
+      this.errorMessage = error.message || 'Failed to assign request to driver';
+      this.isLoading = false;
+      console.error('❌ Error assigning request:', error);
+      
+      this.modalMessage = this.errorMessage;
+      this.showErrorModal = true;
+      this.pendingDriver = null;
+    }
+  });
+}
 
   cancelAssignment(): void {
     this.showConfirmModal = false;

@@ -3,12 +3,11 @@ import { Component, importProvidersFrom, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { Router } from '@angular/router'; 
+import { Router } from '@angular/router';
 import { Alldriverservice } from '../../services/alldriverservice';
 import { Driver } from '../../models/all-drivers';
-import { AuthService } from '../../../../core/services/authservice'; 
+import { AuthService } from '../../../../core/services/authservice';
 import { Navbar } from '../../../../shared/components/navbar/navbar';
-import { AdminSidebarComponent } from '../../../../shared/components/admin-sidebar/admin-sidebar';
 
 @Component({
   selector: 'app-all-drivers',
@@ -18,8 +17,7 @@ import { AdminSidebarComponent } from '../../../../shared/components/admin-sideb
     FormsModule,
     MatIconModule,
     Navbar,
-    AdminSidebarComponent
-    
+
   ],
   templateUrl: './all-drivers.html',
   styleUrls: ['./all-drivers.css']
@@ -29,36 +27,32 @@ export class AllDrivers implements OnInit {
   filteredDrivers: Driver[] = [];
   searchQuery: string = '';
   selectedStatus: string = 'All Status';
-  
+
   // Statistics
   totalDrivers: number = 0;
   activeDrivers: number = 0;
-  onDutyToday: number = 0;
   averageRating: number = 0;
 
   // Loading and error states
   isLoading: boolean = false;
   errorMessage: string = '';
-  successMessage: string = ''; 
+  successMessage: string = '';
+  driverToDelete: Driver | null = null;
 
   constructor(
     private driverService: Alldriverservice,
-    private authService: AuthService, 
-    private router: Router 
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.checkAdminAccess(); 
+    this.checkAdminAccess();
   }
 
   checkAdminAccess(): void {
     const token = this.authService.getToken();
     const isAdmin = this.authService.isAdmin();
-    const userId = this.authService.getUserIdFromToken();
 
-    console.log('🔐 Token exists:', !!token);
-    console.log('🔐 User ID:', userId);
-    console.log('🔐 Is Admin:', isAdmin);
 
     if (!token) {
       this.errorMessage = 'Please login to access this page';
@@ -79,7 +73,7 @@ export class AllDrivers implements OnInit {
   loadDrivers(): void {
     this.isLoading = true;
     this.errorMessage = '';
-    
+
     this.driverService.getAllDrivers().subscribe({
       next: (data) => {
         this.drivers = data;
@@ -92,7 +86,7 @@ export class AllDrivers implements OnInit {
         console.error('❌ Error loading drivers:', error);
         this.errorMessage = error.message || 'Failed to load drivers. Please try again later.';
         this.isLoading = false;
-        
+
         if (error.message && (error.message.includes('Unauthorized') || error.message.includes('403'))) {
           this.errorMessage = 'You do not have permission to view drivers';
         }
@@ -103,10 +97,9 @@ export class AllDrivers implements OnInit {
   calculateStatistics(): void {
     this.totalDrivers = this.drivers.length;
     this.activeDrivers = this.drivers.filter(d => d.status === 'active').length;
-    this.onDutyToday = this.drivers.filter(d => d.pickups.todayCount > 0).length;
-    
+
     const totalRating = this.drivers.reduce((sum, d) => sum + d.rating, 0);
-    this.averageRating = this.drivers.length > 0 ? 
+    this.averageRating = this.drivers.length > 0 ?
       Math.round((totalRating / this.drivers.length) * 10) / 10 : 0;
   }
 
@@ -120,22 +113,18 @@ export class AllDrivers implements OnInit {
 
   applyFilters(): void {
     this.filteredDrivers = this.drivers.filter(driver => {
-      const matchesSearch = !this.searchQuery || 
+      const matchesSearch = !this.searchQuery ||
         driver.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
         driver.phone.includes(this.searchQuery) ||
-        driver.location.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        (driver.idNumber && driver.idNumber.includes(this.searchQuery));
-      
-      const matchesStatus = this.selectedStatus === 'All Status' || 
+        driver.location.toLowerCase().includes(this.searchQuery.toLowerCase())
+
+      const matchesStatus = this.selectedStatus === 'All Status' ||
         driver.status === this.selectedStatus.toLowerCase();
-      
+
       return matchesSearch && matchesStatus;
     });
   }
 
-  getStatusBadgeClass(status: string): string {
-    return status.toLowerCase();
-  }
 
   onDeleteDriver(driver: Driver): void {
     if (!this.authService.isAdmin()) {
@@ -143,8 +132,19 @@ export class AllDrivers implements OnInit {
       return;
     }
 
-    if (confirm(`Are you sure you want to delete ${driver.name}? This action cannot be undone.`)) {
-      this.deleteDriver(driver);
+    // Store driver to delete
+    this.driverToDelete = driver;
+    const modalElement = document.getElementById('deleteDriverModal');
+    if (modalElement) {
+      const modal = new (window as any).bootstrap.Modal(modalElement);
+      modal.show();
+    }
+  }
+
+  confirmDelete(): void {
+    if (this.driverToDelete) {
+      this.deleteDriver(this.driverToDelete);
+      this.driverToDelete = null;
     }
   }
 
@@ -160,10 +160,10 @@ export class AllDrivers implements OnInit {
         this.applyFilters();
         this.calculateStatistics();
         this.isLoading = false;
-        
+
         this.successMessage = `Driver ${driver.name} deleted successfully`;
         console.log('✅ Driver deleted:', driver.name);
-        
+
         setTimeout(() => {
           this.successMessage = '';
         }, 3000);
@@ -172,7 +172,7 @@ export class AllDrivers implements OnInit {
         console.error('❌ Error deleting driver:', error);
         this.errorMessage = error.message || 'Failed to delete driver. Please try again.';
         this.isLoading = false;
-        
+
         if (error.message && error.message.includes('403')) {
           this.errorMessage = 'You do not have permission to delete drivers';
         }

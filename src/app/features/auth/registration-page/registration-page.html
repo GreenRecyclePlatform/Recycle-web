@@ -261,13 +261,24 @@
           <div class="row g-3 mb-3">
             <div class="col-md-6">
               <label>Password *</label>
-              <input
-                [class.error-border]="hasError('password')"
-                type="password"
-                placeholder="••••••••"
-                formControlName="password"
-                required
-              />
+              <div class="relative">
+                <input
+                  [class.error-border]="hasError('password')"
+                  [type]="showPassword ? 'text' : 'password'"
+                  placeholder="••••••••"
+                  formControlName="password"
+                  required
+                />
+
+                <button
+                  type="button"
+                  class="position-absolute top-50 end-0 translate-middle-y btn btn-link p-0 pe-3"
+                  style="border: none; box-shadow: none"
+                  (click)="togglePassword()"
+                >
+                  <i class="bi passicon" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                </button>
+              </div>
 
               @if(hasError('password')){
 
@@ -296,13 +307,26 @@
 
             <div class="col-md-6">
               <label>Confirm Password *</label>
-              <input
-                [class.error-border]="hasError('confirmPassword')"
-                type="password"
-                placeholder="••••••••"
-                formControlName="confirmPassword"
-                required
-              />
+              <div class="relative">
+                <input
+                  [class.error-border]="hasError('confirmPassword')"
+                  [type]="showConfirmPassword ? 'text' : 'password'"
+                  placeholder="••••••••"
+                  formControlName="confirmPassword"
+                  required
+                />
+                <button
+                  type="button"
+                  class="position-absolute top-50 end-0 translate-middle-y btn btn-link p-0 pe-3"
+                  style="border: none; box-shadow: none"
+                  (click)="togglePassword('confirm')"
+                >
+                  <i
+                    class="bi passicon"
+                    [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"
+                  ></i>
+                </button>
+              </div>
 
               @if(hasError('confirmPassword')){
 
@@ -360,6 +384,29 @@
                   </mat-card-content>
                 </mat-card>
               </div>
+              @if(hasError('role')){
+
+              <p class="error text-danger mb-0 d-flex gap-1 mt-2 align-items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-circle-alert w-4 h-4"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" x2="12" y1="8" y2="12"></line>
+                  <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                </svg>
+                {{ errorMessage('role') }}
+              </p>
+              }
             </div>
           </div>
         </div>
@@ -406,7 +453,7 @@
               <label>City</label>
               <input
                 [class.error-border]="hasError('city')"
-                placeholder="Mumbai"
+                placeholder="Shoubra"
                 formControlName="city"
               />
 
@@ -439,7 +486,7 @@
               <label>Governorate</label>
               <input
                 [class.error-border]="hasError('governorate')"
-                placeholder="Governorate"
+                placeholder="Giza"
                 formControlName="governorate"
               />
 
@@ -507,47 +554,93 @@
           <div class="row g-3 mb-3">
             <div class="col-md-6">
               <label>ID Number</label>
-              <input placeholder="idNumber" formControlName="IDNumber" />
+              <input
+                type="text"
+                placeholder="idNumber"
+                [class.error-border]="hasError('IDNumber')"
+                formControlName="IDNumber"
+              />
+
+              @if(hasError('IDNumber')){
+              <p class="error text-danger mb-0 d-flex gap-1 mt-2 align-items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-circle-alert w-4 h-4"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" x2="12" y1="8" y2="12"></line>
+                  <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                </svg>
+                {{ errorMessage('IDNumber') }}
+              </p>
+              }
             </div>
 
             <div class="col-md-6">
               <label>Profile Image</label>
               <input
+                [class.error-border]="!selectedFile && submitted"
                 class="file-input"
                 type="file"
                 (change)="onImageChange($event)"
                 accept="image/*"
                 placeholder="Profile Image"
               />
+              @if(!selectedFile && submitted){
+              <p class="error text-danger mb-0 d-flex gap-1 mt-2 align-items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-circle-alert w-4 h-4"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" x2="12" y1="8" y2="12"></line>
+                  <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                </svg>
+                Profile Image is Required
+              </p>
+              }
             </div>
           </div>
           }
 
-          <div class="mb-3">
-            <mat-checkbox formControlName="termsAccepted"
-              >I agree to the Terms and Conditions *</mat-checkbox
-            >
+          <div class="mb-3 d-flex align-items-center justify-content-start">
+            <div>
+              <input type="checkbox" formControlName="termsAccepted" />
+            </div>
+            <p class="d-flex align-items-center mb-0 ml-1">I agree to the Terms and Conditions *</p>
           </div>
         </div>
         }
 
         <!-- Navigation Buttons -->
         <div class="d-flex justify-content-between gap-3 mt-4">
-          <button
-            *ngIf="step > 1"
-            type="button"
-            mat-stroked-button
-            (click)="handleBack()"
-            class="d-flex align-items-center"
-          >
+          @if(step == 2){
+          <button type="button" (click)="handleBack()" class="btn-secondary back">
             <lucide-icon [name]="ChevronLeft" [size]="18" class="me-1"></lucide-icon>
-            Back
-          </button>
+            Back</button
+          >}
           <div class="flex-grow-1"></div>
           <button
             *ngIf="step < 2"
             type="button"
-            mat-raised-button
             color="primary"
             class="btn-primary d-flex align-items-center next"
             (click)="handleNext()"

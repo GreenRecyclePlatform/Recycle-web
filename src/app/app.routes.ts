@@ -31,17 +31,47 @@ import { RegistrationPage } from './features/auth/registration-page/registration
 import { ForgotPasswordPage } from './features/auth/forgot-password/forgot-password';
 import { ResetPassword } from './features/auth/reset-password/reset-password';
 import { TestNotificationsComponent } from './pages/test-notifications/test-notifications.component';
-import { ProfileComponent } from './features/profile/profile.component';
+import { Settings } from './features/admin/settings/settings';
+import { supplierRoutes } from './features/supplier/supplier.routes';
+import { ManageMaterials } from './features/manage-materials/manage-materials';
 import { Profiledriver } from './features/driverassignments/components/profiledriver/profiledriver';
+import { adminGuard } from './core/guards/admin-guard';
+import { AdminDashboardComponent } from './pages/admin-dashboard.component/admin-dashboard.component';
+import { ReviewRequests } from './features/review-requests/review-requests';
 
 export const routes: Routes = [
-  // Public routes
+  //{
+  //   path: 'admin',
+  //   children: [
+  //     { path: 'drivers', component: AllDrivers },
+  //     { path: 'assign-drivers', component: AssignDriver },
+  //     { path: 'settings', component: Settings },
+  //     { path: 'manage-materials', component: ManageMaterials },
+  //   ],
+  // },
+
+  {
+    path: 'driver',
+    children: [
+
+      { path: 'DashBoardDrivers', component: DriverDashboard },
+      { path: 'DriverProfile', component: Profiledriver },
+    ],
+  },
+
   { path: '', component: LandingPage },
   { path: 'login', component: LoginPage },
   { path: 'register', component: RegistrationPage },
   { path: 'forgot-password', component: ForgotPasswordPage },
   { path: 'reset-password', component: ResetPassword },
 
+  
+{
+    path: 'supplier',
+    children: supplierRoutes,
+    // Add Auth Guard here if needed
+    // canActivate: [AuthGuard]
+  },
   // Driver routes
   { path: 'DashBoardDrivers', component: DriverDashboard },
   { path: 'DriverProfile', component: Profiledriver },
@@ -69,16 +99,24 @@ export const routes: Routes = [
       import('./shared/layouts/admin-layout.component/admin-layout.component').then(
         (m) => m.AdminLayoutComponent
       ),
-    // canActivate: [adminGuard], // Uncomment when auth is ready
     children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'drivers', component: AllDrivers },
-      { path: 'assign-drivers', component: AssignDriver },
-      {
-        path: 'manage-materials',
-        loadComponent: () =>
-          import('./features/manage-materials/manage-materials').then((m) => m.ManageMaterials),
+
+   { path: '',redirectTo: 'dashboard', pathMatch: 'full'},
+       {
+        path: 'dashboard',
+        component: AdminDashboardComponent, 
+        data: { title: 'Dashboard' }
       },
+
+           { path: 'drivers', component: AllDrivers },
+      { path: 'assign-drivers', component: AssignDriver },
+      { path: 'manage-materials', component: ManageMaterials },
+      { path: 'review-requests', component: ReviewRequests },
+      // {
+      //   path: 'manage-materials',
+      //   loadComponent: () =>
+      //     import('./features/manage-materials/manage-materials').then((m) => m.ManageMaterials),
+      // },
       {
         path: 'settings',
         loadComponent: () => import('./features/admin/settings/settings').then((m) => m.Settings),
