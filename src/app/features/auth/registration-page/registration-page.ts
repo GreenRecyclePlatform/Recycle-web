@@ -11,7 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { LucideAngularModule, Leaf, User, Truck, ChevronRight, ChevronLeft } from 'lucide-angular';
+import { LucideAngularModule, Leaf, User, Truck, ChevronRight, ChevronLeft,Factory } from 'lucide-angular';
 import { RegisterRequest } from '../../../core/models/auth-response';
 import { DriverProfileService } from '../../../core/services/driverprofileservice';
 import { passwordUpperValidator } from '../../../core/validators/passwordUpperValidator';
@@ -50,6 +50,7 @@ export class RegistrationPage {
   Truck = Truck;
   ChevronRight = ChevronRight;
   ChevronLeft = ChevronLeft;
+  Factory = Factory;
 
   userId: string | null = null;
 
@@ -67,6 +68,9 @@ export class RegistrationPage {
       icon: this.User,
     },
     { id: 'Driver', title: 'Driver', description: 'Collect materials and earn', icon: this.Truck },
+    {
+      id:'Supplier',title:'Supplier',description: 'Buy materials and pay with card', icon:this.Factory
+    }
   ];
 
   showPassword = false;
