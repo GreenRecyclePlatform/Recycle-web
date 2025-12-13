@@ -53,7 +53,7 @@ export class UserRequests implements OnInit {
         this.isLoading = false;
       },
       error: (err: HttpErrorResponse) => {
-        this.error = 'فشل تحميل الطلبات. يرجى المحاولة مرة أخرى.';  // Egyptian Arabic
+        this.error = 'Failed to load requests. Please try again.';  // Egyptian Arabic
         console.error('Error loading requests:', err);
         this.isLoading = false;
       }
@@ -101,14 +101,14 @@ export class UserRequests implements OnInit {
   }
 
   deleteRequest(request: PickupRequest): void {
-    if (confirm('هل أنت متأكد من حذف هذا الطلب؟')) {  // Egyptian Arabic
+    if (confirm('Are You Sure You Want To Delete This Request?')) {
       this.pickupRequestService.delete(request.requestId).subscribe({
         next: () => {
           this.loadMyRequests();
-          alert('تم حذف الطلب بنجاح');  // Egyptian Arabic
+          alert('Request deleted successfully');
         },
         error: (err: HttpErrorResponse) => {
-          alert('فشل حذف الطلب: ' + (err.error?.message || 'خطأ غير معروف'));
+          alert('Failed to delete request: ' + (err.error?.message || 'Unknown error'));
         }
       });
     }
@@ -134,7 +134,7 @@ export class UserRequests implements OnInit {
   }
 
   formatCurrency(amount: number): string {
-    return `${amount.toFixed(2)} ج.م`;  // Egyptian Pound
+    return `${amount.toFixed(2)} EGP`;  // Egyptian Pound
   }
 
   // Add these methods to user-requests..ts

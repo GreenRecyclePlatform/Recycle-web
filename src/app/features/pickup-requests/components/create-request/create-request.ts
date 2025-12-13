@@ -58,7 +58,7 @@ export class CreateRequest implements OnInit {
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error loading addresses:', err);
-        this.error = 'فشل تحميل العناوين';
+        this.error = 'Failed to load addresses';
       }
     });
   }
@@ -72,7 +72,7 @@ export class CreateRequest implements OnInit {
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error loading materials:', err);
-        this.error = 'فشل تحميل المواد';
+        this.error = 'Failed to load materials';
         this.isLoading = false;
       }
     });
@@ -124,7 +124,7 @@ export class CreateRequest implements OnInit {
   onSubmit(): void {
     if (this.requestForm.invalid) {
       this.markFormGroupTouched(this.requestForm);
-      this.error = 'يرجى ملء جميع الحقول المطلوبة';
+      this.error = 'Please fill out all required fields correctly.';
       return;
     }
 
@@ -144,11 +144,11 @@ export class CreateRequest implements OnInit {
 
     this.pickupRequestService.create(createDto).subscribe({
       next: (response) => {
-        alert('تم إنشاء الطلب بنجاح!');
+        alert('The pickup request has been created successfully.');
         this.router.navigate(['/pickup-requests/my-requests']);
       },
       error: (err: HttpErrorResponse) => {
-        this.error = err.error?.message || 'فشل إنشاء الطلب. يرجى المحاولة مرة أخرى.';
+        this.error = err.error?.message || 'Failed to create pickup request.';
         this.isSubmitting = false;
       }
     });

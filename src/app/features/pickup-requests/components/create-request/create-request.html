@@ -2,8 +2,8 @@
     <div class="container mx-auto px-4 max-w-6xl">
         <!-- Header -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-[#212529] mb-2">إنشاء طلب تجميع جديد</h1>
-            <p class="text-gray-600">املأ التفاصيل أدناه لجدولة عملية التجميع</p>
+            <h1 class="text-3xl font-bold text-[#212529] mb-2">Create New Pickup Request</h1>
+            <p class="text-gray-600">Fill in the details below to schedule a pickup</p>
         </div>
 
         <!-- Error Alert -->
@@ -33,18 +33,18 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
-                                عنوان التجميع
+                                Choose Pickup Address
                             </h2>
                         </div>
                         <div class="p-6">
                             <div class="mb-4">
                                 <label for="addressId" class="block text-sm font-medium text-gray-700 mb-2">
-                                    اختر العنوان <span class="text-red-500">*</span>
+                                    Choose an Address<span class="text-red-500">*</span>
                                 </label>
                                 <select id="addressId" formControlName="addressId"
                                     class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] outline-none transition-all"
                                     [class.border-red-500]="requestForm.get('addressId')?.invalid && requestForm.get('addressId')?.touched">
-                                    <option value="">-- اختر عنوان --</option>
+                                    <option value="">-- Choose Address --</option>
                                     <option *ngFor="let address of addresses" [value]="address.id">
                                         {{ address.street }}, {{ address.city }}, {{ address.governorate }}
                                     </option>
@@ -55,7 +55,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    يرجى اختيار عنوان
+                                    Please select an address
                                 </p>
                             </div>
 
@@ -70,7 +70,7 @@
                                     <p class="text-blue-800 text-sm font-medium mb-1">ليس لديك عناوين محفوظة</p>
                                     <a href="/addresses/create"
                                         class="text-blue-600 hover:text-blue-700 text-sm font-semibold underline">
-                                        إضافة عنوان جديد
+                                        Add a new address
                                     </a>
                                 </div>
                             </div>
@@ -87,13 +87,13 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
-                                موعد التجميع
+                                Choose Pickup Date
                             </h2>
                         </div>
                         <div class="p-6 space-y-4">
                             <div>
                                 <label for="preferredPickupDate" class="block text-sm font-medium text-gray-700 mb-2">
-                                    التاريخ المفضل <span class="text-red-500">*</span>
+                                    Preferred Date <span class="text-red-500">*</span>
                                 </label>
                                 <input type="date" id="preferredPickupDate" formControlName="preferredPickupDate"
                                     [min]="getMinDate()"
@@ -105,16 +105,16 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    يرجى اختيار تاريخ
+                                    Please select a valid date
                                 </p>
                             </div>
 
                             <div>
                                 <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">
-                                    ملاحظات إضافية (اختياري)
+                                    Additional Notes (Optional)
                                 </label>
                                 <textarea id="notes" formControlName="notes" rows="3"
-                                    placeholder="أي تفاصيل إضافية تريد أن يعرفها السائق..."
+                                    placeholder=" Any Additional Details You Want the Driver to Know..."
                                     class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] outline-none transition-all resize-none"></textarea>
                             </div>
                         </div>
@@ -129,7 +129,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                                 </svg>
-                                المواد المراد تجميعها
+                                Recyclable Materials You Want to Sell
                             </h2>
                             <button type="button" (click)="addMaterialRow()"
                                 class="inline-flex items-center gap-2 bg-[#2D6A4F] hover:bg-[#2D6A4F]/90 text-white px-4 py-2 rounded-lg transition font-medium text-sm">
@@ -137,7 +137,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 4v16m8-8H4" />
                                 </svg>
-                                إضافة مادة
+                                Add Material
                             </button>
                         </div>
                         <div class="p-6">
@@ -150,12 +150,12 @@
                                         <div class="md:col-span-1">
                                             <label [for]="'material-' + $index"
                                                 class="block text-sm font-medium text-gray-700 mb-2">
-                                                نوع المادة <span class="text-red-500">*</span>
+                                                Material Type<span class="text-red-500">*</span>
                                             </label>
                                             <select [id]="'material-' + $index" formControlName="materialId"
                                                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] outline-none transition-all"
                                                 [class.border-red-500]="material.get('materialId')?.invalid && material.get('materialId')?.touched">
-                                                <option value="">-- اختر مادة --</option>
+                                                <option value="">-- Please Select a Material--</option>
                                                 @for (mat of materials; track mat.id) {
                                                 <option [value]="mat.id">{{ mat.name }} ({{ mat.pricePerKg }} ج.م/كجم)
                                                 </option>
@@ -167,7 +167,7 @@
                                         <div>
                                             <label [for]="'weight-' + $index"
                                                 class="block text-sm font-medium text-gray-700 mb-2">
-                                                الوزن التقديري (كجم) <span class="text-red-500">*</span>
+                                                Estimated Weight (kg) <span class="text-red-500">*</span>
                                             </label>
                                             <input type="number" [id]="'weight-' + $index"
                                                 formControlName="estimatedWeight" min="0.1" step="0.1" placeholder="0.0"
@@ -209,8 +209,8 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                                 </svg>
-                                <p>لم يتم إضافة أي مواد بعد</p>
-                                <p class="text-sm mt-1">انقر على "إضافة مادة" للبدء</p>
+                                <p>No materials added yet</p>
+                                <p class="text-sm mt-1">Click "Add Material" to get started</p>
                             </div>
                             }
                         </div>
@@ -227,24 +227,24 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                 </svg>
-                                ملخص الطلب
+                                Request Summary
                             </h3>
 
                             <div class="space-y-4">
                                 <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                                    <p class="text-white/80 text-sm mb-1">إجمالي الوزن</p>
+                                    <p class="text-white/80 text-sm mb-1">Total Weight</p>
                                     <p class="text-3xl font-bold">{{ calculateTotalWeight().toFixed(2) }}</p>
-                                    <p class="text-white/60 text-xs mt-1">كيلوجرام</p>
+                                    <p class="text-white/60 text-xs mt-1">Kilograms</p>
                                 </div>
 
                                 <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                                    <p class="text-white/80 text-sm mb-1">الأرباح المتوقعة</p>
+                                    <p class="text-white/80 text-sm mb-1">Expected Profit </p>
                                     <p class="text-3xl font-bold">{{ calculateGrandTotal().toFixed(2) }}</p>
-                                    <p class="text-white/60 text-xs mt-1">جنيه مصري</p>
+                                    <p class="text-white/60 text-xs mt-1">Egyptian Pounds </p>
                                 </div>
 
                                 <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                                    <p class="text-white/80 text-sm mb-1">عدد المواد</p>
+                                    <p class="text-white/80 text-sm mb-1">Number of Materials/p>
                                     <p class="text-3xl font-bold">{{ materialsFormArray.length }}</p>
                                     <p class="text-white/60 text-xs mt-1">عنصر</p>
                                 </div>
@@ -259,7 +259,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                معلومات مهمة
+                                Important Information
                             </h4>
                             <ul class="space-y-2 text-sm text-gray-600">
                                 <li class="flex items-start gap-2">
@@ -268,7 +268,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M5 13l4 4L19 7" />
                                     </svg>
-                                    سيتم مراجعة طلبك خلال 24 ساعة
+                                    Your request will be processed within 24 hours
                                 </li>
                                 <li class="flex items-start gap-2">
                                     <svg class="w-4 h-4 text-[#2D6A4F] flex-shrink-0 mt-0.5" fill="none"
@@ -276,7 +276,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M5 13l4 4L19 7" />
                                     </svg>
-                                    سيتم تأكيد موعد التجميع قريباً
+                                    The Pickup date will be confirmed shortly
                                 </li>
                                 <li class="flex items-start gap-2">
                                     <svg class="w-4 h-4 text-[#2D6A4F] flex-shrink-0 mt-0.5" fill="none"
@@ -284,7 +284,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M5 13l4 4L19 7" />
                                     </svg>
-                                    الأسعار قابلة للتعديل حسب الوزن الفعلي
+                                    The Prices are subject to change based on actual Weight
                                 </li>
                             </ul>
                         </div>
@@ -296,12 +296,12 @@
             <div class="flex gap-4 mt-8">
                 <button type="button" (click)="cancel()"
                     class="flex-1 bg-white hover:bg-gray-50 text-gray-700 px-6 py-3 rounded-lg transition font-semibold border border-gray-300">
-                    إلغاء
+                    Cancel
                 </button>
                 <button type="submit" [disabled]="isSubmitting || requestForm.invalid"
                     class="flex-1 bg-[#2D6A4F] hover:bg-[#2D6A4F]/90 text-white px-6 py-3 rounded-lg transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2">
                     @if (!isSubmitting) {
-                    <span>إنشاء الطلب</span>
+                    <span> Create The Request</span>
                     }
                     @if (isSubmitting) {
                     <span class="flex items-center gap-2">
@@ -312,7 +312,7 @@
                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                             </path>
                         </svg>
-                        جاري الإنشاء...
+                        Creating The Request...
                     </span>
                     }
                 </button>
