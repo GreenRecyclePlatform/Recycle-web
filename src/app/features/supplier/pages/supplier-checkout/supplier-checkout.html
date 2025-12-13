@@ -1,4 +1,3 @@
-
 <div class="checkout-container">
   <div class="checkout-content">
     <!-- Header -->
@@ -21,7 +20,7 @@
             <span class="item-icon">{{ item.material.icon }}</span>
             <div>
               <p class="item-name">{{ item.material.name }}</p>
-              <p class="item-details">{{ item.quantity }} {{ item.material.unit }} × ${{ item.material.sellingPrice }}</p>
+              <p class="item-details">{{ item.quantity }}×( {{ item.material.unit }} × ${{ item.material.sellingPrice }})</p>
             </div>
           </div>
           <span class="item-price">${{ item.totalPrice.toFixed(2) }}</span>
@@ -67,5 +66,22 @@
     <button (click)="cancelCheckout()" class="btn-cancel">
       Cancel
     </button>
+  </div>
+
+  <!-- ✅ Success Modal -->
+  <div *ngIf="showSuccessModal()" class="modal-overlay" (click)="closeSuccessModal()">
+    <div class="success-modal" (click)="$event.stopPropagation()">
+      <div class="success-icon">
+        <div class="checkmark-circle">
+          <div class="checkmark"></div>
+        </div>
+      </div>
+      <h2 class="success-title">Payment Successful! 🎉</h2>
+      <p class="success-message">Your order has been placed successfully.</p>
+      <p class="success-details">Order ID: <strong>{{ orderId() }}</strong></p>
+      <button class="btn-success" (click)="closeSuccessModal()">
+        View My Orders
+      </button>
+    </div>
   </div>
 </div>

@@ -65,9 +65,9 @@ export class SupplierService {
 
   // Helper: Get Auth Headers
   private getAuthHeaders(): HttpHeaders {
-   // const token = localStorage.getItem('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOGQ0ZWM3ZC0wOTMzLTQ1NGItZGIzYi0wOGRlMzgyZmVhOTAiLCJ1bmlxdWVfbmFtZSI6InN0cmluZyIsIm5hbWVpZCI6IjA4ZDRlYzdkLTA5MzMtNDU0Yi1kYjNiLTA4ZGUzODJmZWE5MCIsImVtYWlsIjoiYWFAZ21haWwuY29tIiwicm9sZSI6IlN1cHBsaWVyIiwianRpIjoiNmFhNDgxOGUtODIyOC00NTM4LWIxOGUtMjJmYWIzMjFiMzBkIiwibmJmIjoxNzY1NDEzNjE2LCJleHAiOjE3NjU0MTcyMTYsImlhdCI6MTc2NTQxMzYxNiwiaXNzIjoicmVjeWNsZS5BUEkifQ.xg_g0HVdPlt6hEmYo5BDZhfXVr7THO5KJm8VYEx3xbM');
+    const token = localStorage.getItem('token');
     return new HttpHeaders({
-      'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOGQ0ZWM3ZC0wOTMzLTQ1NGItZGIzYi0wOGRlMzgyZmVhOTAiLCJ1bmlxdWVfbmFtZSI6InN0cmluZyIsIm5hbWVpZCI6IjA4ZDRlYzdkLTA5MzMtNDU0Yi1kYjNiLTA4ZGUzODJmZWE5MCIsImVtYWlsIjoiYWFAZ21haWwuY29tIiwicm9sZSI6IlN1cHBsaWVyIiwianRpIjoiYjg3MDAxMDAtNTQ5NC00MmJiLTljZDEtOTFlYTlmNjA1NDA2IiwibmJmIjoxNzY1NDE3MzE1LCJleHAiOjE3NjU0MjA5MTUsImlhdCI6MTc2NTQxNzMxNSwiaXNzIjoicmVjeWNsZS5BUEkifQ.t_02d6L6VrhCJOYuxVTLvF9zLLbMgo1j-P4cPCIVNFI`,
+      'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
   }

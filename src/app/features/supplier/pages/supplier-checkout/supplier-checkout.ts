@@ -22,6 +22,7 @@ export class SupplierCheckoutComponent implements OnInit {
   cart = signal<CartItem[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
+  showSuccessModal = signal(false); 
   
   orderId = signal<string | null>(null);
   clientSecret = signal<string | null>(null);
@@ -62,14 +63,12 @@ export class SupplierCheckoutComponent implements OnInit {
     }
   }
 
-  // ✅ نعمل mount للـ card element بعد ما الـ DOM يكون جاهز
   private mountCardElement() {
     if (!this.stripe) {
       console.error('❌ Stripe not initialized');
       return;
     }
 
-    // ننتظر شوية عشان نتأكد إن الـ DOM اتعمل render
     setTimeout(() => {
       const cardElementContainer = document.getElementById('card-element');
       if (!cardElementContainer) {
@@ -101,7 +100,6 @@ export class SupplierCheckoutComponent implements OnInit {
         this.cardElement.mount('#card-element');
         console.log('✅ Card element mounted successfully');
 
-        // إضافة event listener للأخطاء
         this.cardElement.on('change', (event) => {
           if (event.error) {
             this.error.set(event.error.message);
@@ -151,8 +149,6 @@ export class SupplierCheckoutComponent implements OnInit {
         console.log('✅ Payment intent created');
         this.clientSecret.set(response.clientSecret);
         this.loading.set(false);
-        
-        // ✅ هنا بالظبط نعمل mount للـ card element
         this.mountCardElement();
       },
       error: (err) => {
@@ -174,18 +170,23 @@ export class SupplierCheckoutComponent implements OnInit {
 
     try {
       console.log('🔄 Processing payment...');
+      console.log('Client Secret:', this.clientSecret());
       
       const { error, paymentIntent } = await this.stripe.confirmCardPayment(
         this.clientSecret()!,
         {
           payment_method: {
-            card: this.cardElement
+            card: this.cardElement,
+            billing_details: {
+              name: 'Test User' 
+            }
           }
         }
       );
 
       if (error) {
         console.error('❌ Payment failed:', error);
+        console.error('Error details:', JSON.stringify(error, null, 2));
         this.error.set(error.message || 'Payment failed');
         this.loading.set(false);
       } else if (paymentIntent && paymentIntent.status === 'succeeded') {
@@ -209,8 +210,11 @@ export class SupplierCheckoutComponent implements OnInit {
       next: () => {
         console.log('✅ Payment confirmed');
         sessionStorage.removeItem('supplierCart');
-        alert('Payment successful! 🎉');
-        this.router.navigate(['/supplier/orders']);
+        this.loading.set(false);
+        
+        console.log('🎉 Showing success modal...');
+        this.showSuccessModal.set(true);
+        console.log('Modal state:', this.showSuccessModal());
       },
       error: (err) => {
         console.error('❌ Payment confirmation failed:', err);
@@ -218,6 +222,11 @@ export class SupplierCheckoutComponent implements OnInit {
         this.loading.set(false);
       }
     });
+  }
+
+  closeSuccessModal() {
+    this.showSuccessModal.set(false);
+    this.router.navigate(['/supplier/orders']);
   }
 
   cancelCheckout() {

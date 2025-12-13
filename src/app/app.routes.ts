@@ -36,6 +36,7 @@ import { TestNotificationsComponent } from './pages/test-notifications/test-noti
 import { Settings } from './features/admin/settings/settings';
 import { supplierRoutes } from './features/supplier/supplier.routes';
 import { ManageMaterials } from './features/manage-materials/manage-materials';
+import { AdminPaymentsComponent } from './features/driverassignments/components/admin-payments/admin-payments';
 
 export const routes: Routes = [
 
@@ -47,7 +48,9 @@ export const routes: Routes = [
       { path: 'drivers', component: AllDrivers },  
       { path: 'assign-drivers', component: AssignDriver },  
       {path:'settings',component:Settings},
-      {path:'manage-materials',component:ManageMaterials}
+      {path:'manage-materials',component:ManageMaterials},
+{path:'payments' , component:AdminPaymentsComponent, data:{ roles: ['Admin'] }}
+     
     ]
    },
    
