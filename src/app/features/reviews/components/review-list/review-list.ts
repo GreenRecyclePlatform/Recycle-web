@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { RouterLink } from '@angular/router'; // Import RouterLink directive
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ReviewService, Review, UpdateReviewDto } from '../../../../core/services/review.service';
+import { ReviewService } from '../../../../core/services/review.service';
+import { Review, UpdateReviewDto } from '../../../../core/models/review.model';
 import { Navbar } from '../../../../shared/components/navbar/navbar';
-import { LucideAngularModule } from "lucide-angular";
+import { LucideAngularModule } from 'lucide-angular';
 import { UserSidebar } from '../../../../shared/components/user-sidebar/user-sidebar';
 
 @Component({
@@ -16,10 +16,10 @@ import { UserSidebar } from '../../../../shared/components/user-sidebar/user-sid
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterLink, // Use RouterLink instead of RouterModule
     Navbar,
-    LucideAngularModule,UserSidebar
-],
+    LucideAngularModule,
+    UserSidebar,
+  ],
   templateUrl: './review-list.html',
   styleUrls: ['./review-list.css'],
 })
@@ -46,6 +46,16 @@ export class ReviewListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    const token = localStorage.getItem('token');
+    console.log('🔍 Review List - Token check:', token ? 'EXISTS ✅' : 'MISSING ❌');
+
+    if (!token) {
+      console.error('❌ No token found! Redirecting to login...');
+      this.error = 'Please login to view your reviews.';
+      this.router.navigate(['/login']);
+      return;
+    }
+
     this.loadReviews();
   }
 
@@ -58,18 +68,28 @@ export class ReviewListComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.error = '';
 
+    console.log('📋 Loading reviews...');
+
     this.reviewService
       .getMyReviews()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (reviews) => {
+          console.log('✅ Reviews loaded:', reviews);
           this.reviews = reviews;
           this.loading = false;
         },
         error: (error) => {
-          console.error('Error loading reviews:', error);
-          this.error = error.error?.message || 'Failed to load reviews. Please try again.';
+          console.error('❌ Error loading reviews:', error);
+          this.error =
+            error.message || 'Failed to load reviews. Please try again.';
           this.loading = false;
+
+          if (error.status === 401) {
+            console.log('🔐 Unauthorized - redirecting to login');
+            localStorage.clear();
+            this.router.navigate(['/login']);
+          }
         },
       });
   }
@@ -127,7 +147,7 @@ export class ReviewListComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error('Error updating review:', error);
-          this.error = error.error?.message || 'Failed to update review. Please try again.';
+          this.error = error.message || 'Failed to update review. Please try again.';
           this.updating = false;
         },
       });
@@ -149,7 +169,7 @@ export class ReviewListComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error('Error deleting review:', error);
-          this.error = error.error?.message || 'Failed to delete review. Please try again.';
+          this.error = error.message || 'Failed to delete review. Please try again.';
         },
       });
   }
