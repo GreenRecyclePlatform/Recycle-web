@@ -1,10 +1,9 @@
-
 import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 
 interface JwtPayload {
   sub: string; // userId
-  user_name: string;
+  unique_name: string; // username
   email: string;
   role: string;
   exp: number;
@@ -46,7 +45,7 @@ export class TokenService {
 
   getUserName(): string | any {
     const decoded = this.decodeToken();
-    return decoded?.user_name || null;
+    return decoded?.unique_name || null;
   }
 
   getUserId(): string | any {
@@ -58,7 +57,7 @@ export class TokenService {
     const decoded = this.decodeToken();
     return decoded?.email || null;
   }
-  
+
   setToken(token: string): void {
     sessionStorage.setItem('accesstoken', token);
   }

@@ -13,58 +13,143 @@
 
       <!-- Navigation Links -->
       <div class="d-none d-md-flex align-items-center gap-4">
-        <a routerLink="/" class="nav-link text-dark text-decoration-none hover-primary-green">Home</a>
-        <a (click)="scrollToSection('how-it-works')" class="nav-link text-dark text-decoration-none hover-primary-green" style="cursor: pointer;">How It Works</a>
-        <a (click)="scrollToSection('materials')" class="nav-link text-dark text-decoration-none hover-primary-green" style="cursor: pointer;">Materials</a>
-        <a (click)="scrollToSection('faq')" class="nav-link text-dark text-decoration-none hover-primary-green" style="cursor: pointer;">FAQ</a>
-        <a (click)="scrollToSection('contact')" class="nav-link text-dark text-decoration-none hover-primary-green" style="cursor: pointer;">Contact</a>
+        <a routerLink="/" class="nav-link text-dark text-decoration-none hover-primary-green"
+          >Home</a
+        >
+        <a
+          (click)="scrollToSection('how-it-works')"
+          class="nav-link text-dark text-decoration-none hover-primary-green"
+          style="cursor: pointer"
+          >How It Works</a
+        >
+        <a
+          (click)="scrollToSection('materials')"
+          class="nav-link text-dark text-decoration-none hover-primary-green"
+          style="cursor: pointer"
+          >Materials</a
+        >
+        <a
+          (click)="scrollToSection('faq')"
+          class="nav-link text-dark text-decoration-none hover-primary-green"
+          style="cursor: pointer"
+          >FAQ</a
+        >
+        <a
+          (click)="scrollToSection('contact')"
+          class="nav-link text-dark text-decoration-none hover-primary-green"
+          style="cursor: pointer"
+          >Contact</a
+        >
       </div>
 
       <!-- Right side actions -->
       <div class="d-flex align-items-center gap-3">
         @if (isAuthenticated == false) {
-          <!-- Unauthenticated State -->
-          <div class="d-none d-md-flex align-items-center gap-3">
-            <button mat-button (click)="navigateTo('/login')">Login</button>
-            <button class="btn-primary register-button" (click)="navigateTo('/register')">
-              Get Started
-            </button>
-          </div>
+        <!-- Unauthenticated State -->
+        <div class="d-none d-md-flex align-items-center gap-3">
+          <button mat-button (click)="navigateTo('/login')">Login</button>
+          <button class="btn-primary register-button" (click)="navigateTo('/register')">
+            Get Started
+          </button>
+        </div>
         } @else {
-          <!-- Authenticated State -->
+        <!-- Authenticated State -->
 
-          <!-- Notification Bell -->
-          <div class="notification-bell-wrapper position-relative">
-            <button
-              mat-icon-button
-              class="notification-bell-btn position-relative"
-              (click)="toggleNotificationDropdown()"
-              [class.active]="isNotificationDropdownOpen"
+        <!-- Notification Bell -->
+        <div class="notification-bell-wrapper position-relative">
+          <button
+            mat-icon-button
+            class="notification-bell-btn position-relative"
+            (click)="toggleNotificationDropdown()"
+            [class.active]="isNotificationDropdownOpen"
+          >
+            <lucide-icon [name]="Bell" [size]="20"></lucide-icon>
+
+            <!-- Unread badge -->
+            <span
+              *ngIf="unreadCount > 0"
+              class="notification-badge position-absolute top-0 end-0 badge bg-danger text-white rounded-circle d-flex align-items-center justify-content-center"
             >
-              <lucide-icon [name]="Bell" [size]="20"></lucide-icon>
+              {{ unreadCount > 99 ? '99+' : unreadCount }}
+            </span>
+          </button>
 
-              <!-- Unread badge -->
-              <span
-                *ngIf="unreadCount > 0"
-                class="notification-badge position-absolute top-0 end-0 badge bg-danger text-white rounded-circle d-flex align-items-center justify-content-center"
-              >
-                {{ unreadCount > 99 ? '99+' : unreadCount }}
-              </span>
-            </button>
+          <!-- Notification Dropdown -->
+          <app-notification-dropdown
+            *ngIf="isNotificationDropdownOpen"
+            (close)="closeNotificationDropdown()"
+            class="notification-dropdown-container"
+          ></app-notification-dropdown>
+        </div>
 
-            <!-- Notification Dropdown -->
-            <app-notification-dropdown
-              *ngIf="isNotificationDropdownOpen"
-              (close)="closeNotificationDropdown()"
-              class="notification-dropdown-container"
-            ></app-notification-dropdown>
-          </div>
-
-          <!-- Logout Button -->
-          <button mat-menu-item (click)="logout()" class="logout-btn">
+        <!-- Logout Button -->
+        <!-- <button mat-menu-item (click)="logout()" class="logout-btn">
             <lucide-icon [name]="LogOut" [size]="16" class="me-2"></lucide-icon>
             Logout
-          </button>
+          </button> -->
+
+        <div class="user-menu">
+          <div class="user-trigger">
+            <div class="user-avatar">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                <path
+                  d="M240 192C240 147.8 275.8 112 320 112C364.2 112 400 147.8 400 192C400 236.2 364.2 272 320 272C275.8 272 240 236.2 240 192zM448 192C448 121.3 390.7 64 320 64C249.3 64 192 121.3 192 192C192 262.7 249.3 320 320 320C390.7 320 448 262.7 448 192zM144 544C144 473.3 201.3 416 272 416L368 416C438.7 416 496 473.3 496 544L496 552C496 565.3 506.7 576 520 576C533.3 576 544 565.3 544 552L544 544C544 446.8 465.2 368 368 368L272 368C174.8 368 96 446.8 96 544L96 552C96 565.3 106.7 576 120 576C133.3 576 144 565.3 144 552L144 544z"
+                />
+              </svg>
+            </div>
+            <span class="user-name">{{ username }}</span>
+          </div>
+
+          <!-- Dropdown Menu -->
+          <div class="dropdown-menu-custom">
+            <div class="dropdown-header-custom">{{ role }}</div>
+
+            <div class="dropdown-divider-custom"></div>
+
+            @if(role === 'Admin') {
+            <a routerLink="/admin/review-requests" class="dropdown-item-custom">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Review Requests</span>
+            </a>
+            <a routerLink="/admin/assign-drivers" class="dropdown-item-custom">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Assign Drivers</span>
+            </a>
+            <a routerLink="/admin/manage-materials" class="dropdown-item-custom">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Manage Materials</span>
+            </a>
+            <a routerLink="/admin/drivers" class="dropdown-item-custom">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Drivers</span>
+            </a>
+            } @else if(role === 'User') {
+            <a routerLink="pickup-requests/my-requests" class="dropdown-item-custom">
+              <i class="fas fa-user"></i>
+              <span>My Requests</span>
+            </a>
+            <a routerLink="pickup-requests/create" class="dropdown-item-custom">
+              <i class="fas fa-user"></i>
+              <span>Create Request</span>
+            </a>
+            } @else if(role === 'Driver'){
+            <a routerLink="driver/DriverProfile" class="dropdown-item-custom">
+              <i class="fas fa-truck"></i>
+              <span>Profile</span>
+            </a>
+            <a routerLink="/driver/DashBoardDrivers" class="dropdown-item-custom">
+              <i class="fas fa-truck"></i>
+              <span>PickUps</span>
+            </a>
+            }
+
+            <a (click)="logout()" class="dropdown-item-custom">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Logout</span>
+            </a>
+          </div>
+        </div>
 
         }
       </div>
