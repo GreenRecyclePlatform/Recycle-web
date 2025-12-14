@@ -208,7 +208,20 @@
             </a>
            
             } @else if(role === 'Supplier'){
-              
+               <a routerLink="/supplier/orders" class="dropdown-item-custom">
+               <i class="bi bi-person"></i>
+              <span>Orders</span>
+            </a>
+             <a routerLink="/supplier/dashboard" class="dropdown-item-custom">
+               <i class="bi bi-person"></i>
+              <span>Profile</span>
+            </a>
+             <a routerLink="supplier/checkout" class="dropdown-item-custom">
+               <i class="bi bi-person"></i>
+              <span>Profile</span>
+            </a>
+            
+
             }
              <div class="dropdown-divider-custom"></div> 
             <a (click)="logout()" class="dropdown-item-custom">
