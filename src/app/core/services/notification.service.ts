@@ -14,11 +14,11 @@ export class NotificationService {
   // ✅ Use environment URL instead of hardcoded
   private apiUrl = `${environment.apiUrl}/Notifications`;
 
-  // State Management
-  private notificationsSubject = new BehaviorSubject<Notification[]>([]);
+  // State Management - ✅ Made public for debugging
+  public notificationsSubject = new BehaviorSubject<Notification[]>([]);
   public notifications$ = this.notificationsSubject.asObservable();
 
-  private unreadCountSubject = new BehaviorSubject<number>(0);
+  public unreadCountSubject = new BehaviorSubject<number>(0);
   public unreadCount$ = this.unreadCountSubject.asObservable();
 
   private loadingSubject = new BehaviorSubject<boolean>(false);
@@ -36,6 +36,7 @@ export class NotificationService {
         console.log('✅ Notifications loaded:', notifications);
         this.notificationsSubject.next(notifications);
         const unreadCount = notifications.filter((n) => !n.isRead).length;
+        console.log('📊 Calculated unread count:', unreadCount);
         this.unreadCountSubject.next(unreadCount);
         this.loadingSubject.next(false);
       }),
@@ -76,7 +77,7 @@ export class NotificationService {
     return this.http.get<{ unreadCount: number }>(`${this.apiUrl}/unread-count`).pipe(
       map((response) => response.unreadCount),
       tap((count) => {
-        console.log('✅ Unread count:', count);
+        console.log('✅ Unread count from API:', count);
         this.unreadCountSubject.next(count);
       }),
       catchError((error) => {
@@ -92,6 +93,7 @@ export class NotificationService {
   markAllAsRead(): Observable<any> {
     return this.http.put(`${this.apiUrl}/mark-all-read`, {}).pipe(
       tap(() => {
+        console.log('✅ Marking all notifications as read');
         // Update local state
         const notifications = this.notificationsSubject.value;
         notifications.forEach((n) => {
@@ -100,6 +102,7 @@ export class NotificationService {
         });
         this.notificationsSubject.next([...notifications]);
         this.unreadCountSubject.next(0);
+        console.log('📊 Unread count set to 0');
       }),
       catchError((error) => {
         console.error('❌ Error marking all as read:', error);
@@ -157,27 +160,45 @@ export class NotificationService {
    * Add notification to local state (for SignalR real-time updates)
    */
   addNotification(notification: Notification): void {
-    const notifications = this.notificationsSubject.value;
-    this.notificationsSubject.next([notification, ...notifications]);
+    console.log('➕ Adding notification to local state:', notification);
+    console.log('📌 IsRead status:', notification.isRead);
 
-    if (!notification.isRead) {
-      const unreadCount = this.unreadCountSubject.value;
-      this.unreadCountSubject.next(unreadCount + 1);
-    }
+    const notifications = this.notificationsSubject.value;
+    const updatedNotifications = [notification, ...notifications];
+
+    console.log('📋 Updated notifications array length:', updatedNotifications.length);
+    this.notificationsSubject.next(updatedNotifications);
+
+    // ✅ Calculate unread count from actual notifications array
+    const unreadCount = updatedNotifications.filter((n) => !n.isRead).length;
+    console.log('📊 Calculated unread count after adding:', unreadCount);
+    console.log(
+      '📊 Notifications that are unread:',
+      updatedNotifications.filter((n) => !n.isRead)
+    );
+
+    this.unreadCountSubject.next(unreadCount);
+    console.log('✅ Unread count subject updated to:', this.unreadCountSubject.value);
   }
 
   /**
    * Update notification in local state
    */
   updateNotification(notificationId: string, updates: Partial<Notification>): void {
+    console.log('🔄 Updating notification:', notificationId, updates);
+
     const notifications = this.notificationsSubject.value;
     const notification = notifications.find((n) => n.notificationId === notificationId);
+
     if (notification) {
       Object.assign(notification, updates);
       this.notificationsSubject.next([...notifications]);
 
       const unreadCount = notifications.filter((n) => !n.isRead).length;
+      console.log('📊 Unread count after update:', unreadCount);
       this.unreadCountSubject.next(unreadCount);
+    } else {
+      console.warn('⚠️ Notification not found for update:', notificationId);
     }
   }
 
@@ -185,11 +206,14 @@ export class NotificationService {
    * Remove notification from local state
    */
   removeNotification(notificationId: string): void {
+    console.log('🗑️ Removing notification:', notificationId);
+
     const notifications = this.notificationsSubject.value;
     const filtered = notifications.filter((n) => n.notificationId !== notificationId);
     this.notificationsSubject.next(filtered);
 
     const unreadCount = filtered.filter((n) => !n.isRead).length;
+    console.log('📊 Unread count after removal:', unreadCount);
     this.unreadCountSubject.next(unreadCount);
   }
 
@@ -204,6 +228,7 @@ export class NotificationService {
    * Clear all local state
    */
   clearState(): void {
+    console.log('🧹 Clearing notification state');
     this.notificationsSubject.next([]);
     this.unreadCountSubject.next(0);
     this.loadingSubject.next(false);

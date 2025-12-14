@@ -25,10 +25,10 @@
         <i class="far fa-clock"></i>
         {{ getTimeAgo(notification.createdAt) }}
       </span>
-      
-      <span class="notification-badge" *ngIf="notification.priority === 'High' || notification.priority === 'Urgent'">
+      <!-- priority -->
+      <!-- <span class="notification-badge" *ngIf="notification.priority === 'High' || notification.priority === 'Urgent'">
         {{ notification.priority }}
-      </span>
+      </span> -->
     </div>
   </div>
 

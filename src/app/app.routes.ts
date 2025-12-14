@@ -31,7 +31,6 @@ export const routes: Routes = [
   {
     path: 'driver',
     children: [
-
       { path: 'DashBoardDrivers', component: DriverDashboard },
       { path: 'DriverProfile', component: Profiledriver },
     ],
@@ -43,8 +42,7 @@ export const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordPage },
   { path: 'reset-password', component: ResetPassword },
 
-  
-{
+  {
     path: 'supplier',
     children: supplierRoutes,
     // Add Auth Guard here if needed
@@ -85,15 +83,14 @@ export const routes: Routes = [
         (m) => m.AdminLayoutComponent
       ),
     children: [
-
-   { path: '',redirectTo: 'dashboard', pathMatch: 'full'},
-       {
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
         path: 'dashboard',
-        component: AdminDashboardComponent, 
-        data: { title: 'Dashboard' }
+        component: AdminDashboardComponent,
+        data: { title: 'Dashboard' },
       },
 
-           { path: 'drivers', component: AllDrivers },
+      { path: 'drivers', component: AllDrivers },
       { path: 'assign-drivers', component: AssignDriver },
       { path: 'manage-materials', component: ManageMaterials },
       { path: 'review-requests', component: ReviewRequests },
