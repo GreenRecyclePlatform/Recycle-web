@@ -192,7 +192,7 @@ button[mat-button]:hover {
   right: 2px !important;
   transform: scale(1);
   animation: pulse 2s infinite;
-  background-color: #dc2626 !important;
+  background-color: #2d6a4f !important;
 }
 
 @keyframes pulse {
