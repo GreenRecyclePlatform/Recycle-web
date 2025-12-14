@@ -5,14 +5,13 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AssignmentRequest, Driver, Request } from '../../models/assignment';
 import { DriverService } from '../../services/driver';
-import { AuthService } from '../../../../core/services/authservice'; 
+import { AuthService } from '../../../../core/services/authservice';
 import { Navbar } from '../../../../shared/components/navbar/navbar';
-import { AdminSidebarComponent } from '../../../../shared/components/admin-sidebar/admin-sidebar';
 
 @Component({
   selector: 'app-assign-driver',
   standalone: true,
-  imports: [CommonModule, FormsModule,Navbar, AdminSidebarComponent],
+  imports: [CommonModule, FormsModule,Navbar],
   templateUrl: './assign-driver.html',
   styleUrls: ['./assign-driver.css']
 })
@@ -22,7 +21,7 @@ export class AssignDriver implements OnInit {
   selectedRequest: Request | null = null;
   isLoading = false;
   errorMessage = '';
-  
+
   showConfirmModal = false;
   showSuccessModal = false;
   showErrorModal = false;
@@ -78,7 +77,7 @@ export class AssignDriver implements OnInit {
       error: (error) => {
         this.errorMessage = error.message || 'Failed to load requests';
         console.error('❌ Error loading requests:', error);
-        
+
         if (error.message.includes('Unauthorized')) {
           // this.router.navigate(['/login']);
         }
@@ -95,7 +94,7 @@ export class AssignDriver implements OnInit {
         this.errorMessage = error.message || 'Failed to load drivers';
         this.isLoading = false;
         console.error('❌ Error loading drivers:', error);
-        
+
         if (error.message.includes('Unauthorized')) {
           // this.router.navigate(['/login']);
         }

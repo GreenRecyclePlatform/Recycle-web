@@ -1,68 +1,163 @@
 /* Navbar Component Styles */
+
+/* ========== CSS Variables ========== */
+:host {
+  --primary-green: #2d6a4f;
+  --primary-green-dark: #1e4d38;
+  --white: #ffffff;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-600: #4b5563;
+  --gray-800: #1f2937;
+  --radius-lg: 0.5rem;
+}
+
+/* ========== Navbar Container - STICKY ========== */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: white;
+  border-bottom: 1px solid var(--gray-200);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
 .bg-white-95 {
   background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
 }
 
+/* ========== Logo Container ========== */
 .logo-container {
   width: 2.5rem;
   height: 2.5rem;
+  background-color: var(--primary-green);
+  transition: all 0.2s ease;
+}
+
+.logo-container:hover {
+  background-color: var(--primary-green-dark);
+  transform: scale(1.05);
 }
 
 nav a {
   cursor: pointer;
 }
 
-.register-button {
-  background-color: #2d6a4f;
-  padding: 8px 16px;
-  color: white;
-  border-radius: calc(0.625rem - 2px);
-  border-color: #0000001a;
+/* ========== Navigation Links ========== */
+.nav-link {
+  position: relative;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.2s ease;
   font-weight: 500;
-  font-size: 14px;
-  border: none;
-  cursor: pointer;
+  font-size: 0.9375rem;
+  color: var(--gray-600);
+  border-radius: var(--radius-lg);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: var(--primary-green);
   transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-link:hover {
+  color: var(--primary-green) !important;
+  background-color: var(--gray-100);
+}
+
+.nav-link:hover::after {
+  width: calc(100% - 1.5rem);
+}
+
+/* ========== Primary Button (Get Started / Register) ========== */
+.register-button {
+  background-color: var(--primary-green);
+  padding: 0.75rem 1rem;
+  color: white;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .register-button:hover {
-  background-color: #1e4d38;
+  background-color: var(--primary-green-dark);
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.25);
 }
 
-.logout-btn {
-  background-color: #2d6a4f;
-  padding: 8px 16px;
-  color: white;
-  border-radius: calc(0.625rem - 2px);
-  border-color: #0000001a;
+.register-button:active {
+  transform: translateY(0);
+}
+
+/* ========== Login Button ========== */
+button[mat-button] {
+  color: var(--gray-600);
   font-weight: 500;
-  font-size: 14px;
+  font-size: 0.9375rem;
+  border-radius: var(--radius-lg);
+  transition: all 0.2s ease;
+}
+
+button[mat-button]:hover {
+  background-color: var(--gray-100);
+  color: var(--primary-green);
+}
+
+/* ========== Logout Button ========== */
+.logout-btn {
+  background-color: var(--primary-green);
+  padding: 0.75rem 1rem;
+  color: white;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200);
+  font-weight: 500;
+  font-size: 0.9375rem;
   display: flex;
   align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .logout-btn:hover {
-  background-color: #1e4d38 !important;
+  background-color: var(--primary-green-dark) !important;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.25);
 }
 
+.logout-btn:active {
+  transform: translateY(0);
+}
+
+/* ========== User Avatar ========== */
 .user-avatar-nav {
   width: 2rem;
   height: 2rem;
   font-size: 0.875rem;
+  background-color: var(--primary-green);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
 }
 
-.hover-primary-green:hover {
-  color: #2d6a4f !important;
-}
-
-.transition-colors {
-  transition: color 0.2s;
-}
-
-/* Notification Bell Styles */
+/* ========== Notification Bell ========== */
 .notification-bell-wrapper {
   position: relative;
 }
@@ -72,15 +167,18 @@ nav a {
   width: 40px !important;
   height: 40px !important;
   border-radius: 50% !important;
-  transition: all 0.3s ease !important;
+  transition: all 0.2s ease !important;
+  color: var(--gray-600) !important;
 }
 
 .notification-bell-btn:hover {
-  background-color: rgba(45, 106, 79, 0.1) !important;
+  background-color: var(--gray-100) !important;
+  color: var(--primary-green) !important;
 }
 
 .notification-bell-btn.active {
-  background-color: rgba(45, 106, 79, 0.15) !important;
+  background-color: var(--gray-100) !important;
+  color: var(--primary-green) !important;
 }
 
 .notification-badge {
@@ -94,6 +192,7 @@ nav a {
   right: 2px !important;
   transform: scale(1);
   animation: pulse 2s infinite;
+  background-color: #dc2626 !important;
 }
 
 @keyframes pulse {
@@ -106,7 +205,7 @@ nav a {
   }
 }
 
-/* Notification Dropdown Container */
+/* ========== Notification Dropdown Container ========== */
 .notification-dropdown-container {
   position: absolute;
   top: calc(100% + 8px);
@@ -114,8 +213,33 @@ nav a {
   z-index: 1000;
 }
 
-/* Mobile Responsive */
+/* ========== Utility Classes ========== */
+.hover-primary-green:hover {
+  color: var(--primary-green) !important;
+}
+
+.transition-colors {
+  transition: color 0.2s ease;
+}
+
+/* ========== Smooth Scroll ========== */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ========== Responsive Design ========== */
 @media (max-width: 768px) {
+  .nav-link {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .register-button,
+  .logout-btn {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+  }
+
   .logout-btn span {
     display: none;
   }
@@ -125,10 +249,157 @@ nav a {
     width: 90vw;
     max-width: 400px;
   }
+
+  .logo-container {
+    width: 2rem;
+    height: 2rem;
+  }
 }
 
-/* Ensure dropdown appears above other content */
-nav {
+@media (max-width: 480px) {
+  nav {
+    padding: 0.5rem 0;
+  }
+
+  .register-button,
+  .logout-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+}
+
+/* ========== Focus States for Accessibility ========== */
+.nav-link:focus,
+.register-button:focus,
+.logout-btn:focus,
+.notification-bell-btn:focus {
+  outline: 2px solid var(--primary-green);
+  outline-offset: 2px;
+}
+
+button[mat-button]:focus {
+  outline: 2px solid var(--primary-green);
+  outline-offset: 2px;
+}
+
+.user-menu {
   position: relative;
-  z-index: 100;
+}
+
+.user-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 25px;
+  transition: background-color 0.3s;
+}
+
+.user-trigger:hover {
+  background-color: #f0f0f0;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  background-color: #2d5f4f;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.dropdown-menu-custom {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 280px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  margin-top: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.user-menu:hover .dropdown-menu-custom {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-header-custom {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+  color: #888;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dropdown-item-custom {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  color: #333;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.dropdown-item-custom:hover {
+  background-color: #f8f9fa;
+  color: #2d5f4f;
+}
+
+.dropdown-item-custom i {
+  width: 20px;
+  font-size: 1rem;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.dropdown-item-custom:hover i {
+  color: #2d5f4f;
+}
+
+.dropdown-divider-custom {
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 0.5rem 0;
+}
+
+@media (max-width: 991px) {
+  .navbar {
+    padding: 1rem;
+  }
+
+  .user-menu {
+    margin-top: 1rem;
+  }
+
+  .dropdown-menu-custom {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    box-shadow: none;
+    margin-top: 0.5rem;
+  }
 }

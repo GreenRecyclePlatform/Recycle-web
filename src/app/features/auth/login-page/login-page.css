@@ -218,3 +218,7 @@ input.error-border {
   outline: 3px solid #dc3545;
   outline-offset: 2px;
 }
+
+.passicon {
+  color: #0a0a0a;
+}

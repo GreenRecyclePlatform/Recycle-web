@@ -1,15 +1,13 @@
 <div class="admin-layout">
-  <!-- Navbar Placeholder - Someone else will create this -->
-  <div class="navbar-placeholder">
-    <!-- The navbar component will be inserted here by another developer -->
-    <!-- They should create a component that fills this space -->
-  </div>
+  <!-- Navbar Component -->
+  <app-navbar [transparent]="false"></app-navbar>
 
-  <!-- Main Content Area -->
+  <!-- Main Container -->
   <div class="admin-container">
-    <!-- Sidebar -->
+    <!-- Sidebar with Playful Features -->
     <aside class="sidebar">
-      <div class="sidebar-header">
+      <!-- Admin Profile Card - Professional -->
+      <div class="admin-profile-card">
         <div class="admin-profile">
           <div class="admin-avatar">{{ adminName.charAt(0) }}</div>
           <div class="admin-info">
@@ -19,8 +17,13 @@
         </div>
       </div>
 
+      <!-- Navigation Menu -->
       <nav class="sidebar-nav">
-        <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item">
+               <!-- NEW: Dashboard Link -->
+        <a routerLink="/admin/dashboard"
+           routerLinkActive="active"
+           class="nav-item"
+           [routerLinkActiveOptions]="{exact: true}">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="7" height="7"></rect>
             <rect x="14" y="3" width="7" height="7"></rect>
@@ -29,21 +32,56 @@
           </svg>
           <span>Dashboard</span>
         </a>
-
-        <a routerLink="/admin/review-requests" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-            <polyline points="10 9 9 9 8 9"></polyline>
+        <!-- <a routerLink="/admin/assign-drivers"
+           routerLinkActive="active"
+           class="nav-item"
+           [routerLinkActiveOptions]="{exact: false}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> -->
+        <a
+          routerLink="/admin/review-requests"
+          routerLinkActive="active"
+          class="nav-item"
+          [routerLinkActiveOptions]="{ exact: false }"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-file-text w-5 h-5 flex-shrink-0"
+            aria-hidden="true"
+          >
+            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
+            <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+            <path d="M10 9H8"></path>
+            <path d="M16 13H8"></path>
+            <path d="M16 17H8"></path>
           </svg>
           <span>Review Requests</span>
-          <span class="badge-notification" *ngIf="notificationCount > 0">{{ notificationCount }}</span>
         </a>
 
-        <a routerLink="/admin/assign-drivers" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <a
+          routerLink="/admin/assign-drivers"
+          routerLinkActive="active"
+          class="nav-item"
+          [routerLinkActiveOptions]="{ exact: false }"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
             <circle cx="9" cy="7" r="4"></circle>
             <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -52,26 +90,49 @@
           <span>Assign Drivers</span>
         </a>
 
-        <a routerLink="/admin/manage-materials" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+        <a
+          routerLink="/admin/manage-materials"
+          routerLinkActive="active"
+          class="nav-item"
+          [routerLinkActiveOptions]="{ exact: false }"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+            ></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
           </svg>
           <span>Manage Materials</span>
         </a>
 
-        <a routerLink="/admin/inventory" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-            <line x1="12" y1="22.08" x2="12" y2="12"></line>
-          </svg>
-          <span>Inventory</span>
-        </a>
-
-        <a routerLink="/admin/drivers" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <a
+          routerLink="/admin/drivers"
+          routerLinkActive="active"
+          class="nav-item"
+          [routerLinkActiveOptions]="{ exact: false }"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
             <circle cx="9" cy="7" r="4"></circle>
             <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -80,17 +141,23 @@
           <span>Drivers</span>
         </a>
 
-        <a routerLink="/admin/reports" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="20" x2="18" y2="10"></line>
-            <line x1="12" y1="20" x2="12" y2="4"></line>
-            <line x1="6" y1="20" x2="6" y2="14"></line>
-          </svg>
-          <span>Reports</span>
-        </a>
-
-        <a routerLink="/admin/settings" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <a
+          routerLink="/admin/settings"
+          routerLinkActive="active"
+          class="nav-item"
+          [routerLinkActiveOptions]="{ exact: false }"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <circle cx="12" cy="12" r="3"></circle>
             <path d="M12 1v6m0 6v6"></path>
           </svg>
@@ -98,20 +165,38 @@
         </a>
       </nav>
 
+      <!-- Sidebar Footer with Playful Logout -->
       <div class="sidebar-footer">
         <button class="logout-btn" (click)="logout()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-            <polyline points="16 17 21 12 16 7"></polyline>
-            <line x1="21" y1="12" x2="9" y2="12"></line>
-          </svg>
+          <div class="logout-icon-wrapper">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </div>
           <span>Logout</span>
+          <div class="logout-arrow">→</div>
         </button>
-        <p class="copyright">© 2025</p>
+
+        <div class="copyright">
+          <span class="copyright-icon">💚</span>
+          <span>© 2025 RecycleHub</span>
+        </div>
       </div>
     </aside>
 
-    <!-- Main Content -->
+    <!-- Main Content Area -->
     <main class="main-content">
       <router-outlet></router-outlet>
     </main>

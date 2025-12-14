@@ -16,14 +16,13 @@ export class MaterialService {
   private handleError(error: any): Observable<never> {
     console.error('API Error:', error);
     console.error('Error Status:', error.status);
-    console.error('Error Body:', error.error); // ← This will show backend validation errors
+    console.error('Error Body:', error.error);
 
     let errorMessage = 'An error occurred';
 
     if (error.error?.message) {
       errorMessage = error.error.message;
     } else if (error.error?.errors) {
-      // Handle ASP.NET validation errors
       const validationErrors = error.error.errors;
       errorMessage = Object.keys(validationErrors)
         .map(key => `${key}: ${validationErrors[key].join(', ')}`)
@@ -65,42 +64,52 @@ export class MaterialService {
     );
   }
 
-  createMaterial(material: any): Observable<Material> {
-    const payload = {
-      name: material.name || '',
-      description: material.description || '',
-      unit: material.unit || 'kg',
-      icon: material.icon || '♻️',
-      image: material.image || '',
-      buyingPrice: Number(material.buyingPrice) || 0,
-      sellingPrice: Number(material.sellingPrice) || 0,
-      pricePerKg: Number(material.pricePerKg) || 0,
-      status: material.status || 'active'
-    };
+  // ✅ UPDATED: Now uses FormData like DriverProfile
+  createMaterial(material: any, imageFile: File | null): Observable<Material> {
+    const formData = new FormData();
 
-    console.log('Sending payload to backend:', payload); // ← Debug log
+    formData.append('name', material.name || '');
+    formData.append('description', material.description || '');
+    formData.append('unit', material.unit || 'kg');
+    formData.append('icon', material.icon || '♻️');
+    formData.append('buyingPrice', material.buyingPrice?.toString() || '0');
+    formData.append('sellingPrice', material.sellingPrice?.toString() || '0');
+    formData.append('pricePerKg', material.pricePerKg?.toString() || '0');
+    formData.append('status', material.status || 'active');
 
-    return this.http.post<Material>(this.apiUrl, payload).pipe(
+    // Add image file if provided
+    if (imageFile) {
+      formData.append('Image', imageFile, imageFile.name);
+    }
+
+    console.log('📤 Sending FormData to backend');
+
+    return this.http.post<Material>(this.apiUrl, formData).pipe(
       catchError(this.handleError)
     );
   }
 
-  updateMaterial(id: string, material: any): Observable<Material> {
-    const payload = {
-      name: material.name || '',
-      description: material.description || '',
-      unit: material.unit || 'kg',
-      icon: material.icon || '♻️',
-      image: material.image || '',
-      buyingPrice: Number(material.buyingPrice) || 0,
-      sellingPrice: Number(material.sellingPrice) || 0,
-      pricePerKg: Number(material.pricePerKg) || 0,
-      status: material.status || 'active'
-    };
+  // ✅ UPDATED: Now uses FormData like DriverProfile
+  updateMaterial(id: string, material: any, imageFile: File | null): Observable<Material> {
+    const formData = new FormData();
 
-    console.log('Updating material:', id, payload); // ← Debug log
+    formData.append('name', material.name || '');
+    formData.append('description', material.description || '');
+    formData.append('unit', material.unit || 'kg');
+    formData.append('icon', material.icon || '♻️');
+    formData.append('buyingPrice', material.buyingPrice?.toString() || '0');
+    formData.append('sellingPrice', material.sellingPrice?.toString() || '0');
+    formData.append('pricePerKg', material.pricePerKg?.toString() || '0');
+    formData.append('status', material.status || 'active');
 
-    return this.http.put<Material>(`${this.apiUrl}/${id}`, payload).pipe(
+    // Add image file if provided (for updating image)
+    if (imageFile) {
+      formData.append('Image', imageFile, imageFile.name);
+    }
+
+    console.log('📤 Updating material with FormData:', id);
+
+    return this.http.put<Material>(`${this.apiUrl}/${id}`, formData).pipe(
       catchError(this.handleError)
     );
   }

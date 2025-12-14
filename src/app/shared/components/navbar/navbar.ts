@@ -38,6 +38,8 @@ export class Navbar implements OnInit, OnDestroy {
   unreadCount = 0;
   isNotificationDropdownOpen = false;
   mobileMenuOpen = false;
+  username: string | null = '';
+  role: string | null = '';
 
   private destroy$ = new Subject<void>();
 
@@ -56,6 +58,8 @@ export class Navbar implements OnInit, OnDestroy {
       // Initialize notifications when user is authenticated
       if (status) {
         this.initializeNotifications();
+        this.username = this.authService.getUserName();
+        this.role = this.authService.userRole;
       } else {
         this.cleanup();
       }
@@ -67,9 +71,6 @@ export class Navbar implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Initialize notifications when user is authenticated
-   */
   /**
    * Initialize notifications when user is authenticated
    */
@@ -95,8 +96,6 @@ export class Navbar implements OnInit, OnDestroy {
         });
 
       // Start SignalR connection (optional - can be disabled for testing)
-      // Comment this out if SignalR is not set up yet
-
       this.signalRService
         .startConnection(token)
         .then(() => {
@@ -138,9 +137,8 @@ export class Navbar implements OnInit, OnDestroy {
 
     // Logout from auth service
     this.authService.logout();
-   
+
     this.router.navigate([' ']);
-  
   }
 
   /**
@@ -148,6 +146,40 @@ export class Navbar implements OnInit, OnDestroy {
    */
   navigateTo(path: string): void {
     this.router.navigate([path]);
+  }
+
+  /**
+   * Scroll to section with smooth animation
+   */
+  scrollToSection(sectionId: string): void {
+    // First navigate to home if not already there
+    if (this.router.url !== '/') {
+      this.router.navigate(['/']).then(() => {
+        // Wait for navigation to complete, then scroll
+        setTimeout(() => {
+          this.performScroll(sectionId);
+        }, 100);
+      });
+    } else {
+      this.performScroll(sectionId);
+    }
+  }
+
+  /**
+   * Perform the actual scroll
+   */
+  private performScroll(sectionId: string): void {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const navbarHeight = 64; // Height of navbar in pixels (4rem)
+      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = elementPosition - navbarHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+    }
   }
 
   /**

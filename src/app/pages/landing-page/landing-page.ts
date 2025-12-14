@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+//neww
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MaterialService } from '../../core/services/material.service';
@@ -29,8 +30,8 @@ interface FAQ {
 export class LandingPage implements OnInit {
   materials: Material[] = [];
   loading: boolean = false;
-  categories = ['All', 'Plastic', 'Metal', 'Paper', 'Glass', 'Electronics'];
-  selectedCategory = 'All';
+  showAllMaterials: boolean = false;
+  showBackToTop: boolean = false; // 🆕 Control back to top button visibility
 
   testimonials: Testimonial[] = [
     {
@@ -87,7 +88,7 @@ export class LandingPage implements OnInit {
     {
       question: 'What areas do you serve?',
       answer:
-        'We currently operate in major cities across India. Enter your pincode during registration to check if we service your area.',
+        'We currently operate in major cities across Egypt. Enter your pincode during registration to check if we service your area.',
       isOpen: false,
     },
   ];
@@ -98,11 +99,19 @@ export class LandingPage implements OnInit {
     this.loadMaterials();
   }
 
+  // 🆕 Listen to scroll events to show/hide back to top button
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    // Show button after scrolling down 300px
+    this.showBackToTop = window.pageYOffset > 300;
+  }
+
   loadMaterials(): void {
     this.loading = true;
     this.materialService.getActiveMaterials().subscribe({
       next: (data) => {
-        this.materials = data;
+        // Sort materials by price (highest first) for better showcase
+        this.materials = data.sort((a, b) => b.buyingPrice - a.buyingPrice);
         this.loading = false;
       },
       error: (error) => {
@@ -112,19 +121,14 @@ export class LandingPage implements OnInit {
     });
   }
 
-  get filteredMaterials() {
-    if (this.selectedCategory === 'All') {
-      return this.materials;
-    }
-
-    // Filter by material name containing the category
-    return this.materials.filter((material) =>
-      material.name.toLowerCase().includes(this.selectedCategory.toLowerCase())
-    );
+  // Get materials to display (6 by default, all when showAll is true)
+  get displayedMaterials(): Material[] {
+    return this.showAllMaterials ? this.materials : this.materials.slice(0, 6);
   }
 
-  selectCategory(category: string) {
-    this.selectedCategory = category;
+  // Toggle show all materials
+  toggleShowAll(): void {
+    this.showAllMaterials = !this.showAllMaterials;
   }
 
   toggleFAQ(index: number) {
@@ -132,6 +136,24 @@ export class LandingPage implements OnInit {
   }
 
   scrollToSection(sectionId: string) {
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const navbarHeight = 80; // 🆕 Updated to match fixed navbar height
+      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = elementPosition - navbarHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  // 🆕 Scroll to top function
+  scrollToTop(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }
 }
