@@ -9,17 +9,12 @@ import { Review, UpdateReviewDto } from '../../../../core/models/review.model';
 import { Navbar } from '../../../../shared/components/navbar/navbar';
 import { LucideAngularModule } from 'lucide-angular';
 import { UserSidebar } from '../../../../shared/components/user-sidebar/user-sidebar';
+import { TokenService } from '../../../../core/services/tokenservice'; // ✅ ADD THIS
 
 @Component({
   selector: 'app-review-list',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    Navbar,
-    LucideAngularModule,
-    UserSidebar,
-  ],
+  imports: [CommonModule, ReactiveFormsModule, Navbar, LucideAngularModule, UserSidebar],
   templateUrl: './review-list.html',
   styleUrls: ['./review-list.css'],
 })
@@ -37,6 +32,7 @@ export class ReviewListComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private reviewService = inject(ReviewService);
+  private tokenService = inject(TokenService); // ✅ ADD THIS
 
   constructor() {
     this.editForm = this.fb.group({
@@ -46,16 +42,24 @@ export class ReviewListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const token = localStorage.getItem('token');
-    console.log('🔍 Review List - Token check:', token ? 'EXISTS ✅' : 'MISSING ❌');
+    // ✅ USE TokenService instead of localStorage
+    const token = this.tokenService.getToken();
+    console.log('🔍 Review List - Token check:', {
+      exists: !!token,
+      isExpired: this.tokenService.isTokenExpired(),
+      userId: this.tokenService.getUserId(),
+    });
 
-    if (!token) {
-      console.error('❌ No token found! Redirecting to login...');
+    if (!token || this.tokenService.isTokenExpired()) {
+      console.error('❌ No valid token found! Redirecting to login...');
       this.error = 'Please login to view your reviews.';
-      this.router.navigate(['/login']);
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 1000);
       return;
     }
 
+    // ✅ Token exists and is valid, load reviews
     this.loadReviews();
   }
 
@@ -81,13 +85,12 @@ export class ReviewListComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error('❌ Error loading reviews:', error);
-          this.error =
-            error.message || 'Failed to load reviews. Please try again.';
+          this.error = error.message || 'Failed to load reviews. Please try again.';
           this.loading = false;
 
           if (error.status === 401) {
             console.log('🔐 Unauthorized - redirecting to login');
-            localStorage.clear();
+            this.tokenService.clearToken(); // ✅ Use TokenService
             this.router.navigate(['/login']);
           }
         },
@@ -154,10 +157,6 @@ export class ReviewListComponent implements OnInit, OnDestroy {
   }
 
   onDeleteReview(reviewId: string): void {
-    if (!confirm('Are you sure you want to delete this review?')) {
-      return;
-    }
-
     this.reviewService
       .deleteReview(reviewId)
       .pipe(takeUntil(this.destroy$))

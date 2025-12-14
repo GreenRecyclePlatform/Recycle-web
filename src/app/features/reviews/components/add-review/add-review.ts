@@ -48,25 +48,43 @@ export class AddReviewComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log('🔍 ADD REVIEW - Token Check');
+    console.log('Current URL:', this.router.url);
 
     const token = this.tokenService.getToken();
+    console.log('Token exists:', !!token);
 
     if (!token) {
-      console.error('❌ NO TOKEN FOUND!');
-      this.error = 'Please login first to add a review.';
-      setTimeout(() => this.router.navigate(['/login']), 2000);
+      console.error('❌ NO TOKEN FOUND! SessionStorage might be cleared.');
+      console.log('SessionStorage contents:', sessionStorage.length, 'items');
+      this.error = 'Session expired. Please login again.';
+      setTimeout(() => {
+        this.router.navigate(['/login'], {
+          queryParams: { returnUrl: '/reviews/add' },
+        });
+      }, 1500);
       return;
     }
 
-    if (this.tokenService.isTokenExpired()) {
+    // Check if token is expired
+    const isExpired = this.tokenService.isTokenExpired();
+    console.log('Token expired:', isExpired);
+
+    if (isExpired) {
       console.error('❌ TOKEN EXPIRED!');
       this.error = 'Your session has expired. Please login again.';
       this.tokenService.clearToken();
-      setTimeout(() => this.router.navigate(['/login']), 2000);
+      setTimeout(() => {
+        this.router.navigate(['/login'], {
+          queryParams: { returnUrl: '/reviews/add' },
+        });
+      }, 1500);
       return;
     }
 
     console.log('✅ Token is valid');
+    console.log('User ID:', this.tokenService.getUserId());
+    console.log('User Role:', this.tokenService.getRole());
+
     this.loadPendingReviews();
   }
 
@@ -75,6 +93,7 @@ export class AddReviewComponent implements OnInit, OnDestroy {
     this.error = '';
 
     console.log('📋 Loading pending reviews...');
+    console.log('Token check before API call:', !!this.tokenService.getToken());
 
     this.reviewService
       .getPendingReviews()
@@ -82,9 +101,6 @@ export class AddReviewComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (reviews) => {
           console.log('✅ Pending reviews loaded:', reviews);
-
-          // ✅ No need to filter by driverId anymore!
-          // Backend will handle getting the driver from the request
           this.pendingReviews = reviews;
           this.loading = false;
 
@@ -97,13 +113,25 @@ export class AddReviewComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error('❌ Error loading pending reviews:', error);
-          this.error = error.message || 'Failed to load pending reviews. Please try again.';
+          console.error('Error status:', error.status);
+          console.error('Error message:', error.message);
+
           this.loading = false;
 
-          if (error.status === 401) {
+          if (error.status === 401 || error.status === 403) {
             console.log('🔐 Unauthorized - redirecting to login');
+            this.error = 'Authentication failed. Please login again.';
             this.tokenService.clearToken();
-            setTimeout(() => this.router.navigate(['/login']), 2000);
+            setTimeout(() => {
+              this.router.navigate(['/login'], {
+                queryParams: { returnUrl: '/reviews/add' },
+              });
+            }, 1500);
+          } else {
+            this.error =
+              error.error?.message ||
+              error.message ||
+              'Failed to load pending reviews. Please try again.';
           }
         },
       });
@@ -112,7 +140,6 @@ export class AddReviewComponent implements OnInit, OnDestroy {
   selectRequest(request: PendingReviewDto): void {
     console.log('📌 Request selected:', request);
 
-    // ✅ Simple validation - just check if requestId exists
     if (!request.requestId) {
       console.error('❌ Invalid request - no requestId');
       this.error = 'Invalid request. Please try another.';
@@ -144,6 +171,15 @@ export class AddReviewComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Check token again before submission
+    if (!this.tokenService.getToken() || this.tokenService.isTokenExpired()) {
+      this.error = 'Session expired. Please login again.';
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 1500);
+      return;
+    }
+
     this.submitReview();
   }
 
@@ -154,16 +190,13 @@ export class AddReviewComponent implements OnInit, OnDestroy {
     this.error = '';
     this.successMessage = '';
 
-    // ✅ SIMPLIFIED: Only send requestId, rating, and comment
-    // Backend automatically gets driverId from the PickupRequest table
     const createDto: CreateReviewDto = {
       requestId: this.selectedRequest.requestId,
-      // ❌ NO driverId - backend handles it!
       rating: this.reviewForm.value.rating,
       comment: this.reviewForm.value.comment.trim(),
     };
 
-    console.log('📤 Submitting review (requestId only):', createDto);
+    console.log('📤 Submitting review:', createDto);
 
     this.reviewService
       .createReview(createDto)
@@ -176,23 +209,29 @@ export class AddReviewComponent implements OnInit, OnDestroy {
 
           setTimeout(() => {
             this.router.navigate(['/reviews']);
-          }, 2000);
+          }, 1500);
         },
         error: (error) => {
           console.error('❌ Error submitting review:', error);
           this.submitting = false;
 
-          let errorMessage = 'Failed to submit review. ';
-
-          if (error.error?.message) {
-            errorMessage += error.error.message;
-          } else if (error.message) {
-            errorMessage += error.message;
+          if (error.status === 401 || error.status === 403) {
+            this.error = 'Session expired. Please login again.';
+            this.tokenService.clearToken();
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 1500);
           } else {
-            errorMessage += 'Please try again.';
+            let errorMessage = 'Failed to submit review. ';
+            if (error.error?.message) {
+              errorMessage += error.error.message;
+            } else if (error.message) {
+              errorMessage += error.message;
+            } else {
+              errorMessage += 'Please try again.';
+            }
+            this.error = errorMessage;
           }
-
-          this.error = errorMessage;
         },
       });
   }
