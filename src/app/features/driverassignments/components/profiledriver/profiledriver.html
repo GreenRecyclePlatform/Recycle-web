@@ -1,6 +1,8 @@
 <app-navbar></app-navbar>
 
 <div class="container">
+
+
   <app-driver-sidebar 
     [driverName]="sidebarData.name"
     [driverRole]="sidebarData.role"
@@ -38,7 +40,7 @@
     </div>
 
     <div *ngIf="!isLoading">
-      <div class="profile-header">
+      <div class="profile-header mt-5">
         <div>
           <h1>Driver Profile</h1>
           <p class="subtitle">View and manage your profile information</p>

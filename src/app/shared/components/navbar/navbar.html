@@ -43,7 +43,7 @@
       </div>
 
       <!-- Right side actions -->
-      <div class="d-flex align-items-center gap-3">
+      <div class="d-flex align-items-center gap-2">
         @if (isAuthenticated == false) {
         <!-- Unauthenticated State -->
         <div class="d-none d-md-flex align-items-center gap-3">
@@ -59,7 +59,7 @@
         <div class="notification-bell-wrapper position-relative">
           <button
             mat-icon-button
-            class="notification-bell-btn position-relative"
+            class="notification-bell-btn position-relative d-flex justify-content-center align-items-center"
             (click)="toggleNotificationDropdown()"
             [class.active]="isNotificationDropdownOpen"
           >
@@ -82,21 +82,11 @@
           ></app-notification-dropdown>
         </div>
 
-        <!-- Logout Button -->
-        <!-- <button mat-menu-item (click)="logout()" class="logout-btn">
-            <lucide-icon [name]="LogOut" [size]="16" class="me-2"></lucide-icon>
-            Logout
-          </button> -->
-
         <div class="user-menu">
           <div class="user-trigger">
-            <div class="user-avatar">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
-                <path
-                  d="M240 192C240 147.8 275.8 112 320 112C364.2 112 400 147.8 400 192C400 236.2 364.2 272 320 272C275.8 272 240 236.2 240 192zM448 192C448 121.3 390.7 64 320 64C249.3 64 192 121.3 192 192C192 262.7 249.3 320 320 320C390.7 320 448 262.7 448 192zM144 544C144 473.3 201.3 416 272 416L368 416C438.7 416 496 473.3 496 544L496 552C496 565.3 506.7 576 520 576C533.3 576 544 565.3 544 552L544 544C544 446.8 465.2 368 368 368L272 368C174.8 368 96 446.8 96 544L96 552C96 565.3 106.7 576 120 576C133.3 576 144 565.3 144 552L144 544z"
-                />
-              </svg>
+            <div class="user-avatar-nav">
+             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="w-6 h-6">
+              <path fill="white" d="M240 192C240 147.8 275.8 112 320 112C364.2 112 400 147.8 400 192C400 236.2 364.2 272 320 272C275.8 272 240 236.2 240 192zM448 192C448 121.3 390.7 64 320 64C249.3 64 192 121.3 192 192C192 262.7 249.3 320 320 320C390.7 320 448 262.7 448 192zM144 544C144 473.3 201.3 416 272 416L368 416C438.7 416 496 473.3 496 544L496 552C496 565.3 506.7 576 520 576C533.3 576 544 565.3 544 552L544 544C544 446.8 465.2 368 368 368L272 368C174.8 368 96 446.8 96 544L96 552C96 565.3 106.7 576 120 576C133.3 576 144 565.3 144 552L144 544z"/></svg>
             </div>
             <span class="user-name">{{ username }}</span>
           </div>
@@ -105,23 +95,97 @@
           <div class="dropdown-menu-custom">
             <div class="dropdown-header-custom">{{ role }}</div>
 
-            <div class="dropdown-divider-custom"></div>
+            <!-- <div class="dropdown-divider-custom"></div> -->
 
             @if(role === 'Admin') {
+      
+            <a routerLink="/admin/dashboard" class="dropdown-item-custom">
+               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+              <span>Dashboard</span>
+            </a>
             <a routerLink="/admin/review-requests" class="dropdown-item-custom">
-              <i class="fas fa-tachometer-alt"></i>
+              <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-file-text w-5 h-5 flex-shrink-0"
+            aria-hidden="true"
+          >
+            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
+            <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+            <path d="M10 9H8"></path>
+            <path d="M16 13H8"></path>
+            <path d="M16 17H8"></path>
+          </svg>
               <span>Review Requests</span>
             </a>
             <a routerLink="/admin/assign-drivers" class="dropdown-item-custom">
-              <i class="fas fa-tachometer-alt"></i>
+               <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
               <span>Assign Drivers</span>
             </a>
             <a routerLink="/admin/manage-materials" class="dropdown-item-custom">
-              <i class="fas fa-tachometer-alt"></i>
+              <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+            ></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
               <span>Manage Materials</span>
             </a>
             <a routerLink="/admin/drivers" class="dropdown-item-custom">
-              <i class="fas fa-tachometer-alt"></i>
+              <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
               <span>Drivers</span>
             </a>
             } @else if(role === 'User') {
@@ -134,23 +198,25 @@
               <span>Create Request</span>
             </a>
             } @else if(role === 'Driver'){
-            <a routerLink="driver/DriverProfile" class="dropdown-item-custom">
-              <i class="fas fa-truck"></i>
-              <span>Profile</span>
-            </a>
-            <a routerLink="/driver/DashBoardDrivers" class="dropdown-item-custom">
+               <a routerLink="/driver/DashBoardDrivers" class="dropdown-item-custom">
               <i class="fas fa-truck"></i>
               <span>PickUps</span>
             </a>
+            <a routerLink="/driver/DriverProfile" class="dropdown-item-custom">
+               <i class="bi bi-person"></i>
+              <span>Profile</span>
+            </a>
+           
+            } @else if(role === 'Supplier'){
+              
             }
-
+             <div class="dropdown-divider-custom"></div> 
             <a (click)="logout()" class="dropdown-item-custom">
               <i class="fas fa-sign-out-alt"></i>
               <span>Logout</span>
             </a>
           </div>
         </div>
-
         }
       </div>
     </div>

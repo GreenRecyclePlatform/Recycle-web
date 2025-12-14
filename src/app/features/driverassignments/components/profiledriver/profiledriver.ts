@@ -10,7 +10,7 @@ import { Navbar } from '../../../../shared/components/navbar/navbar';
 
 
 @Component({
-  imports: [FormsModule, CommonModule, DriverSidebar],
+  imports: [FormsModule, CommonModule, DriverSidebar,Navbar],
   selector: 'app-driver-profile',
   templateUrl: './profiledriver.html',
   styleUrls: ['./profiledriver.css']
