@@ -26,6 +26,12 @@ nav {
   transition: all 0.3s ease;
 }
 
+.container{
+   max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
 .bg-white-95 {
   background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
@@ -294,6 +300,7 @@ button[mat-button]:focus {
   cursor: pointer;
   /* border-radius: 25px; */
   transition: background-color 0.3s;
+  border:none;
 }
 
 .user-trigger:hover {
