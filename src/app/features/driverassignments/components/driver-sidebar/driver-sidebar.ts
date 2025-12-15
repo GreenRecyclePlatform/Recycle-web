@@ -32,11 +32,11 @@ export class DriverSidebar implements OnInit {
       label: 'My Pickups',
       route: 'driver/DashBoardDrivers',
     },
-    {
-      icon: 'bi-wallet2',
-      label: 'Earnings',
-      route: '/driver/earnings'
-    },
+    // {
+    //   icon: 'bi-wallet2',
+    //   label: 'Earnings',
+    //   route: '/driver/earnings'
+    // },
     {
       icon: 'bi-person',
       label: 'Profile',
