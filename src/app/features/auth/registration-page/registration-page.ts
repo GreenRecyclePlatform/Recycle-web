@@ -130,6 +130,24 @@ export class RegistrationPage {
     return (this.step / 2) * 100;
   }
 
+  step1Fields = [
+  'firstName',
+  'lastName',
+  'userName',
+  'email',
+  'phone',
+  'birthDate',
+  'password',
+  'confirmPassword',
+  'role'
+];
+
+  isStep1Invalid(): boolean {
+  return this.step1Fields.some(field =>
+    this.registrationForm.get(field)?.invalid
+  );
+}
+
   handleNext(): void {
     if (this.step === 1) {
       const {
@@ -158,10 +176,14 @@ export class RegistrationPage {
           this.registrationForm.get(key)?.markAsTouched();
         });
 
+
+
+
         this.snackBar.open('Please fill all required fields and select a role', 'Close', {
           duration: 3000,
         });
 
+   
         let page2Fields = ['street', 'governorate', 'city', 'postalcode'];
 
         page2Fields.forEach((field) => {
@@ -184,7 +206,7 @@ export class RegistrationPage {
       this.registrationForm.get('IDNumber')?.clearValidators();
       this.registrationForm.get('IDNumber')?.updateValueAndValidity();
     }
-    if (this.step < 2) {
+    if (this.step < 2 &&  !this.isStep1Invalid()) {
       this.step++;
     }
   }
