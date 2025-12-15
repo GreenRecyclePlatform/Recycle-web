@@ -22,7 +22,6 @@ import { API_ENDPOINTS } from '../constants/api-endpoints';
 export class AuthService {
   constructor(private http: HttpClient, private tokenService: TokenService) {
     this.isAuthenticatedSubject.next(this.hasToken());
-    // ✅ تحميل الـ role من الـ token عند البداية
     const role = this.tokenService.getRole();
     if (role) {
       this.userRoleSubject.next(role);

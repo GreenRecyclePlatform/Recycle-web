@@ -7,6 +7,14 @@
   padding-bottom: 2rem;
 }
 
+.page-title{
+
+  padding-top: 2rem;
+  color: #120303;
+   color: var(--dark-gray); 
+   font-weight: 600 ;
+}
+
 
 /* =========================
    Stat Cards Styles

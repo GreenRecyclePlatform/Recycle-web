@@ -12,6 +12,7 @@ import { TestNotificationsComponent } from './pages/test-notifications/test-noti
 import { Settings } from './features/admin/settings/settings';
 import { supplierRoutes } from './features/supplier/supplier.routes';
 import { ManageMaterials } from './features/manage-materials/manage-materials';
+
 import { Profiledriver } from './features/driverassignments/components/profiledriver/profiledriver';
 import { adminGuard } from './core/guards/admin-guard';
 import { AdminDashboardComponent } from './pages/admin-dashboard.component/admin-dashboard.component';
@@ -27,14 +28,26 @@ export const routes: Routes = [
   //     { path: 'manage-materials', component: ManageMaterials },
   //   ],
   // },
+/*{
+ path: 'admin',
+     children: [
+   { path: 'drivers', component: AllDrivers },  
+      { path: 'assign-drivers', component: AssignDriver },  
+      {path:'settings',component:Settings},
+      {path:'manage-materials',component:ManageMaterials},
+{path:'payments' , component:AdminPaymentsComponent, data:{ roles: ['Admin'] }}]},*/
 
   {
     path: 'driver',
     children: [
+     
       { path: 'DashBoardDrivers', component: DriverDashboard },
       { path: 'DriverProfile', component: Profiledriver },
-    ],
-  },
+    ]
+   },
+ 
+
+   
 
   { path: '', component: LandingPage },
   { path: 'login', component: LoginPage },
@@ -94,6 +107,7 @@ export const routes: Routes = [
       { path: 'assign-drivers', component: AssignDriver },
       { path: 'manage-materials', component: ManageMaterials },
       { path: 'review-requests', component: ReviewRequests },
+
       // {
       //   path: 'manage-materials',
       //   loadComponent: () =>

@@ -14,6 +14,7 @@ import { Navbar } from '../../../../shared/components/navbar/navbar';
   selector: 'app-driver-profile',
   templateUrl: './profiledriver.html',
   styleUrls: ['./profiledriver.css']
+  
 })
 export class Profiledriver implements OnInit {
   isEditing: boolean = false;
@@ -162,7 +163,8 @@ export class Profiledriver implements OnInit {
     });
   }
 
-  toggleAvailability(): void {
+  toggleAvailability(): void
+   {
     if (this.isTogglingAvailability) return;
     
     this.isTogglingAvailability = true;

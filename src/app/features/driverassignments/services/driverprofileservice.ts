@@ -24,7 +24,7 @@ export class DriverProfileService {
 
   // ✅ UPDATE Availability
   updateAvailability(isAvailable: boolean): Observable<boolean> {
-    return this.http.put<boolean>(`${this.apiUrl}/availability`, { isAvailable });
+    return this.http.put<boolean>(`${this.apiUrl}/availability`, isAvailable );
   }
 
   // ✅ UPLOAD Profile Image
