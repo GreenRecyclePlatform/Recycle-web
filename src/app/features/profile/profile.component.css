@@ -345,38 +345,7 @@
   background-color: #D1D5DB;
 }
 
-/* Environmental Impact */
-.impact-card {
-  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
-  border: none;
-}
 
-.impact-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2rem;
-  text-align: center;
-}
-
-.impact-stat {
-  padding: 1.5rem;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
-.impact-value {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--primary-green);
-  margin-bottom: 0.5rem;
-}
-
-.impact-label {
-  font-size: 1rem;
-  color: #6B7280;
-  font-weight: 500;
-}
 
 /* Notification Preferences */
 .preferences-list {
@@ -461,63 +430,14 @@ input:checked + .toggle-slider {
 input:checked + .toggle-slider:before {
   transform: translateX(28px);
 }
-
-/* ✅ Achievements Grid */
-.achievements-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.5rem;
-}
-
-.achievement-card {
-  background-color: #F9FAFB;
-  border: 2px solid #E5E7EB;
-  border-radius: 16px;
-  padding: 1.75rem;
-  text-align: center;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.achievement-card.unlocked {
-  background-color: #d1fae5;
-  border-color: var(--primary-green);
-}
-
-.achievement-card.locked {
-  opacity: 0.6;
-  filter: grayscale(50%);
-}
-
-.achievement-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-}
-
-.achievement-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-.achievement-title {
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: #1F2937;
-  margin: 0 0 0.5rem 0;
-}
-
-.achievement-description {
-  font-size: 0.875rem;
-  color: #6B7280;
-  margin: 0 0 1rem 0;
-  min-height: 2.5rem;
-}
-
-.achievement-status {
+/* ✅ Section Header with Badge */
+.section-header-with-badge {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  justify-content: space-between;
   align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #F3F4F6;
 }
 
 .status-badge {
@@ -542,28 +462,6 @@ input:checked + .toggle-slider:before {
   font-size: 0.75rem;
   color: #6B7280;
 }
-
-/* ✅ No Achievements Message */
-.no-achievements {
-  text-align: center;
-  padding: 3rem 1rem;
-  background-color: #F9FAFB;
-  border-radius: 12px;
-  margin-top: 1rem;
-}
-
-.no-achievements p {
-  font-size: 1rem;
-  color: #6B7280;
-  margin: 0;
-}
-
-/* Responsive - Achievements */
-/* @media (max-width: 768px) {
-  .achievements-grid {
-    grid-template-columns: 1fr;
-  }
-} */
 
 /* Responsive Design */
 @media (max-width: 768px) {

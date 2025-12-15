@@ -1,4 +1,4 @@
-// profile.component.ts - FULLY API-DRIVEN
+// profile.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -11,7 +11,6 @@ import {
   UpdateProfileDto,
   UpdateAddressDto,
   NotificationPreferencesDto,
-  AchievementDto, // ✅ ADD THIS
 } from '../../core/services/profile.service';
 
 @Component({
@@ -24,16 +23,13 @@ import {
 export class ProfileComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
-  // UI State
   isEditMode = false;
   isLoading = false;
   errorMessage: string | null = null;
   successMessage: string | null = null;
 
-  // Profile Data - NO STATIC DATA
   profile: UserProfileDto | null = null;
 
-  // Editable form data
   editForm = {
     firstName: '',
     lastName: '',
@@ -45,11 +41,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     postalCode: '',
   };
 
-  // Store original values for cancel
   private originalFormData: any = null;
-
-  // ❌ REMOVE STATIC ACHIEVEMENTS AND NOTIFICATION PREFERENCES
-  // All data now comes from profile object
 
   constructor(private profileService: ProfileService) {}
 
@@ -57,7 +49,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     console.log('🚀 Profile component initialized');
     this.loadProfile();
 
-    // Subscribe to loading state
     this.profileService.loading$.pipe(takeUntil(this.destroy$)).subscribe((loading) => {
       this.isLoading = loading;
     });
@@ -68,9 +59,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  /**
-   * ✅ Load user profile from API
-   */
   loadProfile(): void {
     console.log('📡 Fetching profile from API...');
 
@@ -82,8 +70,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.profile = profile;
           this.populateForm(profile);
           console.log('✅ Profile loaded successfully:', profile);
-          console.log('🏆 Achievements:', profile.achievements); // ← Add this
-
         },
         error: (error) => {
           this.errorMessage = error.error?.message || 'Failed to load profile. Please try again.';
@@ -93,9 +79,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Populate form with profile data from API
-   */
   private populateForm(profile: UserProfileDto): void {
     this.editForm = {
       firstName: profile.firstName,
@@ -109,9 +92,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     };
   }
 
-  /**
-   * Toggle edit mode
-   */
   toggleEditMode(): void {
     if (!this.isEditMode) {
       this.originalFormData = { ...this.editForm };
@@ -120,15 +100,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.clearMessages();
   }
 
-  /**
-   * ✅ Save profile changes to API
-   */
   saveProfile(): void {
     console.log('💾 Saving profile...');
-    console.log('📝 Form data:', this.editForm);
 
     if (!this.validateForm()) {
-      console.log('❌ Validation failed:', this.errorMessage);
       return;
     }
 
@@ -141,14 +116,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
       dateOfBirth: new Date(this.editForm.dateOfBirth),
     };
 
-    console.log('📤 Sending profile update to API:', profileDto);
-
     this.profileService
       .updateProfile(profileDto)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (updatedProfile) => {
-          console.log('✅ Profile updated successfully:', updatedProfile);
           this.profile = updatedProfile;
 
           if (this.hasAddressData()) {
@@ -161,14 +133,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.errorMessage = error.error?.message || 'Failed to save profile. Please try again.';
-          console.error('❌ Error saving profile:', error);
         },
       });
   }
 
-  /**
-   * ✅ Update address via API
-   */
   private updateAddress(): void {
     const addressDto: UpdateAddressDto = {
       street: this.editForm.street.trim(),
@@ -177,14 +145,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
       postalCode: this.editForm.postalCode.trim(),
     };
 
-    console.log('📤 Sending address update to API:', addressDto);
-
     this.profileService
       .updateAddress(addressDto)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (updatedAddress) => {
-          console.log('✅ Address updated successfully:', updatedAddress);
+        next: () => {
           this.isEditMode = false;
           this.successMessage = 'Profile and address updated successfully!';
           this.autoHideMessage();
@@ -192,14 +157,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.errorMessage = error.error?.message || 'Profile saved but address update failed.';
-          console.error('❌ Error saving address:', error);
         },
       });
   }
 
-  /**
-   * Cancel edit and restore original values
-   */
   cancelEdit(): void {
     if (this.originalFormData) {
       this.editForm = { ...this.originalFormData };
@@ -209,36 +170,26 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.clearMessages();
   }
 
-  /**
-   * Validate form fields
-   */
   private validateForm(): boolean {
     if (!this.editForm.firstName.trim()) {
       this.errorMessage = 'First name is required';
       return false;
     }
-
     if (!this.editForm.lastName.trim()) {
       this.errorMessage = 'Last name is required';
       return false;
     }
-
     if (!this.editForm.phoneNumber.trim()) {
       this.errorMessage = 'Phone number is required';
       return false;
     }
-
     if (!this.editForm.dateOfBirth) {
       this.errorMessage = 'Date of birth is required';
       return false;
     }
-
     return true;
   }
 
-  /**
-   * Check if address data is provided
-   */
   private hasAddressData(): boolean {
     return !!(
       this.editForm.street.trim() ||
@@ -248,77 +199,34 @@ export class ProfileComponent implements OnInit, OnDestroy {
     );
   }
 
-  /**
-   * ✅ Get user initials from API data
-   */
   getInitials(): string {
     if (!this.profile) return '?';
     return `${this.profile.firstName[0]}${this.profile.lastName[0]}`.toUpperCase();
   }
 
-  /**
-   * ✅ Get full name from API data
-   */
   getFullName(): string {
     if (!this.profile) return 'Loading...';
     return `${this.profile.firstName} ${this.profile.lastName}`;
   }
 
-  /**
-   * ✅ Get member since date from API data
-   */
   getMemberSince(): Date {
     return this.profile?.createdAt || new Date();
   }
 
-  /**
-   * ✅ Get stats from API data
-   */
+  // ✅ Updated - Removed impactScore
   getStats() {
     if (!this.profile) {
       return {
         totalRequests: 0,
         completedPickups: 0,
         totalEarnings: 0,
-        impactScore: 0,
       };
     }
     return this.profile.stats;
   }
 
-  /**
-   * ✅ Get environmental impact from API data
-   */
-  getEnvironmentalImpact() {
-    if (!this.profile) {
-      return {
-        materialsRecycled: 0,
-        co2Saved: 0,
-        treesEquivalent: 0,
-      };
-    }
-    return this.profile.environmentalImpact;
-  }
-
-  /**
-   * ✅ Get achievements from API data
-   */
-  getAchievements(): AchievementDto[] {
-    return this.profile?.achievements || [];
-  }
-
-  /**
-   * ✅ Check if user has any achievements
-   */
-  hasAchievements(): boolean {
-    return this.getAchievements().length > 0;
-  }
-
-  /**
-   * Format date for display
-   */
   formatDate(date: Date | string | null): string {
-    if (!date) return 'Not yet earned';
+    if (!date) return 'Not available';
     const d = new Date(date);
     return d.toLocaleDateString('en-US', {
       year: 'numeric',
@@ -327,9 +235,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Format date for input field (YYYY-MM-DD)
-   */
   private formatDateForInput(date: Date | string): string {
     const d = new Date(date);
     const year = d.getFullYear();
@@ -338,9 +243,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     return `${year}-${month}-${day}`;
   }
 
-  /**
-   * Format currency (Egyptian Pounds)
-   */
   formatCurrency(amount: number): string {
     return `EGP ${amount.toLocaleString('en-US', {
       minimumFractionDigits: 2,
@@ -348,34 +250,21 @@ export class ProfileComponent implements OnInit, OnDestroy {
     })}`;
   }
 
-  /**
-   * Clear error and success messages
-   */
   private clearMessages(): void {
     this.errorMessage = null;
     this.successMessage = null;
   }
 
-  /**
-   * Auto-hide success message after 3 seconds
-   */
   private autoHideMessage(): void {
     setTimeout(() => {
       this.successMessage = null;
     }, 3000);
   }
 
-  /**
-   * Refresh profile data from API
-   */
   refreshProfile(): void {
-    console.log('🔄 Refreshing profile...');
     this.loadProfile();
   }
 
-  /**
-   * ✅ Toggle notification preference (API-driven)
-   */
   toggleNotification(preference: keyof NotificationPreferencesDto): void {
     if (!this.profile?.notificationPreferences) return;
 
@@ -393,14 +282,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
-          console.log('✅ Notification preference saved');
           this.successMessage = 'Notification preferences updated!';
           this.autoHideMessage();
         },
         error: (error) => {
           this.profile!.notificationPreferences = currentPreferences;
           this.errorMessage = 'Failed to update notification preferences';
-          console.error('❌ Error:', error);
         },
       });
   }

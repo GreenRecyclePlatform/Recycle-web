@@ -16,6 +16,7 @@ import { Profiledriver } from './features/driverassignments/components/profiledr
 import { adminGuard } from './core/guards/admin-guard';
 import { AdminDashboardComponent } from './pages/admin-dashboard.component/admin-dashboard.component';
 import { ReviewRequests } from './features/review-requests/review-requests';
+import { ProfileComponent } from './features/profile/profile.component';
 
 export const routes: Routes = [
   //{
@@ -41,6 +42,7 @@ export const routes: Routes = [
   { path: 'register', component: RegistrationPage },
   { path: 'forgot-password', component: ForgotPasswordPage },
   { path: 'reset-password', component: ResetPassword },
+  { path: 'profile', component: ProfileComponent },
 
   {
     path: 'supplier',
@@ -70,8 +72,8 @@ export const routes: Routes = [
   // Payments Module
   {
     path: 'payments',
-    loadChildren: () => import('./features/payments/payments-routing.module')
-      .then(m => m.PaymentsRoutingModule),
+    loadChildren: () =>
+      import('./features/payments/payments-routing.module').then((m) => m.PaymentsRoutingModule),
     //canActivate: [authGuard]
   },
 
