@@ -12,7 +12,7 @@ import { SettingService } from '../../../core/services/setting.service';
   styleUrl: './settings.css'
 })
 export class Settings implements OnInit {
-  activeTab: string = 'platform';
+  activeTab: string = 'pricing';
   isLoading: boolean = false;
   isSaving: boolean = false;
 

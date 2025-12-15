@@ -1,25 +1,20 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { RouterLink } from '@angular/router'; // Import RouterLink directive
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ReviewService, Review, UpdateReviewDto } from '../../../../core/services/review.service';
+import { ReviewService } from '../../../../core/services/review.service';
+import { Review, UpdateReviewDto } from '../../../../core/models/review.model';
 import { Navbar } from '../../../../shared/components/navbar/navbar';
-import { LucideAngularModule } from "lucide-angular";
+import { LucideAngularModule } from 'lucide-angular';
 import { UserSidebar } from '../../../../shared/components/user-sidebar/user-sidebar';
+import { TokenService } from '../../../../core/services/tokenservice'; // ✅ ADD THIS
 
 @Component({
   selector: 'app-review-list',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterLink, // Use RouterLink instead of RouterModule
-    Navbar,
-    LucideAngularModule,UserSidebar
-],
+  imports: [CommonModule, ReactiveFormsModule, Navbar, LucideAngularModule, UserSidebar],
   templateUrl: './review-list.html',
   styleUrls: ['./review-list.css'],
 })
@@ -37,6 +32,7 @@ export class ReviewListComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private reviewService = inject(ReviewService);
+  private tokenService = inject(TokenService); // ✅ ADD THIS
 
   constructor() {
     this.editForm = this.fb.group({
@@ -46,6 +42,24 @@ export class ReviewListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // ✅ USE TokenService instead of localStorage
+    const token = this.tokenService.getToken();
+    console.log('🔍 Review List - Token check:', {
+      exists: !!token,
+      isExpired: this.tokenService.isTokenExpired(),
+      userId: this.tokenService.getUserId(),
+    });
+
+    if (!token || this.tokenService.isTokenExpired()) {
+      console.error('❌ No valid token found! Redirecting to login...');
+      this.error = 'Please login to view your reviews.';
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 1000);
+      return;
+    }
+
+    // ✅ Token exists and is valid, load reviews
     this.loadReviews();
   }
 
@@ -58,18 +72,27 @@ export class ReviewListComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.error = '';
 
+    console.log('📋 Loading reviews...');
+
     this.reviewService
       .getMyReviews()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (reviews) => {
+          console.log('✅ Reviews loaded:', reviews);
           this.reviews = reviews;
           this.loading = false;
         },
         error: (error) => {
-          console.error('Error loading reviews:', error);
-          this.error = error.error?.message || 'Failed to load reviews. Please try again.';
+          console.error('❌ Error loading reviews:', error);
+          this.error = error.message || 'Failed to load reviews. Please try again.';
           this.loading = false;
+
+          if (error.status === 401) {
+            console.log('🔐 Unauthorized - redirecting to login');
+            this.tokenService.clearToken(); // ✅ Use TokenService
+            this.router.navigate(['/login']);
+          }
         },
       });
   }
@@ -127,17 +150,13 @@ export class ReviewListComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error('Error updating review:', error);
-          this.error = error.error?.message || 'Failed to update review. Please try again.';
+          this.error = error.message || 'Failed to update review. Please try again.';
           this.updating = false;
         },
       });
   }
 
   onDeleteReview(reviewId: string): void {
-    if (!confirm('Are you sure you want to delete this review?')) {
-      return;
-    }
-
     this.reviewService
       .deleteReview(reviewId)
       .pipe(takeUntil(this.destroy$))
@@ -149,7 +168,7 @@ export class ReviewListComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error('Error deleting review:', error);
-          this.error = error.error?.message || 'Failed to delete review. Please try again.';
+          this.error = error.message || 'Failed to delete review. Please try again.';
         },
       });
   }
