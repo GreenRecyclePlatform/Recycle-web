@@ -45,7 +45,7 @@
               </div>
               <div class="detail-item">
                 <span class="detail-label">Available:</span>
-                <span class="detail-value available-qty">{{ material.availableQuantity }} {{ material.unit }}</span>
+                <span class="detail-value available-qty">{{ material.availableQuantity }} </span>
               </div>
             </div>
           </div>
@@ -92,7 +92,7 @@
                 <button (click)="removeFromCart(item.material.materialId)" class="btn-remove">×</button>
               </div>
               <div class="cart-item-details">
-                <p>{{ item.quantity }} {{ item.material.unit }} × ${{ item.material.sellingPrice }}</p>
+                <p>{{ item.quantity }}× ({{ item.material.unit }} × ${{ item.material.sellingPrice }})</p>
                 <p class="cart-item-total">${{ item.totalPrice.toFixed(2) }}</p>
               </div>
             </div>

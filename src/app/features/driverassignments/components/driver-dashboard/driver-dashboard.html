@@ -1,7 +1,7 @@
 
 <app-navbar></app-navbar>
 
-<div class="dashboard-layout">
+<div class="dashboard-layout mt-16">
 
 
   <app-driver-sidebar 
@@ -19,7 +19,7 @@
       <!-- Page Header -->
       <div class="page-header">
         <div>
-          <h1>My Pickups</h1>
+          <h1 class="page-title">My Pickups</h1>
           <p>View and manage all your pickup assignments</p>
         </div>
         <button class="btn btn-outline" (click)="refreshData()" [disabled]="isLoading">

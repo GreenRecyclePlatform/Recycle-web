@@ -1,73 +1,45 @@
-/* ===================================
-   DASHBOARD CONTAINER
-   =================================== */
-
 .dashboard-container {
-  padding: 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
+  padding: 4rem;
+  margin: -5 auto;
 }
-
-/* ===================================
-   HEADER
-   =================================== */
-
 .page-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-  gap: 1rem;
 }
 
 .header-content {
   flex: 1;
-  min-width: 0;
 }
 
 .page-title {
   font-size: 2rem;
   font-weight: 700;
-  color: #1F2937;
+  color:  #071f14;
   margin: 0 0 0.5rem;
 }
 
 .page-subtitle {
   font-size: 1rem;
-  color: #6B7280;
+  color:  #2D6A4F;
   margin: 0;
 }
 
 .btn-refresh {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   padding: 0.75rem 1.5rem;
   background: #2D6A4F;
   color: white;
-  border: none;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  cursor: pointer;
+  border-radius: 1rem;
   transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(45, 106, 79, 0.2);
 }
 
 .btn-refresh:hover {
   background: #1e4d38;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.3);
-}
-
-.btn-refresh:active {
-  transform: translateY(0);
 }
 
 .refresh-icon {
   font-size: 1rem;
   display: inline-block;
-  animation: none;
 }
 
 .btn-refresh:hover .refresh-icon {
@@ -149,7 +121,6 @@
   align-items: center;
   justify-content: center;
   padding: 4rem 2rem;
-  gap: 1rem;
   color: #6B7280;
 }
 
@@ -169,20 +140,52 @@
   font-size: 1.25rem;
 }
 
-/* ===================================
-   STATS GRID
-   =================================== */
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.top-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.bottom-section {
+  display: flex;
+  flex-direction: column;
+  padding-top: 2rem;
+  border-top: 2px solid  #1f754e;;
+}
+
+.section-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color:  #1f754e;
+  display: flex;
+  align-items: center;
+}
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.5rem;
+  margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
+
+}
+
+.stats-grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.stats-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
   margin-bottom: 2rem;
 }
 
 .stat-card {
   background: white;
-  border-radius: 1rem;
+  border-radius: 1.5rem;
   padding: 1.75rem;
   display: flex;
   align-items: center;
@@ -194,7 +197,7 @@
 
 .stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.453);
 }
 
 .stat-icon {
@@ -205,7 +208,21 @@
   align-items: center;
   justify-content: center;
   border-radius: 1rem;
-  flex-shrink: 0;
+}
+
+.stat-card.stat-revenue .stat-icon {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.stat-card.stat-orders .stat-icon {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+}
+
+.stat-card.stat-pending-payment .stat-icon {
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  color: #8B4513;
 }
 
 .stat-primary .stat-icon {
@@ -244,9 +261,6 @@
   font-weight: 500;
 }
 
-/* ===================================
-   MAIN GRID
-   =================================== */
 
 .main-grid {
   display: grid;
@@ -254,11 +268,6 @@
   gap: 1.5rem;
   align-items: start;
 }
-
-/* ===================================
-   CARD BASE
-   =================================== */
-
 .card {
   background: white;
   border-radius: 1rem;
@@ -273,11 +282,6 @@
   color: #1F2937;
   margin: 0 0 1.5rem;
 }
-
-/* ===================================
-   ACTIVITY CARD
-   =================================== */
-
 .activity-card {
   grid-row: span 2;
 }
@@ -342,10 +346,6 @@
   color: #9CA3AF;
 }
 
-/* ===================================
-   SUMMARY CARD
-   =================================== */
-
 .summary-content {
   display: flex;
   flex-direction: column;
@@ -393,9 +393,6 @@
   background: #E5E7EB;
 }
 
-/* ===================================
-   EMPTY STATE
-   =================================== */
 
 .empty-state {
   text-align: center;
@@ -407,10 +404,112 @@
   margin: 0;
   font-size: 0.9375rem;
 }
+.orders-table-card {
+  margin-top: 0;
+}
+
+.orders-section {
+  margin-top: 0;
+}
+
+.orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.orders-count {
+  background: #7b89929f;
+  color: #576166;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.orders-table-container {
+  overflow-x: auto;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.orders-table thead {
+  background:  #2D6A4F;
+  color: white;
+}
+
+.orders-table th,
+.orders-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.orders-table th {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.orders-table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.orders-table tbody tr:hover {
+  background: #F9FAFB;
+}
+
+.supplier-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.supplier-icon {
+  font-size: 1.25rem;
+}
+
+
+.badge-count {
+    background: #474e4ab9;
+  color: #e2e9e7;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-completed {
+  background: #14b260;
+  color: #e2e9e7;
+}
 
 /* ===================================
    RESPONSIVE DESIGN
    =================================== */
+
+@media (max-width: 1200px) {
+  .stats-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stats-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
 @media (max-width: 1024px) {
   .main-grid {
@@ -421,6 +520,13 @@
     grid-row: auto;
   }
 }
+
+.activity-payment {
+  border-left-color: #10B981;
+}
+
+
+
 
 @media (max-width: 768px) {
   .dashboard-container {
@@ -436,22 +542,29 @@
     font-size: 1.75rem;
   }
 
+  .section-title {
+    font-size: 1.5rem;
+  }
+
   .btn-refresh {
     width: 100%;
     justify-content: center;
   }
 
-  .stats-grid {
+  .stats-grid-4,
+  .stats-grid-3 {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
+  
 
   .main-grid {
     grid-template-columns: 1fr;
   }
 
-  .actions-grid {
-    grid-template-columns: 1fr;
+  .bottom-section {
+    gap: 1rem;
+    padding-top: 1.5rem;
   }
 
   .stat-card,
@@ -459,6 +572,8 @@
     padding: 1.25rem;
   }
 }
+
+
 
 @media (max-width: 480px) {
   .page-title {
@@ -475,7 +590,21 @@
     height: 56px;
   }
 
-  .action-btn {
-    padding: 1rem;
+}
+
+
+@media (max-width: 768px) {
+  .orders-table {
+    font-size: 0.875rem;
   }
+
+  .orders-table th,
+  .orders-table td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .order-info-grid {
+    grid-template-columns: 1fr;
+  }
+
 }

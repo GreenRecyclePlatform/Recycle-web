@@ -36,10 +36,18 @@
       <span>{{ errorMessage }}</span>
     </div>
 
+<<<<<<< madonna
     <!-- Dashboard Content -->
     <div *ngIf="!isLoading" class="dashboard-content">
       <!-- Stats Grid -->
       <div class="stats-grid">
+=======
+    <!-- TOP SECTION: 4 Cards + Recent Activity + Today's Summary -->
+    <div class="top-section">
+      
+      <!-- Stats Grid - 4 cards -->
+      <div class="stats-grid stats-grid-4">
+>>>>>>> dev
         <!-- Total Requests -->
         <div class="stat-card stat-primary">
           <div class="stat-icon">📋</div>
@@ -135,6 +143,92 @@
           </div>
         </div>
       </div>
+
     </div>
+
+    <!-- BOTTOM SECTION: Payment Section with 3 Cards + Orders Table -->
+    <div class="bottom-section">
+      
+      <h2 class="section-title">💳 Payment Overview</h2>
+
+      <!-- Stats Grid - 3 cards -->
+      <div class="stats-grid stats-grid-3">
+        <!-- Total Revenue -->
+        <div class="stat-card stat-revenue">
+          <div class="stat-icon">💰</div>
+          <div class="stat-info">
+            <h3 class="stat-value">{{ formatRevenue(stats.totalRevenue) }} EGP</h3>
+            <p class="stat-label">Total Revenue</p>
+          </div>
+        </div>
+
+        <!-- Completed Orders -->
+        <div class="stat-card stat-orders">
+          <div class="stat-icon">📦</div>
+          <div class="stat-info">
+            <h3 class="stat-value">{{ stats.completedOrdersCount }}</h3>
+            <p class="stat-label">Completed Orders</p>
+          </div>
+        </div>
+
+        <!-- Pending Payments -->
+        <div class="stat-card stat-pending-payment">
+          <div class="stat-icon">⏰</div>
+          <div class="stat-info">
+            <h3 class="stat-value">{{ formatRevenue(stats.pendingPayments) }} EGP</h3>
+            <p class="stat-label">Pending Payments</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orders Table -->
+      <div class="card orders-table-card">
+        <div class="orders-header">
+          <h2 class="card-title">📦 Recent Supplier Orders</h2>
+          <span class="orders-count">{{ allOrders.length }} orders</span>
+        </div>
+
+        <div class="orders-table-container" *ngIf="allOrders.length > 0">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Supplier</th>
+                <th>Total Amount</th>
+                <th>Items</th>
+                <th>Order Date</th>
+                <th>Payment Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let order of allOrders.slice(0, 10)">
+                <td class="supplier-name">
+                  <i class="supplier-icon">🏢</i>
+                  {{ order.supplierName }}
+                </td>
+                <td class="amount">{{ formatCurrency(order.totalAmount) }}</td>
+                <td class="items-count">
+                  <span class="badge-count">{{ order.itemsCount }}</span>
+                </td>
+                <td>{{ formatDate(order.orderDate) }}</td>
+                <td>{{ order.paidAt ? formatDate(order.paidAt) : '-' }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="getStatusClass(order.paymentStatus)">
+                    {{ getStatusText(order.paymentStatus) }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="allOrders.length === 0" class="empty-state">
+          <p>📭 No orders found</p>
+        </div>
+      </div>
+
+    </div>
+    <!-- END BOTTOM SECTION -->
+
   </div>
 </div>
