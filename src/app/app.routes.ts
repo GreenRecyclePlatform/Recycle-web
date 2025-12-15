@@ -3,6 +3,7 @@ import { AllDrivers } from './features/driverassignments/components/all-drivers/
 import { AssignDriver } from './features/driverassignments/components/assign-driver/assign-driver';
 import { DriverDashboard } from './features/driverassignments/components/driver-dashboard/driver-dashboard';
 import { authGuard } from './core/guards/auth-guard';
+import { adminPagesGuard } from './core/guards/admin-pages-guard'; // ✅ Import new guard
 import { LandingPage } from './pages/landing-page/landing-page';
 import { LoginPage } from './features/auth/login-page/login-page';
 import { RegistrationPage } from './features/auth/registration-page/registration-page';
@@ -43,7 +44,7 @@ export const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordPage },
   { path: 'reset-password', component: ResetPassword },
 
-  
+
 {
     path: 'supplier',
     children: supplierRoutes,
@@ -89,14 +90,19 @@ export const routes: Routes = [
    { path: '',redirectTo: 'dashboard', pathMatch: 'full'},
        {
         path: 'dashboard',
-        component: AdminDashboardComponent, 
+        component: AdminDashboardComponent,
+        canActivate: [adminPagesGuard], // ✅ Use new guard
         data: { title: 'Dashboard' }
       },
-
            { path: 'drivers', component: AllDrivers },
       { path: 'assign-drivers', component: AssignDriver },
-      { path: 'manage-materials', component: ManageMaterials },
-      { path: 'review-requests', component: ReviewRequests },
+      {
+        path: 'manage-materials',
+        component: ManageMaterials,
+        canActivate: [adminPagesGuard], // ✅ Use new guard
+        data: { title: 'Manage Materials' }
+      },
+            { path: 'review-requests', component: ReviewRequests },
       // {
       //   path: 'manage-materials',
       //   loadComponent: () =>

@@ -1,3 +1,5 @@
+// src/app/core/services/material.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -64,7 +66,6 @@ export class MaterialService {
     );
   }
 
-  // ✅ UPDATED: Now uses FormData like DriverProfile
   createMaterial(material: any, imageFile: File | null): Observable<Material> {
     const formData = new FormData();
 
@@ -77,7 +78,6 @@ export class MaterialService {
     formData.append('pricePerKg', material.pricePerKg?.toString() || '0');
     formData.append('status', material.status || 'active');
 
-    // Add image file if provided
     if (imageFile) {
       formData.append('Image', imageFile, imageFile.name);
     }
@@ -89,7 +89,6 @@ export class MaterialService {
     );
   }
 
-  // ✅ UPDATED: Now uses FormData like DriverProfile
   updateMaterial(id: string, material: any, imageFile: File | null): Observable<Material> {
     const formData = new FormData();
 
@@ -102,7 +101,6 @@ export class MaterialService {
     formData.append('pricePerKg', material.pricePerKg?.toString() || '0');
     formData.append('status', material.status || 'active');
 
-    // Add image file if provided (for updating image)
     if (imageFile) {
       formData.append('Image', imageFile, imageFile.name);
     }
