@@ -3,6 +3,7 @@ import { AllDrivers } from './features/driverassignments/components/all-drivers/
 import { AssignDriver } from './features/driverassignments/components/assign-driver/assign-driver';
 import { DriverDashboard } from './features/driverassignments/components/driver-dashboard/driver-dashboard';
 import { authGuard } from './core/guards/auth-guard';
+import { adminPagesGuard } from './core/guards/admin-pages-guard'; // ✅ Import new guard
 import { LandingPage } from './pages/landing-page/landing-page';
 import { LoginPage } from './features/auth/login-page/login-page';
 import { RegistrationPage } from './features/auth/registration-page/registration-page';
@@ -12,10 +13,12 @@ import { TestNotificationsComponent } from './pages/test-notifications/test-noti
 import { Settings } from './features/admin/settings/settings';
 import { supplierRoutes } from './features/supplier/supplier.routes';
 import { ManageMaterials } from './features/manage-materials/manage-materials';
+
 import { Profiledriver } from './features/driverassignments/components/profiledriver/profiledriver';
 import { adminGuard } from './core/guards/admin-guard';
 import { AdminDashboardComponent } from './pages/admin-dashboard.component/admin-dashboard.component';
 import { ReviewRequests } from './features/review-requests/review-requests';
+import { ProfileComponent } from './features/profile/profile.component';
 
 export const routes: Routes = [
   //{
@@ -27,21 +30,34 @@ export const routes: Routes = [
   //     { path: 'manage-materials', component: ManageMaterials },
   //   ],
   // },
+/*{
+ path: 'admin',
+     children: [
+   { path: 'drivers', component: AllDrivers },  
+      { path: 'assign-drivers', component: AssignDriver },  
+      {path:'settings',component:Settings},
+      {path:'manage-materials',component:ManageMaterials},
+{path:'payments' , component:AdminPaymentsComponent, data:{ roles: ['Admin'] }}]},*/
 
   {
     path: 'driver',
     children: [
-
+     
       { path: 'DashBoardDrivers', component: DriverDashboard },
       { path: 'DriverProfile', component: Profiledriver },
-    ],
-  },
+    ]
+   },
+ 
+
+   
 
   { path: '', component: LandingPage },
   { path: 'login', component: LoginPage },
   { path: 'register', component: RegistrationPage },
   { path: 'forgot-password', component: ForgotPasswordPage },
   { path: 'reset-password', component: ResetPassword },
+  { path: 'profile', component: ProfileComponent },
+
 
 
   {
@@ -72,8 +88,8 @@ export const routes: Routes = [
   // Payments Module
   {
     path: 'payments',
-    loadChildren: () => import('./features/payments/payments-routing.module')
-      .then(m => m.PaymentsRoutingModule),
+    loadChildren: () =>
+      import('./features/payments/payments-routing.module').then((m) => m.PaymentsRoutingModule),
     //canActivate: [authGuard]
   },
 
@@ -85,7 +101,6 @@ export const routes: Routes = [
         (m) => m.AdminLayoutComponent
       ),
     children: [
-
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
@@ -94,9 +109,18 @@ export const routes: Routes = [
       },
 
       { path: 'drivers', component: AllDrivers },
+        canActivate: [adminPagesGuard], // ✅ Use new guard
+        data: { title: 'Dashboard' }
+      },
+           { path: 'drivers', component: AllDrivers },
       { path: 'assign-drivers', component: AssignDriver },
-      { path: 'manage-materials', component: ManageMaterials },
-      { path: 'review-requests', component: ReviewRequests },
+      {
+        path: 'manage-materials',
+        component: ManageMaterials,
+        canActivate: [adminPagesGuard], // ✅ Use new guard
+        data: { title: 'Manage Materials' }
+      },
+            { path: 'review-requests', component: ReviewRequests },
       // {
       //   path: 'manage-materials',
       //   loadComponent: () =>

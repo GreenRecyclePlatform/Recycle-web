@@ -1,8 +1,12 @@
+// src/app/features/manage-materials/manage-materials.component.ts
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MaterialService } from '../../core/services/material.service';
 import { Material } from '../../core/models/material.model';
+import { AuthService } from '../../core/services/authservice';
 
 @Component({
   selector: 'app-manage-materials',
@@ -22,6 +26,8 @@ export class ManageMaterials implements OnInit {
   isLoading = false;
   isSaving = false;
   isDeleting = false;
+  errorMessage = '';
+  accessDenied = false;
 
   recyclingEmojis = [
     '♻️', '📦', '📄', '🗞️', '📰', '🧻',
@@ -56,7 +62,7 @@ export class ManageMaterials implements OnInit {
     unit: 'kg',
     buyingPrice: 0,
     sellingPrice: 0,
-    pricePerKg: 0, // ✅ Still kept for backend, but hidden from UI
+    pricePerKg: 0,
     status: 'active' as 'active' | 'inactive',
     image: ''
   };
@@ -64,25 +70,81 @@ export class ManageMaterials implements OnInit {
   imagePreview: string = '';
   imageFile: File | null = null;
 
-  constructor(private materialService: MaterialService) {}
+  constructor(
+    private materialService: MaterialService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
+    this.checkAdminAccess();
+  }
+
+  /**
+   * Check if user has admin access - Same pattern as AssignDriver
+   */
+  checkAdminAccess(): void {
+    const token = this.authService.getToken();
+    const isAdmin = this.authService.isAdmin();
+    const userId = this.authService.getUserIdFromToken();
+
+    console.log('🔐 Manage Materials - Access Check:', {
+      hasToken: !!token,
+      userId,
+      isAdmin
+    });
+
+    // Check 1: Token exists
+    if (!token) {
+      this.errorMessage = 'Please login to access this page';
+      this.accessDenied = true;
+      console.warn('⚠️ No token found - redirecting to login');
+      setTimeout(() => {
+        this.router.navigate(['/login'], {
+          queryParams: { returnUrl: '/admin/manage-materials' }
+        });
+      }, 2000);
+      return;
+    }
+
+    // Check 2: User has Admin role
+    if (!isAdmin) {
+      this.errorMessage = 'You need Admin privileges to access this page';
+      this.accessDenied = true;
+      console.warn('⚠️ Not an admin - access denied');
+      setTimeout(() => {
+        this.router.navigate(['/']);
+      }, 2000);
+      return;
+    }
+
+    console.log('✅ Admin access confirmed - loading materials');
     this.loadMaterials();
   }
 
   loadMaterials(): void {
     this.isLoading = true;
+    this.errorMessage = '';
 
     this.materialService.getMaterials().subscribe({
       next: (data) => {
         this.materials = data;
         this.isLoading = false;
-        console.log('📋 Materials loaded:', data);
+        console.log('📋 Materials loaded:', data.length);
       },
       error: (error) => {
         console.error('❌ Error loading materials:', error);
         this.isLoading = false;
-        alert('Failed to load materials. Please try again.');
+
+        // Check if it's an authorization error
+        if (error.message.includes('Unauthorized') || error.message.includes('403')) {
+          this.errorMessage = 'Your session has expired or you do not have permission';
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 2000);
+        } else {
+          this.errorMessage = 'Failed to load materials. Please try again.';
+        }
       }
     });
   }
@@ -104,7 +166,7 @@ export class ManageMaterials implements OnInit {
       unit: material.unit || 'kg',
       buyingPrice: material.buyingPrice,
       sellingPrice: material.sellingPrice,
-      pricePerKg: material.pricePerKg, // ✅ Load existing value but won't show in UI
+      pricePerKg: material.pricePerKg,
       status: material.status,
       image: material.imageUrl || ''
     };
@@ -139,7 +201,6 @@ export class ManageMaterials implements OnInit {
     return this.emojiTitles[emoji] || 'Icon';
   }
 
-  // ✅ Calculate profit margin for display (optional helper)
   calculateProfitMargin(): number {
     if (this.materialForm.buyingPrice > 0 && this.materialForm.sellingPrice > 0) {
       return this.materialForm.sellingPrice - this.materialForm.buyingPrice;
@@ -201,10 +262,11 @@ export class ManageMaterials implements OnInit {
       return;
     }
 
-    // ✅ Auto-calculate pricePerKg before sending (kept for backend compatibility)
+    // Auto-calculate pricePerKg (kept for backend compatibility)
     this.materialForm.pricePerKg = (this.materialForm.buyingPrice + this.materialForm.sellingPrice) / 2;
 
     this.isSaving = true;
+    this.errorMessage = '';
 
     console.log('💾 Saving Material...');
     console.log('📝 Form Data:', this.materialForm);
@@ -226,7 +288,11 @@ export class ManageMaterials implements OnInit {
         error: (error) => {
           console.error('❌ Error updating material:', error);
           this.isSaving = false;
-          alert(`Failed to update material: ${error.message}`);
+          this.errorMessage = `Failed to update material: ${error.message}`;
+
+          if (error.message.includes('Unauthorized')) {
+            setTimeout(() => this.router.navigate(['/login']), 2000);
+          }
         }
       });
     } else {
@@ -244,7 +310,11 @@ export class ManageMaterials implements OnInit {
         error: (error) => {
           console.error('❌ Error creating material:', error);
           this.isSaving = false;
-          alert(`Failed to add material: ${error.message}`);
+          this.errorMessage = `Failed to add material: ${error.message}`;
+
+          if (error.message.includes('Unauthorized')) {
+            setTimeout(() => this.router.navigate(['/login']), 2000);
+          }
         }
       });
     }
@@ -253,6 +323,7 @@ export class ManageMaterials implements OnInit {
   deleteMaterial(): void {
     if (this.selectedMaterial) {
       this.isDeleting = true;
+      this.errorMessage = '';
 
       this.materialService.deleteMaterial(this.selectedMaterial.id).subscribe({
         next: () => {
@@ -265,7 +336,11 @@ export class ManageMaterials implements OnInit {
         error: (error) => {
           console.error('❌ Error deleting material:', error);
           this.isDeleting = false;
-          alert('Failed to delete material. Please try again.');
+          this.errorMessage = 'Failed to delete material. Please try again.';
+
+          if (error.message.includes('Unauthorized')) {
+            setTimeout(() => this.router.navigate(['/login']), 2000);
+          }
         }
       });
     }

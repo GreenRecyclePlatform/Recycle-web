@@ -5,7 +5,6 @@ import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
-// ✅ Interfaces matching your backend DTOs
 export interface AddressDto {
   id: string;
   street: string;
@@ -14,17 +13,12 @@ export interface AddressDto {
   postalCode: string;
 }
 
+// ✅ Updated - Removed impactScore
 export interface ProfileStatsDto {
   totalRequests: number;
   completedPickups: number;
   totalEarnings: number;
-  impactScore: number;
-}
-
-export interface EnvironmentalImpactDto {
-  materialsRecycled: number;
-  co2Saved: number;
-  treesEquivalent: number;
+  // ❌ Removed impactScore
 }
 
 export interface NotificationPreferencesDto {
@@ -32,16 +26,6 @@ export interface NotificationPreferencesDto {
   smsNotifications: boolean;
   pickupReminders: boolean;
   marketingEmails: boolean;
-}
-
-// ✅ ADD ACHIEVEMENT INTERFACE
-export interface AchievementDto {
-  id: string;
-  icon: string;
-  title: string;
-  description: string;
-  earnedDate: Date | null;
-  unlocked: boolean;
 }
 
 export interface UserProfileDto {
@@ -54,9 +38,7 @@ export interface UserProfileDto {
   createdAt: Date;
   primaryAddress: AddressDto | null;
   stats: ProfileStatsDto;
-  environmentalImpact: EnvironmentalImpactDto;
   notificationPreferences: NotificationPreferencesDto;
-  achievements: AchievementDto[]; // ✅ ADD THIS LINE
 }
 
 export interface UpdateProfileDto {
@@ -79,7 +61,6 @@ export interface UpdateAddressDto {
 export class ProfileService {
   private apiUrl = `${environment.apiUrl}/Profile`;
 
-  // State management
   private profileSubject = new BehaviorSubject<UserProfileDto | null>(null);
   public profile$ = this.profileSubject.asObservable();
 
@@ -88,10 +69,6 @@ export class ProfileService {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Get user profile from API
-   * GET: /api/Profile
-   */
   getProfile(): Observable<UserProfileDto> {
     this.loadingSubject.next(true);
 
@@ -109,10 +86,6 @@ export class ProfileService {
     );
   }
 
-  /**
-   * Update personal information
-   * PUT: /api/Profile
-   */
   updateProfile(dto: UpdateProfileDto): Observable<UserProfileDto> {
     this.loadingSubject.next(true);
 
@@ -130,10 +103,6 @@ export class ProfileService {
     );
   }
 
-  /**
-   * Update address
-   * PUT: /api/Profile/address
-   */
   updateAddress(dto: UpdateAddressDto): Observable<AddressDto> {
     return this.http.put<AddressDto>(`${this.apiUrl}/address`, dto).pipe(
       tap((updatedAddress) => {
@@ -153,10 +122,6 @@ export class ProfileService {
     );
   }
 
-  /**
-   * Update notification preferences
-   * PUT: /api/Profile/notifications
-   */
   updateNotificationPreferences(
     dto: NotificationPreferencesDto
   ): Observable<NotificationPreferencesDto> {
@@ -178,32 +143,6 @@ export class ProfileService {
     );
   }
 
-  /**
-   * ✅ Get user achievements from API
-   * GET: /api/Profile/achievements
-   */
-  getAchievements(): Observable<AchievementDto[]> {
-    return this.http.get<AchievementDto[]>(`${this.apiUrl}/achievements`).pipe(
-      tap((achievements) => {
-        const currentProfile = this.profileSubject.value;
-        if (currentProfile) {
-          this.profileSubject.next({
-            ...currentProfile,
-            achievements,
-          });
-        }
-        console.log('✅ Achievements loaded:', achievements);
-      }),
-      catchError((error) => {
-        console.error('❌ Error fetching achievements:', error);
-        return throwError(() => error);
-      })
-    );
-  }
-
-  /**
-   * Clear profile data (on logout)
-   */
   clearProfile(): void {
     this.profileSubject.next(null);
   }

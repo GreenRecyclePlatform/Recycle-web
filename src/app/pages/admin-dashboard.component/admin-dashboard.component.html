@@ -1,129 +1,234 @@
 <div class="dashboard-container">
-  <!-- Header -->
-  <div class="page-header">
-    <div class="header-content">
-      <h1 class="page-title">📊 Dashboard</h1>
-      <p class="page-subtitle">Welcome back! Here's what's happening today</p>
+  <!-- Access Denied Message -->
+  <div *ngIf="accessDenied" class="access-denied-container">
+    <div class="access-denied-card">
+      <div class="access-denied-icon">🔒</div>
+      <h2>Access Denied</h2>
+      <p>{{ errorMessage }}</p>
+      <div class="spinner-border text-danger mt-3" role="status"></div>
+      <p class="mt-2 text-muted">Redirecting...</p>
     </div>
-    <button class="btn-refresh" (click)="refreshDashboard()">
-      <span class="refresh-icon">🔄</span>
-      Refresh
-    </button>
-  </div>
-
-  <!-- Loading State -->
-  <div *ngIf="isLoading" class="loading-state">
-    <div class="spinner-border text-success" role="status"></div>
-    <p>Loading dashboard...</p>
-  </div>
-
-  <!-- Error Message -->
-  <div *ngIf="errorMessage" class="error-message">
-    <i class="icon-alert">⚠️</i>
-    <span>{{ errorMessage }}</span>
   </div>
 
   <!-- Dashboard Content -->
-  <div *ngIf="!isLoading" class="dashboard-content">
-
-    <!-- Stats Grid -->
-    <div class="stats-grid">
-      <!-- Total Requests -->
-      <div class="stat-card stat-primary">
-        <div class="stat-icon">📋</div>
-        <div class="stat-info">
-          <h3 class="stat-value">{{ stats.totalRequests }}</h3>
-          <p class="stat-label">Total Requests</p>
-        </div>
+  <div *ngIf="!accessDenied">
+    <!-- Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <h1 class="page-title">📊 Dashboard</h1>
+        <p class="page-subtitle">Welcome back! Here's what's happening today</p>
       </div>
-
-      <!-- Active Drivers -->
-      <div class="stat-card stat-success">
-        <div class="stat-icon">👥</div>
-        <div class="stat-info">
-          <h3 class="stat-value">{{ stats.activeDrivers }}</h3>
-          <p class="stat-label">Active Drivers</p>
-        </div>
-      </div>
-
-      <!-- Completed Pickups -->
-      <div class="stat-card stat-info">
-        <div class="stat-icon">✅</div>
-        <div class="stat-info">
-          <h3 class="stat-value">{{ stats.completedPickups }}</h3>
-          <p class="stat-label">Completed Pickups</p>
-        </div>
-      </div>
-
-      <!-- Pending Approvals -->
-      <div class="stat-card stat-warning">
-        <div class="stat-icon">⏳</div>
-        <div class="stat-info">
-          <h3 class="stat-value">{{ stats.pendingApprovals }}</h3>
-          <p class="stat-label">Pending Approvals</p>
-        </div>
-      </div>
+      <button class="btn-refresh" (click)="refreshDashboard()">
+        <span class="refresh-icon">🔄</span>
+        Refresh
+      </button>
     </div>
 
-    <!-- Main Grid -->
-    <div class="main-grid">
-
-      <!-- Today's Summary -->
-      <div class="card summary-card">
-        <h2 class="card-title">📅 Today's Summary</h2>
-        <div class="summary-content">
-
-          <div class="summary-item">
-            <div class="summary-icon">🚀</div>
-            <div class="summary-info">
-              <h3>{{ stats.todayPickups }}</h3>
-              <p>Pickups Today</p>
-            </div>
-          </div>
-
-          <div class="summary-divider"></div>
-
-          <div class="summary-item">
-            <div class="summary-icon">💰</div>
-            <div class="summary-info">
-              <h3>EGP {{ stats.revenueThisMonth.toLocaleString() }}</h3>
-              <p>Revenue This Month</p>
-            </div>
-          </div>
-
-          <div class="summary-divider"></div>
-
-          <div class="summary-item">
-            <div class="summary-icon">📈</div>
-            <div class="summary-info">
-              <h3>{{ ((stats.completedPickups / stats.totalRequests) * 100).toFixed(1) }}%</h3>
-              <p>Completion Rate</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Recent Activity -->
-      <div class="card activity-card">
-        <h2 class="card-title">🕐 Recent Activity</h2>
-
-        <div class="activity-list" *ngIf="recentActivities.length > 0">
-          <div
-            *ngFor="let activity of recentActivities"
-            class="activity-item"
-            [ngClass]="getActivityClass(activity.type)">
-            <div class="activity-icon">{{ activity.icon }}</div>
-            <div class="activity-content">
-              <p class="activity-message">{{ activity.message }}</p>
-              <span class="activity-time">{{ getTimeAgo(activity.timestamp) }}</span>
-            </div>
-          </div>
-        </div>
-
-        <div *ngIf="recentActivities.length === 0" class="empty-state">
-          <p>No recent activity</p>
-        </div>
-      </div>
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="spinner-border text-success" role="status"></div>
+      <p>Loading dashboard...</p>
     </div>
+
+    <!-- Error Message (non-access related) -->
+    <div *ngIf="errorMessage && !accessDenied" class="error-message">
+      <i class="icon-alert">⚠️</i>
+      <span>{{ errorMessage }}</span>
+    </div>
+
+<<<<<<< madonna
+    <!-- Dashboard Content -->
+    <div *ngIf="!isLoading" class="dashboard-content">
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+=======
+    <!-- TOP SECTION: 4 Cards + Recent Activity + Today's Summary -->
+    <div class="top-section">
+      
+      <!-- Stats Grid - 4 cards -->
+      <div class="stats-grid stats-grid-4">
+>>>>>>> dev
+        <!-- Total Requests -->
+        <div class="stat-card stat-primary">
+          <div class="stat-icon">📋</div>
+          <div class="stat-info">
+            <h3 class="stat-value">{{ stats.totalRequests }}</h3>
+            <p class="stat-label">Total Requests</p>
+          </div>
+        </div>
+
+        <!-- Active Drivers -->
+        <div class="stat-card stat-success">
+          <div class="stat-icon">👥</div>
+          <div class="stat-info">
+            <h3 class="stat-value">{{ stats.activeDrivers }}</h3>
+            <p class="stat-label">Active Drivers</p>
+          </div>
+        </div>
+
+        <!-- Completed Pickups -->
+        <div class="stat-card stat-info">
+          <div class="stat-icon">✅</div>
+          <div class="stat-info">
+            <h3 class="stat-value">{{ stats.completedPickups }}</h3>
+            <p class="stat-label">Completed Pickups</p>
+          </div>
+        </div>
+
+        <!-- Pending Approvals -->
+        <div class="stat-card stat-warning">
+          <div class="stat-icon">⏳</div>
+          <div class="stat-info">
+            <h3 class="stat-value">{{ stats.pendingApprovals }}</h3>
+            <p class="stat-label">Pending Approvals</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Grid -->
+      <div class="main-grid">
+        <!-- Today's Summary -->
+        <div class="card summary-card">
+          <h2 class="card-title">📅 Today's Summary</h2>
+          <div class="summary-content">
+            <div class="summary-item">
+              <div class="summary-icon">🚀</div>
+              <div class="summary-info">
+                <h3>{{ stats.todayPickups }}</h3>
+                <p>Pickups Today</p>
+              </div>
+            </div>
+
+            <div class="summary-divider"></div>
+
+            <div class="summary-item">
+              <div class="summary-icon">💰</div>
+              <div class="summary-info">
+                <h3>EGP {{ stats.revenueThisMonth.toLocaleString() }}</h3>
+                <p>Revenue This Month</p>
+              </div>
+            </div>
+
+            <div class="summary-divider"></div>
+
+            <div class="summary-item">
+              <div class="summary-icon">📈</div>
+              <div class="summary-info">
+                <h3>{{ ((stats.completedPickups / stats.totalRequests) * 100).toFixed(1) }}%</h3>
+                <p>Completion Rate</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="card activity-card">
+          <h2 class="card-title">🕐 Recent Activity</h2>
+
+          <div class="activity-list" *ngIf="recentActivities.length > 0">
+            <div
+              *ngFor="let activity of recentActivities"
+              class="activity-item"
+              [ngClass]="getActivityClass(activity.type)">
+              <div class="activity-icon">{{ activity.icon }}</div>
+              <div class="activity-content">
+                <p class="activity-message">{{ activity.message }}</p>
+                <span class="activity-time">{{ getTimeAgo(activity.timestamp) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="recentActivities.length === 0" class="empty-state">
+            <p>No recent activity</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- BOTTOM SECTION: Payment Section with 3 Cards + Orders Table -->
+    <div class="bottom-section">
+      
+      <h2 class="section-title">💳 Payment Overview</h2>
+
+      <!-- Stats Grid - 3 cards -->
+      <div class="stats-grid stats-grid-3">
+        <!-- Total Revenue -->
+        <div class="stat-card stat-revenue">
+          <div class="stat-icon">💰</div>
+          <div class="stat-info">
+            <h3 class="stat-value">{{ formatRevenue(stats.totalRevenue) }} EGP</h3>
+            <p class="stat-label">Total Revenue</p>
+          </div>
+        </div>
+
+        <!-- Completed Orders -->
+        <div class="stat-card stat-orders">
+          <div class="stat-icon">📦</div>
+          <div class="stat-info">
+            <h3 class="stat-value">{{ stats.completedOrdersCount }}</h3>
+            <p class="stat-label">Completed Orders</p>
+          </div>
+        </div>
+
+        <!-- Pending Payments -->
+        <div class="stat-card stat-pending-payment">
+          <div class="stat-icon">⏰</div>
+          <div class="stat-info">
+            <h3 class="stat-value">{{ formatRevenue(stats.pendingPayments) }} EGP</h3>
+            <p class="stat-label">Pending Payments</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orders Table -->
+      <div class="card orders-table-card">
+        <div class="orders-header">
+          <h2 class="card-title">📦 Recent Supplier Orders</h2>
+          <span class="orders-count">{{ allOrders.length }} orders</span>
+        </div>
+
+        <div class="orders-table-container" *ngIf="allOrders.length > 0">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Supplier</th>
+                <th>Total Amount</th>
+                <th>Items</th>
+                <th>Order Date</th>
+                <th>Payment Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let order of allOrders.slice(0, 10)">
+                <td class="supplier-name">
+                  <i class="supplier-icon">🏢</i>
+                  {{ order.supplierName }}
+                </td>
+                <td class="amount">{{ formatCurrency(order.totalAmount) }}</td>
+                <td class="items-count">
+                  <span class="badge-count">{{ order.itemsCount }}</span>
+                </td>
+                <td>{{ formatDate(order.orderDate) }}</td>
+                <td>{{ order.paidAt ? formatDate(order.paidAt) : '-' }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="getStatusClass(order.paymentStatus)">
+                    {{ getStatusText(order.paymentStatus) }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="allOrders.length === 0" class="empty-state">
+          <p>📭 No orders found</p>
+        </div>
+      </div>
+
+    </div>
+    <!-- END BOTTOM SECTION -->
+
   </div>
 </div>

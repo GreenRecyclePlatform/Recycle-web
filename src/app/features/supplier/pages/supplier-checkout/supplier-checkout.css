@@ -1,4 +1,3 @@
-
 .checkout-container {
   min-height: 100vh;
   background: #f9fafb;
@@ -219,6 +218,137 @@
   color: #374151;
 }
 
+/* ==================== Success Modal ==================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.success-modal {
+  background: white;
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  max-width: 450px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.success-icon {
+  margin-bottom: 1.5rem;
+}
+
+.checkmark-circle {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #2d6a4f 0%, #52b788 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: scaleIn 0.5s ease 0.2s backwards;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.checkmark {
+  width: 30px;
+  height: 50px;
+  border: solid white;
+  border-width: 0 5px 5px 0;
+  transform: rotate(45deg);
+  animation: checkmark 0.4s ease 0.5s backwards;
+}
+
+@keyframes checkmark {
+  from {
+    height: 0;
+  }
+  to {
+    height: 50px;
+  }
+}
+
+.success-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1e4d38;
+  margin: 0 0 1rem 0;
+}
+
+.success-message {
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 0 0 0.75rem 0;
+}
+
+.success-details {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin: 0 0 2rem 0;
+}
+
+.success-details strong {
+  color: #2d6a4f;
+  font-weight: 600;
+}
+
+.btn-success {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #2d6a4f 0%, #1e4d38 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(45, 106, 79, 0.3);
+}
+
 /* ==================== Responsive ==================== */
 @media (max-width: 768px) {
   .checkout-container {
@@ -237,5 +367,13 @@
 
   .item-price {
     align-self: flex-end;
+  }
+
+  .success-modal {
+    padding: 2rem 1.5rem;
+  }
+
+  .success-title {
+    font-size: 1.5rem;
   }
 }
