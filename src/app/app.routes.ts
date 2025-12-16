@@ -30,26 +30,22 @@ export const routes: Routes = [
   //     { path: 'manage-materials', component: ManageMaterials },
   //   ],
   // },
-/*{
- path: 'admin',
-     children: [
-   { path: 'drivers', component: AllDrivers },  
-      { path: 'assign-drivers', component: AssignDriver },  
-      {path:'settings',component:Settings},
-      {path:'manage-materials',component:ManageMaterials},
-{path:'payments' , component:AdminPaymentsComponent, data:{ roles: ['Admin'] }}]},*/
+  /*{
+   path: 'admin',
+       children: [
+     { path: 'drivers', component: AllDrivers },  
+        { path: 'assign-drivers', component: AssignDriver },  
+        {path:'settings',component:Settings},
+        {path:'manage-materials',component:ManageMaterials},
+  {path:'payments' , component:AdminPaymentsComponent, data:{ roles: ['Admin'] }}]},*/
 
   {
     path: 'driver',
     children: [
-     
       { path: 'DashBoardDrivers', component: DriverDashboard },
       { path: 'DriverProfile', component: Profiledriver },
     ]
-   },
- 
-
-   
+  },
 
   { path: '', component: LandingPage },
   { path: 'login', component: LoginPage },
@@ -58,14 +54,13 @@ export const routes: Routes = [
   { path: 'reset-password', component: ResetPassword },
   { path: 'profile', component: ProfileComponent },
 
-
-
   {
     path: 'supplier',
     children: supplierRoutes,
     // Add Auth Guard here if needed
     // canActivate: [AuthGuard]
   },
+
   // Driver routes
   { path: 'DashBoardDrivers', component: DriverDashboard },
   { path: 'DriverProfile', component: Profiledriver },
@@ -85,6 +80,7 @@ export const routes: Routes = [
       ),
     //canActivate: [authGuard],
   },
+
   // Payments Module
   {
     path: 'payments',
@@ -105,14 +101,10 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         component: AdminDashboardComponent,
-        data: { title: 'Dashboard' }
-      },
-
-      { path: 'drivers', component: AllDrivers },
         canActivate: [adminPagesGuard], // ✅ Use new guard
         data: { title: 'Dashboard' }
       },
-           { path: 'drivers', component: AllDrivers },
+      { path: 'drivers', component: AllDrivers },
       { path: 'assign-drivers', component: AssignDriver },
       {
         path: 'manage-materials',
@@ -120,7 +112,7 @@ export const routes: Routes = [
         canActivate: [adminPagesGuard], // ✅ Use new guard
         data: { title: 'Manage Materials' }
       },
-            { path: 'review-requests', component: ReviewRequests },
+      { path: 'review-requests', component: ReviewRequests },
       // {
       //   path: 'manage-materials',
       //   loadComponent: () =>
@@ -130,7 +122,7 @@ export const routes: Routes = [
         path: 'settings',
         loadComponent: () => import('./features/admin/settings/settings').then((m) => m.Settings),
       },
-    ],
+    ]
   },
 
   // Catch all - ONLY ONE AT THE END
