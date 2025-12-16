@@ -5,6 +5,7 @@ export interface CreatePickupRequestDto {
     preferredPickupDate: Date;
     notes?: string;
     materials: RequestMaterialItem[];
+    payPalEmail: string;  // ✅ ADD THIS LINE
 }
 
 export interface UpdatePickupRequestDto {

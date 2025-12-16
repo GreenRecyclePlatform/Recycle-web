@@ -106,7 +106,7 @@ export class RequestDetails implements OnInit {
   }
 
   canEdit(): boolean {
-    return this.request?.status === RequestStatus.Pending;
+    return this.request?.status === RequestStatus.Pending || this.request?.status === RequestStatus.Waiting;
   }
 
   canDelete(): boolean {

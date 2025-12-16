@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-[#F8F9FA] py-8">
+<div pd class="min-h-screen bg-[#F8F9FA] py-8 pt-20">
     <div class="container mx-auto px-4 max-w-6xl">
         <!-- Header -->
         <div class="mb-8">
@@ -22,6 +22,74 @@
             <div class="grid lg:grid-cols-3 gap-6">
                 <!-- Main Form Column -->
                 <div class="lg:col-span-2 space-y-6">
+
+                    <!-- NEW: PayPal Payment Information Card -->
+                    <div
+                        class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200 shadow-sm overflow-hidden">
+                        <div class="p-6 border-b border-blue-200 bg-white/50">
+                            <h2 class="text-xl font-semibold text-[#212529] flex items-center gap-2">
+                                <svg class="w-6 h-6 text-[#0070BA]" fill="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.93 4.778-4.005 7.201-9.138 7.201h-2.19a.563.563 0 0 0-.556.479l-1.187 7.527h-.506l-.24 1.516a.56.56 0 0 0 .554.647h3.882c.46 0 .85-.334.922-.788.06-.26.76-4.852.76-4.852a.932.932 0 0 1 .922-.788h.58c3.76 0 6.705-1.528 7.565-5.946.36-1.847.174-3.388-.778-4.471z" />
+                                </svg>
+                                PayPal Payment Information
+                            </h2>
+                            <p class="text-sm text-gray-600 mt-2">Enter your PayPal email to receive payment when pickup
+                                is completed</p>
+                        </div>
+                        <div class="p-6">
+                            <label for="paypalEmail" class="block text-sm font-medium text-gray-700 mb-2">
+                                PayPal Email Address <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                                <input type="email" id="paypalEmail" formControlName="paypalEmail"
+                                    placeholder="your-sandbox-email@personal.example.com"
+                                    class="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
+                                    [class.border-red-500]="requestForm.get('paypalEmail')?.invalid && requestForm.get('paypalEmail')?.touched">
+                            </div>
+                            <p *ngIf="requestForm.get('paypalEmail')?.hasError('required') && requestForm.get('paypalEmail')?.touched"
+                                class="text-red-500 text-sm mt-2 flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                PayPal email is required
+                            </p>
+                            <p *ngIf="requestForm.get('paypalEmail')?.hasError('email') && requestForm.get('paypalEmail')?.touched"
+                                class="text-red-500 text-sm mt-2 flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Please enter a valid email address
+                            </p>
+
+                            <!-- PayPal Info Box -->
+                            <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                <div class="flex items-start gap-3">
+                                    <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <div class="text-sm text-blue-800">
+                                        <p class="font-medium mb-1">Important:</p>
+                                        <ul class="list-disc list-inside space-y-1 text-blue-700">
+                                            <li>Use your PayPal Sandbox personal account email for testing</li>
+                                            <li>Payment will be sent automatically after pickup completion</li>
+                                            <li>Make sure your PayPal account is verified</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Address Selection Card -->
                     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                         <div class="p-6 border-b border-gray-200">
@@ -58,7 +126,6 @@
                                     Please select an address
                                 </p>
                             </div>
-
                             @if (addresses.length === 0) {
                             <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start gap-3">
                                 <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none"
@@ -67,7 +134,7 @@
                                         d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 <div>
-                                    <p class="text-blue-800 text-sm font-medium mb-1">ليس لديك عناوين محفوظة</p>
+                                    <p class="text-blue-800 text-sm font-medium mb-1">No saved addresses</p>
                                     <a href="/addresses/create"
                                         class="text-blue-600 hover:text-blue-700 text-sm font-semibold underline">
                                         Add a new address
@@ -108,13 +175,12 @@
                                     Please select a valid date
                                 </p>
                             </div>
-
                             <div>
                                 <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">
                                     Additional Notes (Optional)
                                 </label>
                                 <textarea id="notes" formControlName="notes" rows="3"
-                                    placeholder=" Any Additional Details You Want the Driver to Know..."
+                                    placeholder="Any Additional Details You Want the Driver to Know..."
                                     class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] outline-none transition-all resize-none"></textarea>
                             </div>
                         </div>
@@ -129,7 +195,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                                 </svg>
-                                Recyclable Materials You Want to Sell
+                                Recyclable Materials
                             </h2>
                             <button type="button" (click)="addMaterialRow()"
                                 class="inline-flex items-center gap-2 bg-[#2D6A4F] hover:bg-[#2D6A4F]/90 text-white px-4 py-2 rounded-lg transition font-medium text-sm">
@@ -146,7 +212,6 @@
                                 <div [formGroupName]="$index"
                                     class="border border-gray-200 rounded-xl p-4 hover:border-[#2D6A4F]/30 transition-colors">
                                     <div class="grid md:grid-cols-3 gap-4">
-                                        <!-- Material Selection -->
                                         <div class="md:col-span-1">
                                             <label [for]="'material-' + $index"
                                                 class="block text-sm font-medium text-gray-700 mb-2">
@@ -155,15 +220,13 @@
                                             <select [id]="'material-' + $index" formControlName="materialId"
                                                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] outline-none transition-all"
                                                 [class.border-red-500]="material.get('materialId')?.invalid && material.get('materialId')?.touched">
-                                                <option value="">-- Please Select a Material--</option>
+                                                <option value="">-- Select Material --</option>
                                                 @for (mat of materials; track mat.id) {
-                                                <option [value]="mat.id">{{ mat.name }} ({{ mat.pricePerKg }} ج.م/كجم)
+                                                <option [value]="mat.id">{{ mat.name }} ({{ mat.pricePerKg }} EGP/kg)
                                                 </option>
                                                 }
                                             </select>
                                         </div>
-
-                                        <!-- Weight -->
                                         <div>
                                             <label [for]="'weight-' + $index"
                                                 class="block text-sm font-medium text-gray-700 mb-2">
@@ -174,15 +237,13 @@
                                                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] outline-none transition-all"
                                                 [class.border-red-500]="material.get('estimatedWeight')?.invalid && material.get('estimatedWeight')?.touched">
                                         </div>
-
-                                        <!-- Total & Delete -->
                                         <div class="flex items-end gap-2">
                                             <div class="flex-1">
                                                 <label
-                                                    class="block text-sm font-medium text-gray-700 mb-2">الإجمالي</label>
+                                                    class="block text-sm font-medium text-gray-700 mb-2">Total</label>
                                                 <div
                                                     class="px-4 py-2.5 bg-green-50 border border-green-200 rounded-lg text-green-700 font-semibold text-center">
-                                                    {{ calculateMaterialTotal($index).toFixed(2) }} ج.م
+                                                    {{ calculateMaterialTotal($index).toFixed(2) }} EGP
                                                 </div>
                                             </div>
                                             @if (materialsFormArray.length > 1) {
@@ -201,18 +262,6 @@
                                 </div>
                                 }
                             </div>
-
-                            @if (materialsFormArray.length === 0) {
-                            <div class="text-center py-8 text-gray-500">
-                                <svg class="w-16 h-16 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                </svg>
-                                <p>No materials added yet</p>
-                                <p class="text-sm mt-1">Click "Add Material" to get started</p>
-                            </div>
-                            }
                         </div>
                     </div>
                 </div>
@@ -229,24 +278,21 @@
                                 </svg>
                                 Request Summary
                             </h3>
-
                             <div class="space-y-4">
                                 <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
                                     <p class="text-white/80 text-sm mb-1">Total Weight</p>
                                     <p class="text-3xl font-bold">{{ calculateTotalWeight().toFixed(2) }}</p>
                                     <p class="text-white/60 text-xs mt-1">Kilograms</p>
                                 </div>
-
                                 <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                                    <p class="text-white/80 text-sm mb-1">Expected Profit </p>
+                                    <p class="text-white/80 text-sm mb-1">Expected Earnings</p>
                                     <p class="text-3xl font-bold">{{ calculateGrandTotal().toFixed(2) }}</p>
-                                    <p class="text-white/60 text-xs mt-1">Egyptian Pounds </p>
+                                    <p class="text-white/60 text-xs mt-1">Egyptian Pounds</p>
                                 </div>
-
                                 <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                                    <p class="text-white/80 text-sm mb-1">Number of Materials/p>
+                                    <p class="text-white/80 text-sm mb-1">Number of Materials</p>
                                     <p class="text-3xl font-bold">{{ materialsFormArray.length }}</p>
-                                    <p class="text-white/60 text-xs mt-1">عنصر</p>
+                                    <p class="text-white/60 text-xs mt-1">Items</p>
                                 </div>
                             </div>
                         </div>
@@ -268,6 +314,14 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M5 13l4 4L19 7" />
                                     </svg>
+                                    Payment will be sent to your PayPal automatically
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <svg class="w-4 h-4 text-[#2D6A4F] flex-shrink-0 mt-0.5" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
                                     Your request will be processed within 24 hours
                                 </li>
                                 <li class="flex items-start gap-2">
@@ -276,15 +330,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M5 13l4 4L19 7" />
                                     </svg>
-                                    The Pickup date will be confirmed shortly
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <svg class="w-4 h-4 text-[#2D6A4F] flex-shrink-0 mt-0.5" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    The Prices are subject to change based on actual Weight
+                                    Prices are subject to actual weight measurement
                                 </li>
                             </ul>
                         </div>
@@ -301,7 +347,7 @@
                 <button type="submit" [disabled]="isSubmitting || requestForm.invalid"
                     class="flex-1 bg-[#2D6A4F] hover:bg-[#2D6A4F]/90 text-white px-6 py-3 rounded-lg transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2">
                     @if (!isSubmitting) {
-                    <span> Create The Request</span>
+                    <span>Create Request</span>
                     }
                     @if (isSubmitting) {
                     <span class="flex items-center gap-2">
@@ -312,7 +358,7 @@
                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                             </path>
                         </svg>
-                        Creating The Request...
+                        Creating Request...
                     </span>
                     }
                 </button>

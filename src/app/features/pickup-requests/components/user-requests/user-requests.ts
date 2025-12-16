@@ -12,7 +12,8 @@ import { RequestStatus, REQUEST_STATUS_COLORS, REQUEST_STATUS_LABELS } from '../
   standalone: true,  // ✅ Standalone flag
   imports: [
     CommonModule,    // ✅ For @if, @for
-    FormsModule      // ✅ For [(ngModel)]
+    FormsModule,// ✅ For [(ngModel)]
+
   ],
   templateUrl: './user-requests.html',
   styleUrls: ['./user-requests.css']
@@ -88,7 +89,7 @@ export class UserRequests implements OnInit {
   }
 
   canEdit(request: PickupRequest): boolean {
-    return request.status === RequestStatus.Pending;
+    return request.status === RequestStatus.Pending || request.status === RequestStatus.Waiting;
   }
 
   canDelete(request: PickupRequest): boolean {

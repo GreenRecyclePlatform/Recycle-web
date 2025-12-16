@@ -1,72 +1,50 @@
-// src/app/features/payments/components/admin-payment-dashboard/admin-payment-dashboard.ts
-
+// src/app/features/payments/components/admin-payment-dashboard/admin-payment-dashboard.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PaymentService } from '../../services/payment.service';
+import { Navbar } from "../../../../shared/components/navbar/navbar";
+
 import {
   Payment,
-  PaymentFilter,
   PaymentStatus,
-  PaymentType,
-  PAYMENT_STATUS_LABELS,
-  PAYMENT_TYPE_LABELS
+  PAYMENT_STATUS_LABELS
 } from '../../models/payment.model';
-
-interface PaymentStats {
-  totalPayments: number;
-  totalEarnings: number;
-  totalWithdrawals: number;
-  pendingWithdrawals: number;
-  processingWithdrawals: number;
-  completedToday: number;
-  failedPayments: number;
-}
 
 @Component({
   selector: 'app-admin-payment-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, Navbar],
   templateUrl: './admin-payment-dashboard.html',
   styleUrls: ['./admin-payment-dashboard.css']
 })
-export class AdminPaymentDashboard implements OnInit {
+export class AdminPaymentDashboardComponent implements OnInit {
   payments: Payment[] = [];
   filteredPayments: Payment[] = [];
   isLoading = false;
   error: string | null = null;
 
+  // Filter
+  selectedStatus: string = 'Pending';
+
   // Stats
-  stats: PaymentStats = {
-    totalPayments: 0,
-    totalEarnings: 0,
-    totalWithdrawals: 0,
-    pendingWithdrawals: 0,
-    processingWithdrawals: 0,
-    completedToday: 0,
-    failedPayments: 0
-  };
-
-  // Filter properties
-  selectedType: string = 'all';
-  selectedStatus: string = 'all';
-  searchTerm: string = '';
-  fromDate: string = '';
-  toDate: string = '';
-
-  // Pagination
-  currentPage = 1;
-  pageSize = 15;
-  totalCount = 0;
-  totalPages = 0;
+  pendingCount = 0;
+  approvedTodayCount = 0;
+  totalPaidAmount = 0;
+  failedCount = 0;
 
   // Labels
   statusLabels = PAYMENT_STATUS_LABELS;
-  typeLabels = PAYMENT_TYPE_LABELS;
-  availableStatuses = Object.keys(PaymentStatus);
-  availableTypes = Object.keys(PaymentType);
+
+  // Selected payment for modal
+  selectedPayment: Payment | null = null;
+  showApprovalModal = false;
+  showRejectionModal = false;
+  adminNotes = '';
+  rejectionReason = '';
+  isProcessing = false;
 
   constructor(
     private paymentService: PaymentService,
@@ -74,31 +52,19 @@ export class AdminPaymentDashboard implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.loadAllPayments();
+    this.loadPayments();
   }
 
-  loadAllPayments(): void {
+  loadPayments(): void {
     this.isLoading = true;
     this.error = null;
 
-    const filter: PaymentFilter = {
-      type: this.selectedType !== 'all' ? (this.selectedType as PaymentType) : undefined,
-      status: this.selectedStatus !== 'all' ? (this.selectedStatus as PaymentStatus) : undefined,
-      fromDate: this.fromDate ? new Date(this.fromDate) : undefined,
-      toDate: this.toDate ? new Date(this.toDate) : undefined,
-      pageNumber: this.currentPage,
-      pageSize: this.pageSize
-    };
-
-    // Admin can see all payments
-    this.paymentService.filter(filter).subscribe({
-      next: (response) => {
-        this.payments = response.data;
-        this.filteredPayments = response.data;
-        this.totalCount = response.totalCount;
-        this.totalPages = response.totalPages;
+    // Get all payments
+    this.paymentService.getAll().subscribe({
+      next: (data: Payment[]) => {
+        this.payments = data;
         this.calculateStats();
-        this.applyLocalFilters();
+        this.filterByStatus(this.selectedStatus);
         this.isLoading = false;
       },
       error: (err: HttpErrorResponse) => {
@@ -110,93 +76,112 @@ export class AdminPaymentDashboard implements OnInit {
   }
 
   calculateStats(): void {
-    // Get all payments for stats (not just current page)
-    this.paymentService.getAll().subscribe({
-      next: (allPayments) => {
-        this.stats.totalPayments = allPayments.length;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-        this.stats.totalEarnings = allPayments
-          .filter(p => p.type === PaymentType.Earning && p.status === PaymentStatus.Completed)
-          .reduce((sum, p) => sum + p.amount, 0);
+    this.pendingCount = this.payments.filter(p => p.status === PaymentStatus.Pending).length;
 
-        this.stats.totalWithdrawals = allPayments
-          .filter(p => p.type === PaymentType.Withdrawal && p.status === PaymentStatus.Completed)
-          .reduce((sum, p) => sum + p.amount, 0);
+    this.approvedTodayCount = this.payments.filter(p => {
+      if (p.status === PaymentStatus.Completed && p.completedAt) {
+        const completedDate = new Date(p.completedAt);
+        completedDate.setHours(0, 0, 0, 0);
+        return completedDate.getTime() === today.getTime();
+      }
+      return false;
+    }).length;
 
-        this.stats.pendingWithdrawals = allPayments
-          .filter(p => p.type === PaymentType.Withdrawal && p.status === PaymentStatus.Pending)
-          .length;
+    this.totalPaidAmount = this.payments
+      .filter(p => p.status === PaymentStatus.Completed)
+      .reduce((sum, p) => sum + p.amount, 0);
 
-        this.stats.processingWithdrawals = allPayments
-          .filter(p => p.type === PaymentType.Withdrawal && p.status === PaymentStatus.Processing)
-          .length;
+    this.failedCount = this.payments.filter(p =>
+      p.status === PaymentStatus.Failed || p.status === PaymentStatus.Cancelled
+    ).length;
+  }
 
-        this.stats.failedPayments = allPayments
-          .filter(p => p.status === PaymentStatus.Failed)
-          .length;
+  filterByStatus(status: string): void {
+    this.selectedStatus = status;
 
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        this.stats.completedToday = allPayments
-          .filter(p => p.status === PaymentStatus.Completed &&
-            new Date(p.completedAt || p.createdAt) >= today)
-          .length;
+    if (status === 'All') {
+      this.filteredPayments = this.payments;
+    } else {
+      this.filteredPayments = this.payments.filter(p => p.status === status);
+    }
+  }
+
+  openApprovalModal(payment: Payment): void {
+    this.selectedPayment = payment;
+    this.adminNotes = '';
+    this.showApprovalModal = true;
+  }
+
+  openRejectionModal(payment: Payment): void {
+    this.selectedPayment = payment;
+    this.rejectionReason = '';
+    this.showRejectionModal = true;
+  }
+
+  closeModals(): void {
+    this.showApprovalModal = false;
+    this.showRejectionModal = false;
+    this.selectedPayment = null;
+    this.adminNotes = '';
+    this.rejectionReason = '';
+  }
+
+  approvePayment(): void {
+    if (!this.selectedPayment) return;
+
+    this.isProcessing = true;
+    const adminId = this.getCurrentAdminId(); // You need to implement this
+
+    this.paymentService.approvePayment(
+      this.selectedPayment.paymentId,
+      adminId,
+      this.adminNotes || undefined
+    ).subscribe({
+      next: (response) => {
+        alert(response.message || 'Payment approved and sent via PayPal successfully!');
+        this.closeModals();
+        this.loadPayments(); // Reload to get updated data
+        this.isProcessing = false;
       },
-      error: (err) => {
-        console.error('Error calculating stats:', err);
+      error: (err: HttpErrorResponse) => {
+        alert('Failed to approve payment: ' + (err.error?.message || 'Unknown error'));
+        this.isProcessing = false;
       }
     });
   }
 
-  applyLocalFilters(): void {
-    this.filteredPayments = this.payments.filter(payment => {
-      const matchesSearch = !this.searchTerm ||
-        payment.paymentId.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        payment.userName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        payment.transactionId?.toLowerCase().includes(this.searchTerm.toLowerCase());
+  rejectPayment(): void {
+    if (!this.selectedPayment || !this.rejectionReason.trim()) {
+      alert('Please provide a reason for rejection');
+      return;
+    }
 
-      return matchesSearch;
+    this.isProcessing = true;
+    const adminId = this.getCurrentAdminId();
+
+    this.paymentService.rejectPayment(
+      this.selectedPayment.paymentId,
+      adminId,
+      this.rejectionReason
+    ).subscribe({
+      next: (response) => {
+        alert(response.message || 'Payment rejected successfully');
+        this.closeModals();
+        this.loadPayments();
+        this.isProcessing = false;
+      },
+      error: (err: HttpErrorResponse) => {
+        alert('Failed to reject payment: ' + (err.error?.message || 'Unknown error'));
+        this.isProcessing = false;
+      }
     });
   }
 
-  onFilterChange(): void {
-    this.currentPage = 1;
-    this.loadAllPayments();
-  }
-
-  onSearchChange(): void {
-    this.applyLocalFilters();
-  }
-
-  clearFilters(): void {
-    this.selectedType = 'all';
-    this.selectedStatus = 'all';
-    this.searchTerm = '';
-    this.fromDate = '';
-    this.toDate = '';
-    this.currentPage = 1;
-    this.loadAllPayments();
-  }
-
   viewDetails(paymentId: string): void {
-    this.router.navigate(['/payments/admin/details', paymentId]);
-  }
-
-  viewPendingWithdrawals(): void {
-    this.selectedType = 'Withdrawal';
-    this.selectedStatus = 'Pending';
-    this.onFilterChange();
-  }
-
-  viewProcessingWithdrawals(): void {
-    this.selectedType = 'Withdrawal';
-    this.selectedStatus = 'Processing';
-    this.onFilterChange();
-  }
-
-  viewFailedPayments(): void {
-    this.selectedStatus = 'Failed';
-    this.onFilterChange();
+    this.router.navigate(['/payments/details', paymentId]);
   }
 
   getStatusBadgeClass(status: string): string {
@@ -210,26 +195,6 @@ export class AdminPaymentDashboard implements OnInit {
     return colorMap[status] || 'bg-gray-100 text-gray-700';
   }
 
-  getTypeBadgeClass(type: string): string {
-    const colorMap: { [key: string]: string } = {
-      'Earning': 'bg-green-100 text-green-700 border-green-200',
-      'Withdrawal': 'bg-blue-100 text-blue-700 border-blue-200',
-      'Refund': 'bg-purple-100 text-purple-700 border-purple-200'
-    };
-    return colorMap[type] || 'bg-gray-100 text-gray-700';
-  }
-
-  goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
-      this.loadAllPayments();
-    }
-  }
-
-  get pages(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
-  }
-
   formatDate(date: Date | string): string {
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -241,23 +206,13 @@ export class AdminPaymentDashboard implements OnInit {
   }
 
   formatCurrency(amount: number): string {
-    return `EGP ${amount.toFixed(2)}`;
+    return `${amount.toFixed(2)} EGP`;
   }
 
-  getAmountClass(type: PaymentType): string {
-    return type === PaymentType.Earning ? 'text-green-600' : 'text-blue-600';
-  }
-
-  getAmountPrefix(type: PaymentType): string {
-    return type === PaymentType.Earning ? '+' : '-';
-  }
-
-  exportToCSV(): void {
-    // TODO: Implement CSV export
-    alert('Export feature coming soon!');
-  }
-
-  manageWithdrawals(): void {
-    this.router.navigate(['/payments/admin/manage-withdrawals']);
+  // Helper method - you need to implement getting admin ID from auth service
+  private getCurrentAdminId(): string {
+    // TODO: Get from AuthService or TokenService
+    // For now, return a placeholder - YOU MUST IMPLEMENT THIS
+    return localStorage.getItem('userId') || '';
   }
 }
