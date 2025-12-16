@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SupplierService } from '../../service/supplierservice';
 import { AvailableMaterial, CartItem } from '../../models/supplier.models';
+import { Navbar } from '../../../../shared/components/navbar/navbar';
 
 @Component({
   selector: 'app-supplier-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,Navbar],
   templateUrl: './supplier-dashboard.html',
   styleUrls: ['./supplier-dashboard.css']
 })

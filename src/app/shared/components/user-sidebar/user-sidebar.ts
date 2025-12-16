@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
@@ -11,17 +11,21 @@ import { Navbar } from "../navbar/navbar";
   templateUrl: './user-sidebar.html',
   styleUrl: './user-sidebar.css',
 })
-export class UserSidebar {
+export class UserSidebar implements OnInit {
 
   
-  userNmae:string='User';
+  userName:string='User';
 userRole:string='User';
   constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.userName = this.authService.getUserName() || "user";
+  }
 
 
  logout(): void {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/']);
   }
 
 }

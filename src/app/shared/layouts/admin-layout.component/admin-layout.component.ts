@@ -42,12 +42,14 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
 
   private loadUserData(): void {
     try {
-      const userDataStr = localStorage.getItem('userData') || sessionStorage.getItem('userData');
+      const userDataStr = true;
+      // localStorage.getItem('userData') || sessionStorage.getItem('userData');
 
       if (userDataStr) {
-        const userData = JSON.parse(userDataStr);
-        this.adminName = userData.name || userData.username || 'Admin User';
-        this.adminRole = userData.role || 'Admin';
+        // const userData = JSON.parse(userDataStr);
+        this.adminName = this.authService.getUserName() || "AdminUser";
+        console.log(`uuuuuuuuuuuuuuuuuuuuuuuuuuu${this.adminName}`);
+        //this.adminRole = userData.role || 'Admin';
       } else {
         const token = localStorage.getItem('token') || sessionStorage.getItem('token');
         if (token) {

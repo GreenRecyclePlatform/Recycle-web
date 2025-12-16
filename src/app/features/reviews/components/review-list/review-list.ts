@@ -18,7 +18,8 @@ import { TokenService } from '../../../../core/services/tokenservice'; // ✅ AD
   templateUrl: './review-list.html',
   styleUrls: ['./review-list.css'],
 })
-export class ReviewListComponent implements OnInit, OnDestroy {
+export class ReviewListComponent implements OnInit, OnDestroy 
+{
   reviews: Review[] = [];
   loading: boolean = false;
   error: string = '';
@@ -43,21 +44,21 @@ export class ReviewListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // ✅ USE TokenService instead of localStorage
-    const token = this.tokenService.getToken();
-    console.log('🔍 Review List - Token check:', {
-      exists: !!token,
-      isExpired: this.tokenService.isTokenExpired(),
-      userId: this.tokenService.getUserId(),
-    });
+    // const token = this.tokenService.getToken();
+    // console.log('🔍 Review List - Token check:', {
+    //   exists: !!token,
+    //   isExpired: this.tokenService.isTokenExpired(),
+    //   userId: this.tokenService.getUserId(),
+    // });
 
-    if (!token || this.tokenService.isTokenExpired()) {
-      console.error('❌ No valid token found! Redirecting to login...');
-      this.error = 'Please login to view your reviews.';
-      setTimeout(() => {
-        this.router.navigate(['/login']);
-      }, 1000);
-      return;
-    }
+    // if (!token || this.tokenService.isTokenExpired()) {
+    //   console.error('❌ No valid token found! Redirecting to login...');
+    //   this.error = 'Please login to view your reviews.';
+    //   setTimeout(() => {
+    //     this.router.navigate(['/login']);
+    //   }, 1000);
+    //   return;
+    // }
 
     // ✅ Token exists and is valid, load reviews
     this.loadReviews();
