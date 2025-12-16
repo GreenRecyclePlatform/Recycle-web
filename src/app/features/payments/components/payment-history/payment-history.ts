@@ -1,11 +1,12 @@
 // src/app/features/payments/components/payment-history/payment-history.ts
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PaymentService } from '../../services/payment.service';
+import { Navbar } from "../../../../shared/components/navbar/navbar";
+
 import {
   Payment,
   PaymentFilter,
@@ -19,7 +20,7 @@ import {
 @Component({
   selector: 'app-payment-history',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, Navbar],
   templateUrl: './payment-history.html',
   styleUrls: ['./payment-history.css']
 })

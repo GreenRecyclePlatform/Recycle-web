@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StatusTimeline } from './status-timeline';
+import { EditRequest } from './edit-request';
 
-describe('StatusTimeline', () => {
-  let component: StatusTimeline;
-  let fixture: ComponentFixture<StatusTimeline>;
+describe('EditRequest', () => {
+  let component: EditRequest;
+  let fixture: ComponentFixture<EditRequest>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StatusTimeline]
+      imports: [EditRequest]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(StatusTimeline);
+    fixture = TestBed.createComponent(EditRequest);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

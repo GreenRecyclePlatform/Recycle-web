@@ -11,7 +11,7 @@ import { Navbar } from '../../../../shared/components/navbar/navbar';
 @Component({
   selector: 'app-assign-driver',
   standalone: true,
-  imports: [CommonModule, FormsModule,Navbar],
+  imports: [CommonModule, FormsModule, Navbar],
   templateUrl: './assign-driver.html',
   styleUrls: ['./assign-driver.css']
 })
@@ -32,7 +32,7 @@ export class AssignDriver implements OnInit {
     private driverService: DriverService,
     private authService: AuthService, // ⬅️ بدل AuthHelperService
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.checkAdminAccess();
@@ -117,50 +117,50 @@ export class AssignDriver implements OnInit {
     this.showConfirmModal = true;
   }
 
-confirmAssignment(): void {
-  if (!this.selectedRequest || !this.pendingDriver) {
-    return;
-  }
-
-  this.showConfirmModal = false;
-  this.isLoading = true;
-  this.errorMessage = '';
-
-  const assignment: AssignmentRequest = {
-    RequestId: this.selectedRequest.id,  
-    DriverId: this.pendingDriver.id   
-  };
-
-  const driver = this.pendingDriver;
-
-  this.driverService.assignRequestToDriver(assignment).subscribe({
-    next: (response) => {
-      console.log('✅ Assignment successful:', response);
-      
-      this.modalMessage = `Request ${this.selectedRequest?.id} has been assigned to Driver ${driver.name} successfully!`;
-      this.showSuccessModal = true;
-      
-      this.approvedRequests = this.approvedRequests.filter(
-        req => req.id !== this.selectedRequest?.id
-      );
-      
-      driver.todayPickups++;
-      
-      this.selectedRequest = null;
-      this.pendingDriver = null;
-      this.isLoading = false;
-    },
-    error: (error) => {
-      this.errorMessage = error.message || 'Failed to assign request to driver';
-      this.isLoading = false;
-      console.error('❌ Error assigning request:', error);
-      
-      this.modalMessage = this.errorMessage;
-      this.showErrorModal = true;
-      this.pendingDriver = null;
+  confirmAssignment(): void {
+    if (!this.selectedRequest || !this.pendingDriver) {
+      return;
     }
-  });
-}
+
+    this.showConfirmModal = false;
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    const assignment: AssignmentRequest = {
+      RequestId: this.selectedRequest.id,
+      DriverId: this.pendingDriver.id
+    };
+
+    const driver = this.pendingDriver;
+
+    this.driverService.assignRequestToDriver(assignment).subscribe({
+      next: (response) => {
+        console.log('✅ Assignment successful:', response);
+
+        this.modalMessage = `Request ${this.selectedRequest?.id} has been assigned to Driver ${driver.name} successfully!`;
+        this.showSuccessModal = true;
+
+        this.approvedRequests = this.approvedRequests.filter(
+          req => req.id !== this.selectedRequest?.id
+        );
+
+        driver.todayPickups++;
+
+        this.selectedRequest = null;
+        this.pendingDriver = null;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.errorMessage = error.message || 'Failed to assign request to driver';
+        this.isLoading = false;
+        console.error('❌ Error assigning request:', error);
+
+        this.modalMessage = this.errorMessage;
+        this.showErrorModal = true;
+        this.pendingDriver = null;
+      }
+    });
+  }
 
   cancelAssignment(): void {
     this.showConfirmModal = false;

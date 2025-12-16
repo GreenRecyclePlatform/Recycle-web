@@ -59,7 +59,8 @@ export const routes: Routes = [
   { path: 'profile', component: ProfileComponent },
 
 
-{
+
+  {
     path: 'supplier',
     children: supplierRoutes,
     // Add Auth Guard here if needed
@@ -104,6 +105,10 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         component: AdminDashboardComponent,
+        data: { title: 'Dashboard' }
+      },
+
+      { path: 'drivers', component: AllDrivers },
         canActivate: [adminPagesGuard], // ✅ Use new guard
         data: { title: 'Dashboard' }
       },
