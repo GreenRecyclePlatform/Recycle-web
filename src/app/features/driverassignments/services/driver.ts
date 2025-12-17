@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Request, PickupRequest, Driver } from '../models/assignment';
 import { AssignmentRequest } from '../models/assignment';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../../environments/environment.prod';
 import { AddressDto } from '../../../core/models/auth-response';
 
 export interface Material {

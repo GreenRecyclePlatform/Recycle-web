@@ -3,7 +3,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { environment } from '../../../../../environments/environment';
+import { environment } from '../../../../../environments/environment.prod';
 import { SupplierService } from '../../service/supplierservice';
 import { CartItem } from '../../models/supplier.models';
 import { loadStripe, Stripe, StripeElements, StripeCardElement } from '@stripe/stripe-js';

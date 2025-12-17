@@ -13,7 +13,7 @@ import {
 } from '../models/auth-response';
 import { HttpClient } from '@angular/common/http';
 import { TokenService } from './tokenservice';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../environments/environment.prod';
 import { API_ENDPOINTS } from '../constants/api-endpoints';
 
 @Injectable({
