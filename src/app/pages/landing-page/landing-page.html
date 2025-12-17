@@ -40,7 +40,7 @@
         <img
           src="https://static.vecteezy.com/system/resources/thumbnails/053/633/645/small_2x/colorful-recycling-bins-in-a-lush-garden-with-bright-sunlight-free-photo.jpg"
           alt="Recycling"
-          onerror="this.src='https://via.placeholder.com/600x400?text=Recycling'"
+          
         />
       </div>
     </div>
@@ -127,9 +127,9 @@
       <div class="material-card" *ngFor="let material of displayedMaterials">
         <div class="material-image">
           <img
-            [src]="material.imageUrl || 'https://via.placeholder.com/400x400?text=' + material.name"
+            [src]="material.imageUrl || 'https://placehold.co/150x150' + material.name"
             [alt]="material.name"
-            (error)="$event.target.src='https://via.placeholder.com/400x400?text=Material'"
+            (error)="$event.target.src='https://placehold.co/150x150'"
           />
         </div>
         <div class="material-content">
@@ -200,7 +200,7 @@
           <img
             [src]="testimonial.avatar"
             [alt]="testimonial.name"
-            onerror="this.src='https://via.placeholder.com/100?text=' + testimonial.name"
+  
           />
           <div>
             <p class="author-name">{{ testimonial.name }}</p>

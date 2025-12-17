@@ -272,7 +272,7 @@ html {
 
 .dropdown-menu-custom {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 80px);
   right: 0;
   background-color: white;
   border-radius: 12px;

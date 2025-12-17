@@ -47,6 +47,8 @@ export class MaterialPriceListComponent implements OnInit {
 
         this.materials = data;
         this.loading = false;
+        console.log(this.materials[0].imageUrl);
+        console.log(this.materials[0].imageLocalPath);
       },
       error: (error: any) => {
         console.error('❌ Error loading materials:', error);
@@ -58,7 +60,7 @@ export class MaterialPriceListComponent implements OnInit {
 
   onImageError(event: any): void {
     console.error('🖼️ Image failed to load:', event.target.src);
-    event.target.src = 'https://via.placeholder.com/400x400?text=No+Image';
+    event.target.src = 'https://placehold.co/150x150';
   }
 
   startRecycling(): void {

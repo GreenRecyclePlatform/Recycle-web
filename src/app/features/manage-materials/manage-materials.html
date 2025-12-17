@@ -43,10 +43,10 @@
       <div class="material-card" *ngFor="let material of materials">
         <div class="material-image-container">
           <img
-            [src]="material.imageUrl || 'https://via.placeholder.com/400x400?text=No+Image'"
+            [src]="material.imageUrl"
             [alt]="material.name"
             class="material-image"
-            (error)="$event.target.src = 'https://via.placeholder.com/400x400?text=No+Image'"
+            (error)="$event.target.src = 'https://placehold.co/150x150'"
           />
         </div>
 
