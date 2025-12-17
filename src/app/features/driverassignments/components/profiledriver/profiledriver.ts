@@ -79,7 +79,6 @@ export class Profiledriver implements OnInit {
     if (!token) {
       this.errorMessage = 'Please login to access your profile';
       console.warn('⚠️ No token found - redirecting to login');
-      // this.router.navigate(['/login']);
       return;
     }
 
@@ -92,7 +91,6 @@ export class Profiledriver implements OnInit {
     if (!isDriver && !isAdmin) {
       this.errorMessage = 'You need Driver privileges to access this page';
       console.warn('⚠️ Not a driver - access denied');
-      // this.router.navigate(['/unauthorized']);
       return;
     }
 
@@ -108,7 +106,6 @@ export class Profiledriver implements OnInit {
       next: (response: DriverProfileResponse) => {
         console.log('📥 Full Response:', response);
         
-        // ⬅️ تحقق إن الـ response موجود وفيه id
         if (!response || !response.id) {
           console.error('❌ No driver profile found for user:', this.driverId);
           this.errorMessage = 'No driver profile found. Please contact support.';
@@ -157,7 +154,6 @@ export class Profiledriver implements OnInit {
         
         if (error.message && (error.message.includes('Unauthorized') || error.message.includes('403'))) {
           console.warn('⚠️ Unauthorized access - redirecting');
-          // this.router.navigate(['/login']);
         }
       }
     });
@@ -323,7 +319,7 @@ export class Profiledriver implements OnInit {
   }
 
   private calculateEarnings(totalTrips: number): string {
-    const earningsPerTrip = 150;
+    const earningsPerTrip = 200;
     const total = totalTrips * earningsPerTrip;
     return `₹${total.toLocaleString('en-US')}`;
   }

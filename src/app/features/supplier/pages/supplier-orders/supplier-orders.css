@@ -4,7 +4,6 @@
   background: #f9fafb;
 }
 
-/* ==================== Header ==================== */
 .orders-header {
   background: linear-gradient(135deg, #2d6a4f 0%, #1e4d38 100%);
   color: white;
@@ -50,7 +49,6 @@
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* ==================== Statistics ==================== */
 .stats-container {
   max-width: 1400px;
   margin: 0 auto;
@@ -97,7 +95,6 @@
   margin: 0;
 }
 
-/* ==================== Loading & Error ==================== */
 .loading-container,
 .error-container {
   text-align: center;
@@ -131,14 +128,12 @@
   margin-top: 1rem;
 }
 
-/* ==================== Orders Content ==================== */
 .orders-content {
   max-width: 1400px;
   margin: 0 auto;
   padding: 1rem 1.5rem 2rem;
 }
 
-/* Empty State */
 .empty-state {
   text-align: center;
   padding: 4rem 2rem;
@@ -180,7 +175,6 @@
   box-shadow: 0 8px 16px rgba(45, 106, 79, 0.3);
 }
 
-/* ==================== Orders Grid ==================== */
 .orders-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -288,7 +282,6 @@
   color: #2d6a4f;
 }
 
-/* Order Footer */
 .order-footer {
   display: flex;
   justify-content: space-between;
@@ -328,7 +321,6 @@
   transform: translateY(-1px);
 }
 
-/* ==================== Modal ==================== */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -456,7 +448,6 @@
   color: #1e4d38;
 }
 
-/* ==================== Responsive ==================== */
 @media (max-width: 768px) {
   .orders-grid {
     grid-template-columns: 1fr;

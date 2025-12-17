@@ -1,6 +1,4 @@
-/* driver-dashboard.component.css - UPDATED WITH LAYOUT */
 
-/* ========== Variables ========== */
 :host {
   --primary-green: #2D6A4F;
   --primary-green-dark: #1e4d38;
@@ -50,7 +48,6 @@
   margin: 0 auto;
 }
 
-/* ========== Page Header ========== */
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -72,7 +69,6 @@
   font-size: 0.9rem;
 }
 
-/* ========== Alerts ========== */
 .alert {
   display: flex;
   align-items: center;
@@ -118,7 +114,6 @@
   opacity: 1;
 }
 
-/* ========== Stats Grid ========== */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -173,7 +168,6 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-/* ========== Filters Bar ========== */
 .filters-bar {
   display: flex;
   gap: 1rem;
@@ -226,7 +220,6 @@
   background: var(--gray-50);
 }
 
-/* ========== Pickup Cards ========== */
 .pickups-list {
   display: flex;
   flex-direction: column;
@@ -286,7 +279,6 @@
   color: var(--gray-800);
 }
 
-/* ========== Status Badges ========== */
 .status-badge {
   padding: 0.375rem 0.75rem;
   border-radius: 9999px;
@@ -318,7 +310,6 @@
   border: 1px solid #FCA5A5;
 }
 
-/* ========== Card Body ========== */
 .card-body {
   padding: 1.25rem;
 }
@@ -357,7 +348,6 @@
   font-size: 0.9rem;
 }
 
-/* ========== Card Actions ========== */
 .card-actions {
   display: flex;
   justify-content: flex-end;
@@ -367,7 +357,6 @@
   background: var(--gray-50);
 }
 
-/* ========== Buttons ========== */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -423,8 +412,6 @@
 .btn-danger:hover:not(:disabled) {
   background: #DC2626;
 }
-
-/* ========== Loading & Empty ========== */
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -485,7 +472,6 @@
   color: var(--gray-500);
 }
 
-/* ========== Modal ========== */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -541,12 +527,10 @@
   margin-top: 1rem;
 }
 
-/* ========== Utilities ========== */
 .text-danger {
   color: var(--danger) !important;
 }
 
-/* ========== Responsive ========== */
 @media (max-width: 1024px) {
   .stats-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -601,7 +585,6 @@
     flex: 1;
     justify-content: center;
   }
-  /* ✅ حل المسافة نهائيًا */
 
 :host {
   display: block;
@@ -613,7 +596,7 @@
 .dashboard-layout {
   display: flex;
   width: 100%;
-  min-height: calc(100vh - 70px); /* ارتفاع الـ navbar */
+  min-height: calc(100vh - 70px); 
   margin: 0;
   padding: 0;
 }

@@ -30,7 +30,7 @@ export class AssignDriver implements OnInit {
 
   constructor(
     private driverService: DriverService,
-    private authService: AuthService, // ⬅️ بدل AuthHelperService
+    private authService: AuthService, 
     private router: Router
   ) { }
 
@@ -50,14 +50,12 @@ export class AssignDriver implements OnInit {
     if (!token) {
       this.errorMessage = 'Please login to access this page';
       console.warn('⚠️ No token found - redirecting to login');
-      // this.router.navigate(['/login']);
       return;
     }
 
     if (!isAdmin) {
       this.errorMessage = 'You need Admin privileges to access this page';
       console.warn('⚠️ Not an admin - access denied');
-      // this.router.navigate(['/unauthorized']);
       return;
     }
 
@@ -79,7 +77,6 @@ export class AssignDriver implements OnInit {
         console.error('❌ Error loading requests:', error);
 
         if (error.message.includes('Unauthorized')) {
-          // this.router.navigate(['/login']);
         }
       }
     });
@@ -96,7 +93,6 @@ export class AssignDriver implements OnInit {
         console.error('❌ Error loading drivers:', error);
 
         if (error.message.includes('Unauthorized')) {
-          // this.router.navigate(['/login']);
         }
       }
     });

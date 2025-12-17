@@ -4,7 +4,6 @@
   background: #f9fafb;
 }
 
-/* ==================== Header ==================== */
 .dashboard-header {
   background: linear-gradient(135deg, #2d6a4f 0%, #1e4d38 100%);
   color: white;
@@ -28,8 +27,6 @@
   opacity: 0.9;
   margin: 0;
 }
-
-/* ==================== Loading & Error ==================== */
 .loading-container, .error-container {
   text-align: center;
   padding: 4rem 1.5rem;
@@ -64,7 +61,6 @@
   background: #1e4d38;
 }
 
-/* ==================== Content Grid ==================== */
 .content-grid {
   display: grid;
   grid-template-columns: 1fr 400px;
@@ -87,7 +83,6 @@
   margin-bottom: 1.5rem;
 }
 
-/* ==================== Materials Section ==================== */
 .materials-section {
   flex: 1;
 }
@@ -224,7 +219,6 @@
   cursor: not-allowed;
 }
 
-/* ==================== Cart Section ==================== */
 .cart-section {
   position: relative;
 }

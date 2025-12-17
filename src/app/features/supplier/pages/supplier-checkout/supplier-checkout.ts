@@ -7,11 +7,12 @@ import { environment } from '../../../../../environments/environment';
 import { SupplierService } from '../../service/supplierservice';
 import { CartItem } from '../../models/supplier.models';
 import { loadStripe, Stripe, StripeElements, StripeCardElement } from '@stripe/stripe-js';
+import { Navbar } from '../../../../shared/components/navbar/navbar';
 
 @Component({
   selector: 'app-supplier-checkout',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,Navbar],
   templateUrl: './supplier-checkout.html',
   styleUrls: ['./supplier-checkout.css']
 })

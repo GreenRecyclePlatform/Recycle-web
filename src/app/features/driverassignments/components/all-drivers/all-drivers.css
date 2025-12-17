@@ -1,6 +1,4 @@
-/* =========================
-   Page Background
-   ========================= */
+
 .all-drivers-container {
   background-color: #fafafa;
   min-height: 100vh;
@@ -14,11 +12,6 @@
    color: var(--dark-gray); 
    font-weight: 600 ;
 }
-
-
-/* =========================
-   Stat Cards Styles
-   ========================= */
 .stat-card {
   transition: all 0.3s ease;
   cursor: pointer;
@@ -49,9 +42,6 @@
   height: 28px;
 }
 
-/* =========================
-   Search & Filter Inputs
-   ========================= */
 .search-input-wrapper {
   position: relative;
   width: 100%;
@@ -119,9 +109,6 @@
   background-color: white;
 }
 
-/* =========================
-   Drivers Table Card
-   ========================= */
 .drivers-table-card {
   border-radius: 1rem;
   min-height: 800px;
@@ -134,9 +121,6 @@
   border-radius: 1rem 1rem 0 0;
 }
 
-/* =========================
-   Table Styles
-   ========================= */
 .drivers-table {
   font-size: 0.95rem;
   background-color: white;
@@ -168,9 +152,6 @@
   padding: 1.25rem 0.75rem !important;
 }
 
-/* =========================
-   Driver Avatar
-   ========================= */
 .driver-avatar {
   width: 48px;
   height: 48px;
@@ -178,9 +159,6 @@
   flex-shrink: 0;
 }
 
-/* =========================
-   Status Badges
-   ========================= */
 .badge.active {
   background-color: #d4edda !important;
   color: #155724 !important;
@@ -197,9 +175,6 @@
   font-size: 0.8125rem;
 }
 
-/* =========================
-   Action Dropdown
-   ========================= */
 .action-dropdown-btn {
   border: none;
   background-color: transparent !important;
@@ -249,9 +224,6 @@
   color: #dc3545 !important;
 }
 
-/* =========================
-   Button Styles
-   ========================= */
 .btn-primary {
   background-color: var(--primary-green) !important;
   border-color: var(--primary-green) !important;
@@ -291,17 +263,11 @@
   color: #495057;
 }
 
-/* =========================
-   Loading States
-   ========================= */
 .spinner-border {
   width: 3rem;
   height: 3rem;
 }
 
-/* =========================
-   Empty State
-   ========================= */
 .empty-state-icon {
   font-size: 64px !important;
   width: 64px !important;
@@ -309,9 +275,6 @@
   opacity: 0.3;
 }
 
-/* =========================
-   Material Icon Sizes
-   ========================= */
 .mat-icon.icon-sm {
   font-size: 14px;
   width: 14px;
@@ -330,9 +293,6 @@
   height: 22px;
 }
 
-/* =========================
-   Text Utilities
-   ========================= */
 .text-success-custom {
   color: var(--primary-green) !important;
 }
@@ -341,9 +301,6 @@
   font-weight: 600 !important;
 }
 
-/* =========================
-   Responsive Design
-   ========================= */
 @media (max-width: 768px) {
   .stat-card {
     margin-bottom: 1rem;
@@ -370,9 +327,6 @@
   }
 }
 
-/* =========================
-   Custom Scrollbar
-   ========================= */
 .table-responsive::-webkit-scrollbar {
   height: 8px;
 }

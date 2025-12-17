@@ -1,6 +1,4 @@
-// DashpickupDriver.model.ts
 
-// ========== Status Enum  ==========
 export enum PickupStatus {
   Pending = 1,      // may accept or cancel 
   Cancelled = 2,    
@@ -8,7 +6,6 @@ export enum PickupStatus {
   Completed = 4     
 }
 
-// ========== DTOs --API ==========
  export interface DriverResponseDto {
   assignmentId: string;
   action: 1 | 2; // 1 = Accept, 2 = Reject
@@ -30,7 +27,6 @@ export interface StatCard {
   color: string;
 }
 
-// ==========  ( Response ) ==========
 export interface Pickup {
   assignmentId: string;
   requestId: string;
@@ -47,7 +43,6 @@ export interface Pickup {
   isActive: boolean;
 }
 
-// ========== Stats Interface ==========
 export interface PickupStats {
   all: number;
   pending: number;
@@ -56,7 +51,6 @@ export interface PickupStats {
   cancelled: number;
 }
 
-// ========== Request DTOs ==========
 export interface RejectRequest {
   reason: string;
 }
@@ -65,7 +59,6 @@ export interface CompleteRequest {
   driverNotes?: string;
 }
 
-// ========== Helper Functions ==========
 export function getStatusLabel(status: PickupStatus): string {
   const labels: Record<PickupStatus, string> = {
     [PickupStatus.Pending]: 'Pending',

@@ -1,4 +1,3 @@
-// ✅ All interfaces match backend DTOs exactly
 
 export interface DriverProfileResponse {
   id: string;

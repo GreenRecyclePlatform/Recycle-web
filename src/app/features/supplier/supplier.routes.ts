@@ -1,5 +1,3 @@
-// src/app/features/supplier/supplier.routes.ts
-
 import { Routes } from '@angular/router';
 
 export const supplierRoutes: Routes = [
