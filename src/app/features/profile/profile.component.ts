@@ -43,7 +43,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   private originalFormData: any = null;
 
-  constructor(private profileService: ProfileService) {}
+  constructor(private profileService: ProfileService) { }
 
   ngOnInit(): void {
     console.log('🚀 Profile component initialized');

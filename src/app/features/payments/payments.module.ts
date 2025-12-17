@@ -9,7 +9,7 @@ import { PaymentsRoutingModule } from './payments-routing.module';
     imports: [
         CommonModule,
         PaymentsRoutingModule,
-        // ✅ Add this
+
     ]
 })
 export class PaymentsModule { }

@@ -17,7 +17,7 @@ import { Profiledriver } from './features/driverassignments/components/profiledr
 import { adminGuard } from './core/guards/admin-guard';
 import { AdminDashboardComponent } from './pages/admin-dashboard.component/admin-dashboard.component';
 import { ReviewRequests } from './features/review-requests/review-requests';
-import { ProfileComponent } from './features/profile/profile.component';
+//import { ProfileComponent } from './features/profile/profile.component';
 import { UserLayoutComponent } from './shared/layouts/user-layout/user-layout';
 
 export const routes: Routes = [
@@ -52,7 +52,7 @@ export const routes: Routes = [
   { path: 'register', component: RegistrationPage },
   { path: 'forgot-password', component: ForgotPasswordPage },
   { path: 'reset-password', component: ResetPassword },
-  { path: 'profile', component: ProfileComponent },
+  //{ path: 'profile', component: ProfileComponent },
 
   {
     path: 'supplier',
@@ -67,15 +67,20 @@ export const routes: Routes = [
 
   // Reviews
   {
-  path: '',
-  component: UserLayoutComponent,
-  children: [
-    {
-      path: 'reviews',
-      loadChildren: () =>
-        import('./features/reviews/reviews.routes').then((m) => m.REVIEW_ROUTES),
-    },
-  ]},
+    path: '',
+    component: UserLayoutComponent,
+    children: [
+      {
+        path: 'reviews',
+        loadChildren: () =>
+          import('./features/reviews/reviews.routes').then((m) => m.REVIEW_ROUTES),
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent)
+      }
+    ]
+  },
   // {
   //   path: 'reviews',
   //   loadChildren: () => import('./features/reviews/reviews.routes').then((m) => m.REVIEW_ROUTES),
@@ -128,7 +133,7 @@ export const routes: Routes = [
       //   loadComponent: () =>
       //     import('./features/manage-materials/manage-materials').then((m) => m.ManageMaterials),
       // },
-      
+
     ]
   },
 
