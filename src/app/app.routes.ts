@@ -101,7 +101,7 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         component: AdminDashboardComponent,
-        canActivate: [adminPagesGuard], // ✅ Use new guard
+        //canActivate: [adminPagesGuard], // ✅ Use new guard
         data: { title: 'Dashboard' }
       },
       { path: 'drivers', component: AllDrivers },
@@ -109,7 +109,7 @@ export const routes: Routes = [
       {
         path: 'manage-materials',
         component: ManageMaterials,
-        canActivate: [adminPagesGuard], // ✅ Use new guard
+        //canActivate: [adminPagesGuard], // ✅ Use new guard
         data: { title: 'Manage Materials' }
       },
       { path: 'review-requests', component: ReviewRequests },
