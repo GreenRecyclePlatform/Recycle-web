@@ -1,12 +1,8 @@
-/* driver-sidebar.component.css */
 
-/* ========== Host (CRITICAL FIX FOR MOBILE) ========== */
 :host {
   display: block;
   position: relative;
 }
-
-/* Desktop: normal sidebar width */
 @media (min-width: 769px) {
   :host {
     width: 260px;
@@ -14,7 +10,6 @@
   }
 }
 
-/* Mobile: collapse host to allow fixed positioning */
 @media (max-width: 768px) {
   :host {
     width: 0;
@@ -22,8 +17,6 @@
     height: 0;
   }
 }
-
-/* ========== CSS Variables ========== */
 :host {
   --primary-green: #2D6A4F;
   --primary-green-dark: #1e4d38;
@@ -42,8 +35,6 @@
   --radius-lg: 0.5rem;
   --radius-xl: 0.75rem;
 }
-
-/* ========== Mobile Sidebar Toggle Button ========== */
 .mobile-sidebar-toggle {
   display: none;
   position: fixed;
@@ -79,7 +70,6 @@
   color: white;
 }
 
-/* ========== Sidebar Backdrop for Mobile ========== */
 .sidebar-backdrop {
   display: none;
   position: fixed;
@@ -99,7 +89,6 @@
   pointer-events: all;
 }
 
-/* ========== Sidebar Container ========== */
 .sidebar {
   width: 260px;
   background: white;
@@ -114,8 +103,6 @@
   overflow-y: auto;
   flex-shrink: 0;
 }
-
-/* ========== Driver Profile Card ========== */
 .driver-profile {
   background: var(--gray-50);
   border-radius: var(--radius-xl);
@@ -129,8 +116,6 @@
 .driver-profile:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
-
-/* Avatar with Initials */
 .driver-avatar {
   width: 56px;
   height: 56px;
@@ -148,7 +133,6 @@
   text-transform: uppercase;
 }
 
-/* Avatar with Image */
 .driver-avatar-image {
   width: 56px;
   height: 56px;
@@ -184,7 +168,6 @@
   font-weight: 500;
 }
 
-/* ========== Navigation Menu ========== */
 .nav-menu {
   flex: 1;
   display: flex;
@@ -258,7 +241,6 @@
   line-height: 1;
 }
 
-/* ========== Sidebar Footer ========== */
 .sidebar-footer {
   margin-top: auto;
   padding-top: 1rem;
@@ -319,7 +301,6 @@
   transform: scale(0.98);
 }
 
-/* ========== Scrollbar Styling ========== */
 .sidebar::-webkit-scrollbar,
 .nav-menu::-webkit-scrollbar {
   width: 6px;
@@ -341,9 +322,7 @@
   background: #9CA3AF;
 }
 
-/* ========== Responsive Design ========== */
 @media (max-width: 768px) {
-  /* Show mobile controls */
   .mobile-sidebar-toggle {
     display: flex;
   }
@@ -352,7 +331,6 @@
     display: block;
   }
 
-  /* Fixed sidebar that slides in */
   .sidebar {
     position: fixed;
     left: -260px;
@@ -403,7 +381,6 @@
   }
 }
 
-/* ========== Print Styles ========== */
 @media print {
   .sidebar,
   .mobile-sidebar-toggle,

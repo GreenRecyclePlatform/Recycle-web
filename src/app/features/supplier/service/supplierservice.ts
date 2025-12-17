@@ -19,17 +19,17 @@ export class SupplierService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl + '/SupplierOrders';
 
-  // ✅ 1. Get Available Materials
+  // 1.Get Available Materials
   getAvailableMaterials(): Observable<AvailableMaterial[]> {
     return this.http.get<AvailableMaterial[]>(`${this.apiUrl}/available-materials`);
   }
 
-  // ✅ 2. Create Order
+  //  2.Create Order
   createOrder(dto: CreateSupplierOrderDto): Observable<SupplierOrderResponse> {
     return this.http.post<SupplierOrderResponse>(this.apiUrl, dto);
   }
 
-  // ✅ 3. Create Payment Intent
+  // 3.Create Payment Intent
   createPaymentIntent(orderId: string): Observable<PaymentIntentDto> {
     return this.http.post<PaymentIntentDto>(
       `${this.apiUrl}/${orderId}/create-payment-intent`,
@@ -37,7 +37,7 @@ export class SupplierService {
     );
   }
 
-  // ✅ 4. Confirm Payment
+  // 4.Confirm Payment
   confirmPayment(dto: ConfirmPaymentDto): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(
       `${this.apiUrl}/confirm-payment`,

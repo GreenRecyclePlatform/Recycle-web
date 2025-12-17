@@ -8,8 +8,6 @@
   max-width: 700px;
   margin: 0 auto;
 }
-
-/* ==================== Header ==================== */
 .checkout-header {
   text-align: center;
   margin-bottom: 2rem;
@@ -29,8 +27,6 @@
   margin: 0;
   opacity: 0.9;
 }
-
-/* ==================== Alert ==================== */
 .alert {
   padding: 1rem 1.5rem;
   border-radius: 8px;
@@ -43,8 +39,6 @@
   color: #991b1b;
   border: 1px solid #fca5a5;
 }
-
-/* ==================== Order Summary ==================== */
 .order-summary {
   background: white;
   border-radius: 12px;
@@ -107,7 +101,6 @@
   font-size: 1rem;
 }
 
-/* Summary Total */
 .summary-total {
   display: flex;
   justify-content: space-between;
@@ -126,7 +119,6 @@
   font-size: 1.5rem;
 }
 
-/* ==================== Payment Steps ==================== */
 .payment-step {
   background: white;
   border-radius: 12px;
@@ -142,7 +134,6 @@
   margin: 0 0 1.5rem 0;
 }
 
-/* Payment Form */
 .payment-form {
   display: flex;
   flex-direction: column;
@@ -170,7 +161,6 @@
   box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.1);
 }
 
-/* ==================== Buttons ==================== */
 .btn-primary {
   width: 100%;
   padding: 1rem 1.5rem;

@@ -1,6 +1,4 @@
-<!-- driver-sidebar.component.html -->
 
-<!-- Mobile Menu Toggle Button -->
 <button class="mobile-sidebar-toggle" (click)="toggleSidebar()" [class.open]="isSidebarOpen">
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -9,7 +7,6 @@
   </svg>
 </button>
 
-<!-- Backdrop Overlay for Mobile -->
 <div class="sidebar-backdrop" [class.visible]="isSidebarOpen" (click)="toggleSidebar()"></div>
 
 <!-- Sidebar -->
@@ -30,7 +27,6 @@
             [class.active]="isActiveRoute(item.route)"
             (click)="navigateTo(item.route)">
 
-      <!-- Bootstrap Icon -->
       <i class="bi" [ngClass]="item.icon"></i>
 
       <span>{{ item.label }}</span>

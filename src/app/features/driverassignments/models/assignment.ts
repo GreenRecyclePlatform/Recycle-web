@@ -1,4 +1,3 @@
-// ✅ غيري requestId و driverId لـ PascalCase
 export interface AssignmentRequest {
   RequestId: string;  
   DriverId: string;  

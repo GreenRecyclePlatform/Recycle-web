@@ -22,7 +22,6 @@ export class SupplierDashboardComponent implements OnInit {
   loading = signal(true);
   error = signal<string | null>(null);
 
-  // Quantities for each material
   quantities: { [key: string]: number } = {};
 
   ngOnInit() {

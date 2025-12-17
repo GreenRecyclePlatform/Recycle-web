@@ -1,4 +1,3 @@
-// driver-dashboard.component.ts
 import { DriverSidebar } from '../driver-sidebar/driver-sidebar';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -7,8 +6,8 @@ import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { DashpickupDriverservice } from '../../services/DashpickupDriverservice';
 import { AuthService } from '../../../../core/services/authservice'; 
-import { DriverProfileService } from '../../services/driverprofileservice'; // ⬅️ جديد
-import { DriverProfileResponse } from '../../models/Profiledriver'; // ⬅️ جديد
+import { DriverProfileService } from '../../services/driverprofileservice';
+import { DriverProfileResponse } from '../../models/Profiledriver'; 
 import { 
   Pickup, 
   PickupStats, 

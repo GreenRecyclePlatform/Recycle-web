@@ -1,5 +1,3 @@
-
-// chatbot.component.ts
 import { Component, signal, OnInit, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -129,6 +127,7 @@ interface QuickQuestion {
       this.unreadCount.set(0);
     }
   }
+  
 
   formatTime(date: Date): string {
     return new Intl.DateTimeFormat('ar-EG', {
@@ -136,6 +135,7 @@ interface QuickQuestion {
       minute: '2-digit'
     }).format(date);
   }
+  
 
   formatMessage(text: string): string {
     return text
@@ -143,6 +143,7 @@ interface QuickQuestion {
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.*?)\*/g, '<em>$1</em>');
   }
+  
 
   private scrollToBottom(): void {
     try {
