@@ -13,7 +13,7 @@ import { Navbar } from "../navbar/navbar";
 })
 export class UserSidebar implements OnInit {
 
-  
+
   userName:string='User';
 userRole:string='User';
   constructor(private authService: AuthService, private router: Router) {}
@@ -21,6 +21,11 @@ userRole:string='User';
   ngOnInit(): void {
     this.userName = this.authService.getUserName() || "user";
   }
+isSidebarOpen = false;
+
+toggleSidebar() {
+  this.isSidebarOpen = !this.isSidebarOpen;
+}
 
 
  logout(): void {

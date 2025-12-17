@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -19,6 +19,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   adminName: string = 'Admin User';
   adminRole: string = 'Admin';
   notificationCount: number = 0;
+  isSidebarOpen = false;
 
   private destroy$ = new Subject<void>();
 
@@ -70,6 +71,32 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.error('Error decoding token:', error);
       return null;
+    }
+  }
+
+  /**
+   * Toggle sidebar for mobile
+   */
+  toggleSidebar(): void {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
+
+  /**
+   * Close sidebar when nav item is clicked on mobile
+   */
+  closeSidebarOnMobile(): void {
+    if (window.innerWidth <= 768) {
+      this.isSidebarOpen = false;
+    }
+  }
+
+  /**
+   * Close sidebar when window is resized to desktop
+   */
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any): void {
+    if (window.innerWidth > 768) {
+      this.isSidebarOpen = false;
     }
   }
 
