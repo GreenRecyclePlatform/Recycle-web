@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SupplierService } from '../../service/supplierservice';
 import { SupplierOrderResponse } from '../../models/supplier.models';
+import { Navbar } from '../../../../shared/components/navbar/navbar';
 
 @Component({
   selector: 'app-supplier-orders',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,Navbar],
   templateUrl: './supplier-orders.html',
   styleUrls: ['./supplier-orders.css']
 })
