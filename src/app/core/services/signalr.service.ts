@@ -9,7 +9,7 @@ import { Notification } from '../models/notification.model';
 export class SignalrService {
   private hubConnection!: signalR.HubConnection;
   private connectionState = new BehaviorSubject<boolean>(false);
-  private hubUrl = 'https://localhost:7099/hubs/notifications';
+  private hubUrl = 'https://recycle.runasp.net/hubs/notifications';
 
   constructor() {}
 

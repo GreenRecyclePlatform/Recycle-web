@@ -55,7 +55,7 @@ export interface SupplierOrder {
 })
 export class DashboardService {
   private readonly apiUrl = `${environment.apiUrl}/AdminDashboard`;
-  private readonly paymentsApiUrl = 'https://localhost:7099/api/admin/supplier-orders';
+  private readonly paymentsApiUrl = 'https://recycle.runasp.net/api/admin/supplier-orders';
 
   private statsSubject = new BehaviorSubject<DashboardStats>({
     totalRequests: 0,
