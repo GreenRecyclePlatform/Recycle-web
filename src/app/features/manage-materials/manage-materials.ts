@@ -283,7 +283,7 @@ export class ManageMaterials implements OnInit {
           this.isSaving = false;
           this.loadMaterials();
           this.closeModal();
-          alert('Material updated successfully!');
+         
         },
         error: (error) => {
           console.error('❌ Error updating material:', error);
@@ -305,7 +305,7 @@ export class ManageMaterials implements OnInit {
           this.isSaving = false;
           this.loadMaterials();
           this.closeModal();
-          alert('Material added successfully!');
+          
         },
         error: (error) => {
           console.error('❌ Error creating material:', error);

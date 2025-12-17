@@ -5,6 +5,7 @@ export const REVIEW_ROUTES: Routes = [
   {
     path: '',
     // canActivate: [authGuard], // ← COMMENTED OUT for testing
+    
     loadComponent: () =>
       import('./components/review-list/review-list').then((m) => m.ReviewListComponent),
   },

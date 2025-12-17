@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 
 import { UserLayoutComponent } from './user-layout/user-layout';
 import { Navbar } from '../components/navbar/navbar'; // For navbar
+import { ReviewListComponent } from '../../features/reviews/components/review-list/review-list';
 
 @NgModule({
     declarations: [],

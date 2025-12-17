@@ -1,245 +1,229 @@
-
-
-
 <div class="container-fluid">
-<nav [class]="'sticky-top z-50 border-bottom ' + (transparent ? 'bg-white-95' : 'bg-white')">
-  <div class="container-fluid px-3 px-md-4">
-    <div class="d-flex justify-content-between align-items-center" style="height: 4rem">
-      <!-- Logo -->
-      <a routerLink="/" class="d-flex align-items-center gap-2 text-decoration-none">
-        <div
-          class="logo-container bg-primary-green rounded d-flex align-items-center justify-content-center"
-        >
-          <lucide-icon [name]="Leaf" [size]="24" class="text-white"></lucide-icon>
-        </div>
-        <span class="text-dark fw-semibold">RecycleHub</span>
-      </a>
-
-      <!-- Navigation Links -->
-      <div class="d-none d-md-flex align-items-center gap-4">
-        <a routerLink="/" class="nav-link text-dark text-decoration-none hover-primary-green"
-          >Home</a
-        >
-        <a
-          (click)="scrollToSection('how-it-works')"
-          class="nav-link text-dark text-decoration-none hover-primary-green"
-          style="cursor: pointer"
-          >How It Works</a
-        >
-        <a
-          (click)="scrollToSection('materials')"
-          class="nav-link text-dark text-decoration-none hover-primary-green"
-          style="cursor: pointer"
-          >Materials</a
-        >
-        <a
-          (click)="scrollToSection('faq')"
-          class="nav-link text-dark text-decoration-none hover-primary-green"
-          style="cursor: pointer"
-          >FAQ</a
-        >
-        <a
-          (click)="scrollToSection('contact')"
-          class="nav-link text-dark text-decoration-none hover-primary-green"
-          style="cursor: pointer"
-          >Contact</a
-        >
-      </div>
-
-      <!-- Right side actions -->
-      <div class="d-flex align-items-center gap-2">
-        @if (isAuthenticated == false) {
-        <!-- Unauthenticated State -->
-        <div class="d-none d-md-flex align-items-center gap-3">
-          <button mat-button (click)="navigateTo('/login')">Login</button>
-          <button class="btn-primary register-button" (click)="navigateTo('/register')">
-            Get Started
-          </button>
-        </div>
-        } @else {
-        <!-- Authenticated State -->
-
-        <!-- Notification Bell -->
-        <div class="notification-bell-wrapper position-relative">
-          <button
-            mat-icon-button
-            class="notification-bell-btn position-relative d-flex justify-content-center align-items-center"
-            (click)="toggleNotificationDropdown()"
-            [class.active]="isNotificationDropdownOpen"
-          >
-            <lucide-icon [name]="Bell" [size]="20"></lucide-icon>
-
-            <!-- Unread badge -->
-            <span
-              *ngIf="unreadCount > 0"
-              class="notification-badge position-absolute top-0 end-0 badge  text-white rounded-circle d-flex align-items-center justify-content-center"
-            >
-              {{ unreadCount > 99 ? '99+' : unreadCount }}
-            </span>
-          </button>
-
-          <!-- Notification Dropdown -->
-          <app-notification-dropdown
-            *ngIf="isNotificationDropdownOpen"
-            (close)="closeNotificationDropdown()"
-            class="notification-dropdown-container"
-          ></app-notification-dropdown>
-        </div>
-
-        <div class="user-menu">
-          <button class="user-trigger btn btn-outline-secondary dropdown-toggle"
-    type="button"
-    data-bs-toggle="dropdown"
-    aria-expanded="false">
-            <div class="user-avatar-nav">
-             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="w-6 h-6">
-              <path fill="white" d="M240 192C240 147.8 275.8 112 320 112C364.2 112 400 147.8 400 192C400 236.2 364.2 272 320 272C275.8 272 240 236.2 240 192zM448 192C448 121.3 390.7 64 320 64C249.3 64 192 121.3 192 192C192 262.7 249.3 320 320 320C390.7 320 448 262.7 448 192zM144 544C144 473.3 201.3 416 272 416L368 416C438.7 416 496 473.3 496 544L496 552C496 565.3 506.7 576 520 576C533.3 576 544 565.3 544 552L544 544C544 446.8 465.2 368 368 368L272 368C174.8 368 96 446.8 96 544L96 552C96 565.3 106.7 576 120 576C133.3 576 144 565.3 144 552L144 544z"/></svg>
-            </div>
-            <span class="user-name">{{ username }}</span>
-          </button>
-
-          <!-- Dropdown Menu -->
-          <div class="dropdown-menu dropdown-menu-end w-100 w-sm-auto p-2">
-            <div class="dropdown-header-custom">{{ role }}</div>
-
-            <!-- <div class="dropdown-divider-custom"></div> -->
-
-            @if(role === 'Admin') {
-      
-            <a routerLink="/admin/dashboard" class=" dropdown-item d-flex align-items-center gap-2 py-2">
-               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="7" height="7"></rect>
-            <rect x="14" y="3" width="7" height="7"></rect>
-            <rect x="14" y="14" width="7" height="7"></rect>
-            <rect x="3" y="14" width="7" height="7"></rect>
-          </svg>
-              <span>Dashboard</span>
-            </a>
-            <a routerLink="/admin/review-requests" class="dropdown-item-custom">
-              <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-file-text w-5 h-5 flex-shrink-0"
-            aria-hidden="true"
-          >
-            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
-            <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
-            <path d="M10 9H8"></path>
-            <path d="M16 13H8"></path>
-            <path d="M16 17H8"></path>
-          </svg>
-              <span>Review Requests</span>
-            </a>
-            <a routerLink="/admin/assign-drivers" class="dropdown-item-custom">
-               <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-          </svg>
-              <span>Assign Drivers</span>
-            </a>
-            <a routerLink="/admin/manage-materials" class="dropdown-item-custom">
-              <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path
-              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
-            ></path>
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-            <line x1="12" y1="22.08" x2="12" y2="12"></line>
-          </svg>
-              <span>Manage Materials</span>
-            </a>
-            <a routerLink="/admin/drivers" class="dropdown-item-custom">
-              <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-          </svg>
-              <span>Drivers</span>
-            </a>
-            } @else if(role === 'User') {
-            <a routerLink="pickup-requests/my-requests" class="dropdown-item-custom">
-              <i class="fas fa-user"></i>
-              <span>My Requests</span>
-            </a>
-            <a routerLink="pickup-requests/create" class="dropdown-item-custom">
-              <i class="fas fa-user"></i>
-              <span>Create Request</span>
-            </a>
-            } @else if(role === 'Driver'){
-               <a routerLink="/driver/DashBoardDrivers" class="dropdown-item-custom">
-              <i class="fas fa-truck"></i>
-              <span>PickUps</span>
-            </a>
-            <a routerLink="/driver/DriverProfile" class="dropdown-item-custom">
-               <i class="bi bi-person"></i>
-              <span>Profile</span>
-            </a>
-           
-            } @else if(role === 'Supplier'){
-               <a routerLink="/supplier/orders" class="dropdown-item-custom">
-               <i class="bi bi-person"></i>
-              <span>Orders</span>
-            </a>
-             <a routerLink="/supplier/dashboard" class="dropdown-item-custom">
-               <i class="bi bi-person"></i>
-              <span>Profile</span>
-            </a>
-             <a routerLink="supplier/checkout" class="dropdown-item-custom">
-               <i class="bi bi-person"></i>
-              <span>Profile</span>
-            </a>
-            
-
-            }
-             <div class="dropdown-divider-custom"></div> 
-            <a (click)="logout()" class="dropdown-item-custom">
-              <i class="fas fa-sign-out-alt"></i>
-              <span>Logout</span>
-            </a>
+  <nav [class]="'sticky-top z-50 border-bottom ' + (transparent ? 'bg-white-95' : 'bg-white')">
+    <div class="container-fluid px-3 px-md-4">
+      <div class="d-flex justify-content-between align-items-center" style="height: 4rem">
+        <!-- Logo -->
+        <a routerLink="/" class="d-flex align-items-center gap-2 text-decoration-none">
+          <div class="logo-container bg-primary-green rounded d-flex align-items-center justify-content-center">
+            <lucide-icon [name]="Leaf" [size]="24" class="text-white"></lucide-icon>
           </div>
+          <span class="text-dark fw-semibold">RecycleHub</span>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <div class="d-none d-md-flex align-items-center gap-4">
+          <a routerLink="/" class="nav-link text-dark text-decoration-none hover-primary-green">Home</a>
+          <a (click)="scrollToSection('how-it-works')" class="nav-link text-dark text-decoration-none hover-primary-green" style="cursor: pointer">How It Works</a>
+          <a (click)="scrollToSection('materials')" class="nav-link text-dark text-decoration-none hover-primary-green" style="cursor: pointer">Materials</a>
+          <a (click)="scrollToSection('faq')" class="nav-link text-dark text-decoration-none hover-primary-green" style="cursor: pointer">FAQ</a>
+          <a (click)="scrollToSection('contact')" class="nav-link text-dark text-decoration-none hover-primary-green" style="cursor: pointer">Contact</a>
         </div>
-        }
+
+        <!-- Right side actions -->
+        <div class="d-flex align-items-center gap-2">
+          @if (isAuthenticated == false) {
+            <!-- Unauthenticated State -->
+            <div class="d-none d-md-flex align-items-center gap-3">
+              <button mat-button (click)="navigateTo('/login')">Login</button>
+              <button class="btn-primary register-button" (click)="navigateTo('/register')">Get Started</button>
+            </div>
+
+            <!-- Mobile Menu Toggle (Unauthenticated) -->
+            <button class="mobile-menu-toggle d-md-none" (click)="toggleMobileMenu()" [class.active]="mobileMenuOpen" aria-label="Toggle menu">
+              <lucide-icon [name]="Menu" [size]="24"></lucide-icon>
+            </button>
+          } @else {
+            <!-- Authenticated State -->
+
+            <!-- Notification Bell -->
+            <div class="notification-bell-wrapper position-relative">
+              <button mat-icon-button class="notification-bell-btn position-relative d-flex justify-content-center align-items-center" (click)="toggleNotificationDropdown()" [class.active]="isNotificationDropdownOpen">
+                <lucide-icon [name]="Bell" [size]="20"></lucide-icon>
+
+                <!-- Unread badge -->
+                <span *ngIf="unreadCount > 0" class="notification-badge position-absolute top-0 end-0 badge text-white rounded-circle d-flex align-items-center justify-content-center">
+                  {{ unreadCount > 99 ? '99+' : unreadCount }}
+                </span>
+              </button>
+
+              <!-- Notification Dropdown -->
+              <app-notification-dropdown *ngIf="isNotificationDropdownOpen" (close)="closeNotificationDropdown()" class="notification-dropdown-container"></app-notification-dropdown>
+            </div>
+
+            <!-- User Menu Dropdown -->
+            <div class="user-menu">
+              <button class="user-trigger btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="user-avatar-nav">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="w-6 h-6">
+                    <path fill="white" d="M240 192C240 147.8 275.8 112 320 112C364.2 112 400 147.8 400 192C400 236.2 364.2 272 320 272C275.8 272 240 236.2 240 192zM448 192C448 121.3 390.7 64 320 64C249.3 64 192 121.3 192 192C192 262.7 249.3 320 320 320C390.7 320 448 262.7 448 192zM144 544C144 473.3 201.3 416 272 416L368 416C438.7 416 496 473.3 496 544L496 552C496 565.3 506.7 576 520 576C533.3 576 544 565.3 544 552L544 544C544 446.8 465.2 368 368 368L272 368C174.8 368 96 446.8 96 544L96 552C96 565.3 106.7 576 120 576C133.3 576 144 565.3 144 552L144 544z" />
+                  </svg>
+                </div>
+                <span class="user-name">{{ username }}</span>
+              </button>
+
+              <!-- Dropdown Menu -->
+              <div class="dropdown-menu dropdown-menu-end w-100 w-sm-auto p-2">
+                <div class="dropdown-header-custom">{{ role }}</div>
+
+                @if(role === 'Admin') {
+                  <a routerLink="/admin/dashboard" class="dropdown-item-custom">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="7" height="7"></rect>
+                      <rect x="14" y="3" width="7" height="7"></rect>
+                      <rect x="14" y="14" width="7" height="7"></rect>
+                      <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    <span>Dashboard</span>
+                  </a>
+                  <a routerLink="/admin/review-requests" class="dropdown-item-custom">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text w-5 h-5 flex-shrink-0" aria-hidden="true">
+                      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
+                      <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+                      <path d="M10 9H8"></path>
+                      <path d="M16 13H8"></path>
+                      <path d="M16 17H8"></path>
+                    </svg>
+                    <span>Review Requests</span>
+                  </a>
+                  <a routerLink="/admin/assign-drivers" class="dropdown-item-custom">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="9" cy="7" r="4"></circle>
+                      <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span>Assign Drivers</span>
+                  </a>
+                  <a routerLink="/admin/manage-materials" class="dropdown-item-custom">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                      <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                      <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                    </svg>
+                    <span>Manage Materials</span>
+                  </a>
+                  <a routerLink="/admin/drivers" class="dropdown-item-custom">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="9" cy="7" r="4"></circle>
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span>Drivers</span>
+                  </a>
+                  <a routerLink="/payments/admin/dashboard" class="dropdown-item-custom">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                      <line x1="1" y1="10" x2="23" y2="10"></line>
+                    </svg>
+                    <span>Payments</span>
+                  </a>
+                } @else if(role === 'User') {
+                  <a routerLink="pickup-requests/my-requests" class="dropdown-item-custom">
+                    <i class="fas fa-user"></i>
+                    <span>My Requests</span>
+                  </a>
+                  <a routerLink="/pickup-requests/create" class="dropdown-item-custom">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>New Request</span>
+                  </a>
+                  <a routerLink="/payments/history" class="dropdown-item-custom">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                      <line x1="1" y1="10" x2="23" y2="10"></line>
+                    </svg>
+                    <span>Payment History</span>
+                  </a>
+                  <a routerLink="/reviews" class="dropdown-item-custom">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 20a6 6 0 0 0-12 0"></path>
+                      <circle cx="12" cy="10" r="4"></circle>
+                      <circle cx="12" cy="10" r="4"></circle>
+                    </svg>
+                    <span>My Reviews</span>
+                  </a>
+                  <a routerLink="/profile" class="dropdown-item-custom">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Profile</span>
+                  </a>
+                } @else if(role === 'Driver'){
+                  <a routerLink="/driver/DashBoardDrivers" class="dropdown-item-custom">
+                    <i class="fas fa-truck"></i>
+                    <span>PickUps</span>
+                  </a>
+                  <a routerLink="/driver/DriverProfile" class="dropdown-item-custom">
+                    <i class="bi bi-person"></i>
+                    <span>Profile</span>
+                  </a>
+                } @else if(role === 'Supplier'){
+                  <a routerLink="/supplier/orders" class="dropdown-item-custom">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clipboard-list-icon lucide-clipboard-list">
+                      <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+                      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                      <path d="M12 11h4" />
+                      <path d="M12 16h4" />
+                      <path d="M8 11h.01" />
+                      <path d="M8 16h.01" />
+                    </svg>
+                    <span>Orders</span>
+                  </a>
+                  <a routerLink="/supplier/dashboard" class="dropdown-item-custom">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart-icon lucide-shopping-cart">
+                      <circle cx="8" cy="21" r="1" />
+                      <circle cx="19" cy="21" r="1" />
+                      <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+                    </svg>
+                    <span>Dashboard</span>
+                  </a>
+                  <a routerLink="/supplier/checkout" class="dropdown-item-custom">
+                    <i class="fa-regular fa-credit-card"></i>
+                    <span>Checkout</span>
+                  </a>
+                }
+                <div class="dropdown-divider-custom"></div>
+                <a (click)="logout()" class="dropdown-item-custom">
+                  <i class="fas fa-sign-out-alt"></i>
+                  <span>Logout</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Mobile Menu Toggle (Authenticated) -->
+            <button class="mobile-menu-toggle d-md-none" (click)="toggleMobileMenu()" [class.active]="mobileMenuOpen" aria-label="Toggle menu">
+              <lucide-icon [name]="Menu" [size]="24"></lucide-icon>
+            </button>
+          }
+        </div>
       </div>
     </div>
+  </nav>
+
+  <!-- Mobile Menu Backdrop -->
+  <div class="mobile-menu-backdrop" [class.visible]="mobileMenuOpen" (click)="toggleMobileMenu()"></div>
+
+  <!-- Mobile Menu Drawer -->
+  <div class="mobile-menu-drawer" [class.open]="mobileMenuOpen">
+    <!-- Navigation Links -->
+    <div class="mobile-nav-links">
+      <a routerLink="/" class="mobile-nav-link" (click)="closeMobileMenu()">Home</a>
+      <a (click)="scrollToSection('how-it-works'); closeMobileMenu()" class="mobile-nav-link" style="cursor: pointer">How It Works</a>
+      <a (click)="scrollToSection('materials'); closeMobileMenu()" class="mobile-nav-link" style="cursor: pointer">Materials</a>
+      <a (click)="scrollToSection('faq'); closeMobileMenu()" class="mobile-nav-link" style="cursor: pointer">FAQ</a>
+      <a (click)="scrollToSection('contact'); closeMobileMenu()" class="mobile-nav-link" style="cursor: pointer">Contact</a>
+    </div>
+
+    <!-- Auth Buttons (Only for Unauthenticated Users) -->
+    @if (isAuthenticated == false) {
+      <div class="mobile-auth-buttons">
+        <button mat-button (click)="navigateTo('/login'); closeMobileMenu()">Login</button>
+        <button class="btn-primary register-button" (click)="navigateTo('/register'); closeMobileMenu()">Get Started</button>
+      </div>
+    }
   </div>
-</nav>
 </div>

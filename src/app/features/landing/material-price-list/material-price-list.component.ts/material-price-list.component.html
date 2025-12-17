@@ -23,7 +23,7 @@
           <div style="font-size: 10px; padding: 5px; background: #f0f0f0; word-break: break-all;">
             URL: {{ material.imageUrl || 'NO IMAGE URL' }}
           </div>
-          <img [src]="material.imageUrl || 'https://via.placeholder.com/400x400?text=No+Image'"
+          <img [src]="material.imageUrl"
                [alt]="material.name"
                class="price-image"
                (error)="onImageError($event)">

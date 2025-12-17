@@ -4,9 +4,9 @@
 
     <!-- Main Container -->
     <div class="user-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <!-- User Profile Card -->
+       
+        <!-- <aside class="sidebar">
+          
             <div class="user-profile-card">
                 <div class="user-profile">
                     <div class="user-avatar">{{ userName.charAt(0) }}</div>
@@ -17,9 +17,9 @@
                 </div>
             </div>
 
-            <!-- Navigation Menu -->
+          
             <nav class="sidebar-nav">
-                <!-- Dashboard -->
+              
                 <a routerLink="/pickup-requests/my-requests" routerLinkActive="active" class="nav-item"
                     [routerLinkActiveOptions]="{exact: false}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -32,7 +32,7 @@
                     <span>My Requests</span>
                 </a>
 
-                <!-- Create Request -->
+               
                 <a routerLink="/pickup-requests/create" routerLinkActive="active" class="nav-item"
                     [routerLinkActiveOptions]="{exact: false}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -43,7 +43,7 @@
                     <span>New Request</span>
                 </a>
 
-                <!-- Payment History -->
+                
                 <a routerLink="/payments/history" routerLinkActive="active" class="nav-item"
                     [routerLinkActiveOptions]="{exact: false}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -54,7 +54,7 @@
                     <span>Payment History</span>
                 </a>
 
-                <!-- Profile/Settings -->
+             
                 <a routerLink="/profile" routerLinkActive="active" class="nav-item"
                     [routerLinkActiveOptions]="{exact: false}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -66,7 +66,7 @@
                 </a>
             </nav>
 
-            <!-- Sidebar Footer -->
+          
             <div class="sidebar-footer">
                 <button class="logout-btn" (click)="logout()">
                     <div class="logout-icon-wrapper">
@@ -86,10 +86,13 @@
                     <span>© 2025 RecycleHub</span>
                 </div>
             </div>
-        </aside>
+        </aside> -->
+
+        <app-user-sidebar></app-user-sidebar>
+
 
         <!-- Main Content Area -->
-        <main class="main-content">
+        <main class="main-content ms-0">
             <router-outlet></router-outlet>
         </main>
     </div>

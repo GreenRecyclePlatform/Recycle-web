@@ -10,7 +10,6 @@ import { RegistrationPage } from './features/auth/registration-page/registration
 import { ForgotPasswordPage } from './features/auth/forgot-password/forgot-password';
 import { ResetPassword } from './features/auth/reset-password/reset-password';
 import { TestNotificationsComponent } from './pages/test-notifications/test-notifications.component';
-import { Settings } from './features/admin/settings/settings';
 import { supplierRoutes } from './features/supplier/supplier.routes';
 import { ManageMaterials } from './features/manage-materials/manage-materials';
 
@@ -19,6 +18,7 @@ import { adminGuard } from './core/guards/admin-guard';
 import { AdminDashboardComponent } from './pages/admin-dashboard.component/admin-dashboard.component';
 import { ReviewRequests } from './features/review-requests/review-requests';
 import { ProfileComponent } from './features/profile/profile.component';
+import { UserLayoutComponent } from './shared/layouts/user-layout/user-layout';
 
 export const routes: Routes = [
   //{
@@ -67,9 +67,19 @@ export const routes: Routes = [
 
   // Reviews
   {
-    path: 'reviews',
-    loadChildren: () => import('./features/reviews/reviews.routes').then((m) => m.REVIEW_ROUTES),
-  },
+  path: '',
+  component: UserLayoutComponent,
+  children: [
+    {
+      path: 'reviews',
+      loadChildren: () =>
+        import('./features/reviews/reviews.routes').then((m) => m.REVIEW_ROUTES),
+    },
+  ]},
+  // {
+  //   path: 'reviews',
+  //   loadChildren: () => import('./features/reviews/reviews.routes').then((m) => m.REVIEW_ROUTES),
+  // },
 
   // Pickup requests
   {
@@ -118,10 +128,7 @@ export const routes: Routes = [
       //   loadComponent: () =>
       //     import('./features/manage-materials/manage-materials').then((m) => m.ManageMaterials),
       // },
-      {
-        path: 'settings',
-        loadComponent: () => import('./features/admin/settings/settings').then((m) => m.Settings),
-      },
+      
     ]
   },
 

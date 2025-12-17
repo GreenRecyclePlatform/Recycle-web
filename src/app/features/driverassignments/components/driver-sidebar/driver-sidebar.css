@@ -1,11 +1,30 @@
 /* driver-sidebar.component.css */
 
-/* ========== Host (IMPORTANT FIX) ========== */
+/* ========== Host (CRITICAL FIX FOR MOBILE) ========== */
 :host {
-  width: 260px;
-  min-width: 260px;
   display: block;
+  position: relative;
+}
 
+/* Desktop: normal sidebar width */
+@media (min-width: 769px) {
+  :host {
+    width: 260px;
+    min-width: 260px;
+  }
+}
+
+/* Mobile: collapse host to allow fixed positioning */
+@media (max-width: 768px) {
+  :host {
+    width: 0;
+    min-width: 0;
+    height: 0;
+  }
+}
+
+/* ========== CSS Variables ========== */
+:host {
   --primary-green: #2D6A4F;
   --primary-green-dark: #1e4d38;
   --primary-green-light: #d8f3dc;
@@ -24,9 +43,65 @@
   --radius-xl: 0.75rem;
 }
 
+/* ========== Mobile Sidebar Toggle Button ========== */
+.mobile-sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 70px;
+  left: 16px;
+  z-index: 100;
+  width: 44px;
+  height: 44px;
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  color: var(--gray-600);
+}
+
+.mobile-sidebar-toggle:hover {
+  background: var(--gray-50);
+  border-color: var(--primary-green);
+  color: var(--primary-green);
+}
+
+.mobile-sidebar-toggle:active {
+  transform: scale(0.95);
+}
+
+.mobile-sidebar-toggle.open {
+  background: var(--primary-green);
+  border-color: var(--primary-green);
+  color: white;
+}
+
+/* ========== Sidebar Backdrop for Mobile ========== */
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 98;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.sidebar-backdrop.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
 /* ========== Sidebar Container ========== */
 .sidebar {
-  width: 100%;
+  width: 260px;
   background: white;
   padding: 1.5rem;
   display: flex;
@@ -206,10 +281,24 @@
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
+  position: relative;
+}
+
+.logout-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .logout-btn svg {
   flex-shrink: 0;
+}
+
+.logout-arrow {
+  margin-left: auto;
+  font-size: 1.25rem;
+  transition: transform 0.2s ease;
 }
 
 .logout-btn:hover {
@@ -220,6 +309,10 @@
 
 .logout-btn:hover svg {
   stroke: #DC2626;
+}
+
+.logout-btn:hover .logout-arrow {
+  transform: translateX(4px);
 }
 
 .logout-btn:active {
@@ -248,23 +341,27 @@
   background: #9CA3AF;
 }
 
-/* ========== Responsive ========== */
+/* ========== Responsive Design ========== */
 @media (max-width: 768px) {
-  :host {
-    width: 100%;
-    min-width: 100%;
+  /* Show mobile controls */
+  .mobile-sidebar-toggle {
+    display: flex;
   }
 
+  .sidebar-backdrop {
+    display: block;
+  }
+
+  /* Fixed sidebar that slides in */
   .sidebar {
     position: fixed;
     left: -260px;
     top: 64px;
     z-index: 99;
+    width: 260px;
     transition: left 0.3s ease;
     height: calc(100vh - 64px);
     box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
-    border-right: 1px solid var(--gray-200);
-    padding: 1.5rem;
   }
 
   .sidebar.open {
@@ -297,11 +394,20 @@
     padding: 0.75rem 0.875rem;
     font-size: 0.875rem;
   }
+
+  .mobile-sidebar-toggle {
+    top: 65px;
+    left: 12px;
+    width: 40px;
+    height: 40px;
+  }
 }
 
 /* ========== Print Styles ========== */
 @media print {
-  .sidebar {
-    display: none;
+  .sidebar,
+  .mobile-sidebar-toggle,
+  .sidebar-backdrop {
+    display: none !important;
   }
 }

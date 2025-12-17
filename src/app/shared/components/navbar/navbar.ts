@@ -1,8 +1,8 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { LucideAngularModule, Leaf, Bell, Menu, User, LogOut } from 'lucide-angular';
+import { LucideAngularModule, Leaf, Bell, Menu, User, ShoppingCart, ClipboardList, LogOut } from 'lucide-angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../../core/services/authservice';
@@ -31,6 +31,8 @@ export class Navbar implements OnInit, OnDestroy {
   Bell = Bell;
   Menu = Menu;
   User = User;
+  ShoppingCart = ShoppingCart;
+  ClipboardList = ClipboardList;
   LogOut = LogOut;
 
   // State
@@ -75,7 +77,7 @@ export class Navbar implements OnInit, OnDestroy {
    * Initialize notifications when user is authenticated
    */
   private initializeNotifications(): void {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    const token = sessionStorage.getItem('accesstoken');
 
     if (token) {
       console.log('🔍 Token found, attempting to connect...');
@@ -124,6 +126,30 @@ export class Navbar implements OnInit, OnDestroy {
   }
 
   /**
+   * Toggle mobile menu
+   */
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
+  }
+
+  /**
+   * Close mobile menu
+   */
+  closeMobileMenu(): void {
+    this.mobileMenuOpen = false;
+  }
+
+  /**
+   * Close mobile menu when window is resized to desktop
+   */
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any): void {
+    if (window.innerWidth > 768) {
+      this.mobileMenuOpen = false;
+    }
+  }
+
+  /**
    * Logout user
    */
   logout() {
@@ -138,7 +164,7 @@ export class Navbar implements OnInit, OnDestroy {
     // Logout from auth service
     this.authService.logout();
 
-    this.router.navigate([' ']);
+    this.router.navigate(['/']);
   }
 
   /**
@@ -188,6 +214,7 @@ export class Navbar implements OnInit, OnDestroy {
   private cleanup(): void {
     this.unreadCount = 0;
     this.isNotificationDropdownOpen = false;
+    this.mobileMenuOpen = false;
   }
 
   ngOnDestroy(): void {

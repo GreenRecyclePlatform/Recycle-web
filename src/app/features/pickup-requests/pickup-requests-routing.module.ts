@@ -94,7 +94,8 @@ const routes: Routes = [
                     {
                         path: 'details/:id',
                         component: RequestDetails
-                    }
+                    },
+                  
                 ]
             },
             // ✅ ADMIN ROUTES - No layout (your team member handles this)

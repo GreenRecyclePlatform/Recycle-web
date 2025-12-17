@@ -1,11 +1,22 @@
+<!-- Mobile Menu Toggle Button -->
+<button class="mobile-menu-toggle" (click)="toggleSidebar()" [class.open]="isSidebarOpen">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="3" y1="12" x2="21" y2="12"></line>
+    <line x1="3" y1="6" x2="21" y2="6"></line>
+    <line x1="3" y1="18" x2="21" y2="18"></line>
+  </svg>
+</button>
 
-<aside class="sidebar">
+<!-- Backdrop Overlay -->
+<div class="sidebar-backdrop" [class.visible]="isSidebarOpen" (click)="toggleSidebar()"></div>
+
+<aside class="sidebar" [class.open]="isSidebarOpen">
   <!-- Sidebar Header -->
   <div class="sidebar-header">
     <div class="admin-profile">
-      <div class="admin-avatar">{{ userNmae }}</div>
+      <div class="admin-avatar">{{ userName[0] }}</div>
       <div class="admin-info">
-        <h3 class="admin-name">{{ userRole }}</h3>
+        <h3 class="admin-name">{{ userName }}</h3>
         <span class="admin-badge">{{ userRole }}</span>
       </div>
     </div>
@@ -13,9 +24,47 @@
 
   <!-- Sidebar Navigation -->
   <nav class="sidebar-nav">
-   
-    <a routerLink="/reviews" routerLinkActive="active" class="nav-item">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+    <!--moving-->
+
+    <a routerLink="/pickup-requests/my-requests" routerLinkActive="active" class="nav-item"
+       [routerLinkActiveOptions]="{exact: false}" (click)="toggleSidebar()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>
+      <span>My Requests</span>
+    </a>
+
+    <a routerLink="/pickup-requests/create" routerLinkActive="active" class="nav-item"
+       [routerLinkActiveOptions]="{exact: false}" (click)="toggleSidebar()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+      <span>New Request</span>
+    </a>
+
+    <a routerLink="/payments/history" routerLinkActive="active" class="nav-item"
+       [routerLinkActiveOptions]="{exact: false}" (click)="toggleSidebar()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+        <line x1="1" y1="10" x2="23" y2="10"></line>
+      </svg>
+      <span>Payment History</span>
+    </a>
+
+    <!--moving-->
+
+    <a routerLink="/reviews" routerLinkActive="active" class="nav-item"
+       [routerLinkActiveOptions]="{exact: false}" (click)="toggleSidebar()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M18 20a6 6 0 0 0-12 0"></path>
         <circle cx="12" cy="10" r="4"></circle>
         <circle cx="12" cy="10" r="4"></circle>
@@ -23,83 +72,23 @@
       <span>My Reviews</span>
     </a>
 
-    <a routerLink="nbghj" routerLinkActive="active" class="nav-item">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+    <a routerLink="/profile" routerLinkActive="active" class="nav-item"
+       [routerLinkActiveOptions]="{exact: false}" (click)="toggleSidebar()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
       </svg>
       <span>Profile</span>
     </a>
 
-    
-    <a routerLink="mkjk" routerLinkActive="active" class="nav-item">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-        <circle cx="9" cy="7" r="4"></circle>
-        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-      </svg>
-      <span>Earning</span>
-    </a>
-<!--
- <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="3" width="7" height="7"></rect>
-        <rect x="14" y="3" width="7" height="7"></rect>
-        <rect x="14" y="14" width="7" height="7"></rect>
-        <rect x="3" y="14" width="7" height="7"></rect>
-      </svg>
-      <span>Dashboard</span>
-    </a>
-
-    <a routerLink="/admin/review-requests" routerLinkActive="active" class="nav-item">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-        <polyline points="14 2 14 8 20 8"></polyline>
-        <line x1="16" y1="13" x2="8" y2="13"></line>
-        <line x1="16" y1="17" x2="8" y2="17"></line>
-        <polyline points="10 9 9 9 8 9"></polyline>
-      </svg>
-      <span>Review Requests</span>
-      <span class="badge-notification" *ngIf="notificationCount > 0">{{ notificationCount }}</span>
-    </a>
-
-
-    <a routerLink="/admin/inventory" routerLinkActive="active" class="nav-item">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
-        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-        <line x1="12" y1="22.08" x2="12" y2="12"></line>
-      </svg>
-      <span>Inventory</span>
-    </a>
-
-
-    <a routerLink="/admin/reports" routerLinkActive="active" class="nav-item">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="18" y1="20" x2="18" y2="10"></line>
-        <line x1="12" y1="20" x2="12" y2="4"></line>
-        <line x1="6" y1="20" x2="6" y2="14"></line>
-      </svg>
-      <span>Reports</span>
-    </a>
-  -->
-
-    <a routerLink="/pickup-requests" routerLinkActive="active" class="nav-item">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="3"></circle>
-        <path d="M12 1v6m0 6v6m5.66-13.66l-4.24 4.24m0 8.48l4.24 4.24m5.66-13.66l-4.24 4.24m-8.48 0l-4.24-4.24m13.66 5.66l-4.24 4.24m-8.48 0l-4.24-4.24"></path>
-      </svg>
-      <span>My Requests</span>
-    </a>
   </nav>
 
   <!-- Sidebar Footer -->
   <div class="sidebar-footer">
     <button class="logout-btn" (click)="logout()">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
         <polyline points="16 17 21 12 16 7"></polyline>
         <line x1="21" y1="12" x2="9" y2="12"></line>

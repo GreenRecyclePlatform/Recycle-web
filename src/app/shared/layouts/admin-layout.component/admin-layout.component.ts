@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -19,6 +19,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   adminName: string = 'Admin User';
   adminRole: string = 'Admin';
   notificationCount: number = 0;
+  isSidebarOpen = false;
 
   private destroy$ = new Subject<void>();
 
@@ -42,12 +43,14 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
 
   private loadUserData(): void {
     try {
-      const userDataStr = localStorage.getItem('userData') || sessionStorage.getItem('userData');
+      const userDataStr = true;
+      // localStorage.getItem('userData') || sessionStorage.getItem('userData');
 
       if (userDataStr) {
-        const userData = JSON.parse(userDataStr);
-        this.adminName = userData.name || userData.username || 'Admin User';
-        this.adminRole = userData.role || 'Admin';
+        // const userData = JSON.parse(userDataStr);
+        this.adminName = this.authService.getUserName() || "AdminUser";
+        console.log(`uuuuuuuuuuuuuuuuuuuuuuuuuuu${this.adminName}`);
+        //this.adminRole = userData.role || 'Admin';
       } else {
         const token = localStorage.getItem('token') || sessionStorage.getItem('token');
         if (token) {
@@ -68,6 +71,32 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.error('Error decoding token:', error);
       return null;
+    }
+  }
+
+  /**
+   * Toggle sidebar for mobile
+   */
+  toggleSidebar(): void {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
+
+  /**
+   * Close sidebar when nav item is clicked on mobile
+   */
+  closeSidebarOnMobile(): void {
+    if (window.innerWidth <= 768) {
+      this.isSidebarOpen = false;
+    }
+  }
+
+  /**
+   * Close sidebar when window is resized to desktop
+   */
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any): void {
+    if (window.innerWidth > 768) {
+      this.isSidebarOpen = false;
     }
   }
 
