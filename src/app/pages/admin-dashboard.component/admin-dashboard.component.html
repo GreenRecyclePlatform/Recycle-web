@@ -103,7 +103,14 @@
               <div class="summary-icon">💰</div>
               <div class="summary-info">
                 <h3>EGP {{ stats.revenueThisMonth.toLocaleString() }}</h3>
-                <p>Revenue This Month</p>
+                <p>payments To Clients This Month</p>
+              </div>
+            </div>
+             <div class="summary-item">
+              <div class="summary-icon">🚛</div>
+              <div class="summary-info">
+                <h3> EGP {{ (stats.completedPickups*200).toLocaleString()}}</h3>
+                <p>payments To Drivers</p>
               </div>
             </div>
 
