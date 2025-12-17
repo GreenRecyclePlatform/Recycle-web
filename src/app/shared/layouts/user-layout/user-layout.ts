@@ -10,21 +10,21 @@ import { AuthService } from '../../../core/services/authservice';
   selector: 'app-user-layout',
   templateUrl: './user-layout.html',
   styleUrls: ['./user-layout.css'],
-  imports: [CommonModule, Navbar, RouterModule,UserSidebar]
+  imports: [CommonModule, Navbar, RouterModule, UserSidebar]
 })
-export class UserLayoutComponent{
+export class UserLayoutComponent {
   userName: string = 'User';
   userRole: string = 'User';
 
-  constructor(private router: Router,private authService: AuthService) { }
+  constructor(private router: Router, private authService: AuthService) { }
 
   // ngOnInit(): void {
-    // Get user info from localStorage or auth service
-    // const storedUser = localStorage.getItem('userName');
-    // if (storedUser) {
-    //   this.userName = storedUser;
-    // }
+  // Get user info from localStorage or auth service
+  // const storedUser = localStorage.getItem('userName');
+  // if (storedUser) {
+  //   this.userName = storedUser;
+  // }
   //}
 
-  
+
 }

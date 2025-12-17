@@ -1,12 +1,9 @@
 // src/app/features/payments/components/payment-details/payment-details.ts
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PaymentService } from '../../services/payment.service';
-import { Navbar } from "../../../../shared/components/navbar/navbar";
-
 import {
   Payment,
   PaymentStatus,
@@ -18,7 +15,7 @@ import {
 @Component({
   selector: 'app-payment-details',
   standalone: true,
-  imports: [CommonModule, RouterModule, Navbar],
+  imports: [CommonModule, RouterModule],
   templateUrl: './payment-details.html',
   styleUrls: ['./payment-details.css']
 })

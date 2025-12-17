@@ -61,7 +61,6 @@ import { RequestDetails } from './components/request-details/request-details';
 import { AdminRequestsDashboard } from './components/admin-requests-dashboard/admin-requests-dashboard';
 import { EditRequest } from './components/edit-request/edit-request';
 import { UserLayoutComponent } from '../../shared/layouts/user-layout/user-layout';
-
 const routes: Routes = [
     {
         //canActivate: [authGuard],
@@ -95,7 +94,8 @@ const routes: Routes = [
                         path: 'details/:id',
                         component: RequestDetails
                     },
-                  
+
+
                 ]
             },
             // ✅ ADMIN ROUTES - No layout (your team member handles this)

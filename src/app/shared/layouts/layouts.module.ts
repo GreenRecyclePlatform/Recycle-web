@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { UserLayoutComponent } from './user-layout/user-layout';
 import { Navbar } from '../components/navbar/navbar'; // For navbar
 import { ReviewListComponent } from '../../features/reviews/components/review-list/review-list';
+import { ProfileComponent } from '../../features/profile/profile.component';
 
 @NgModule({
     declarations: [],
@@ -13,11 +14,13 @@ import { ReviewListComponent } from '../../features/reviews/components/review-li
         RouterModule,    // ✅ CRITICAL: Needed for routerLink and router-outlet
         Navbar,
         UserLayoutComponent,
+        ProfileComponent
         // ✅ Imports navbar component
     ],
     exports: [
         UserLayoutComponent,
-        Navbar  // ✅ Exports navbar component
+        Navbar,
+        ProfileComponent,  // ✅ Exports navbar component
     ]
 })
 export class LayoutsModule { }
