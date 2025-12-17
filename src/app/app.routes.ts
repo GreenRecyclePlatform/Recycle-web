@@ -81,11 +81,7 @@ export const routes: Routes = [
       }
     ]
   },
-  // {
-  //   path: 'reviews',
-  //   loadChildren: () => import('./features/reviews/reviews.routes').then((m) => m.REVIEW_ROUTES),
-  // },
-
+ 
   // Pickup requests
   {
     path: 'pickup-requests',
@@ -128,11 +124,7 @@ export const routes: Routes = [
         data: { title: 'Manage Materials' }
       },
       { path: 'review-requests', component: ReviewRequests },
-      // {
-      //   path: 'manage-materials',
-      //   loadComponent: () =>
-      //     import('./features/manage-materials/manage-materials').then((m) => m.ManageMaterials),
-      // },
+      
 
     ]
   },

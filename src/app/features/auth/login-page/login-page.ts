@@ -166,35 +166,7 @@ export class LoginPage implements OnDestroy {
       },
     });
 
-    //   // Show success message
-    //   this.snackBar.open('Welcome back!', 'Close', {
-    //     duration: 3000,
-    //     panelClass: ['success-snackbar'],
-    //   });
-
-    // },
-    // error: (error) => {
-    //   console.error('❌ Login error:', error);
-    //   this.isLoading = false;
-
-    //   let errorMessage = 'Login failed. Please try again.';
-
-    //   if (error.status === 401) {
-    //     errorMessage = 'Invalid email/username or password';
-    //   } else if (error.status === 404) {
-    //     errorMessage = 'User not found';
-    //   } else if (error.status === 0) {
-    //     errorMessage = 'Unable to connect to server';
-    //   } else if (error.error?.message) {
-    //     errorMessage = error.error.message;
-    //   }
-
-    //   this.snackBar.open(errorMessage, 'Close', {
-    //     duration: 5000,
-    //     panelClass: ['error-snackbar'],
-    //   });
-    // },
-    //});
+    
   }
 
   /**
