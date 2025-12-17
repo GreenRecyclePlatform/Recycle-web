@@ -1,0 +1,122 @@
+
+<app-navbar></app-navbar>
+
+<div class="dashboard-container mt-5">
+  
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <h1 class="header-title">♻️ Available Materials</h1>
+      <p class="header-subtitle">Purchase recycled materials for your business</p>
+    </div>
+  </header>
+
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading materials...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error()" class="error-container">
+    <p>{{ error() }}</p>
+    <button (click)="loadMaterials()" class="btn-retry">Retry</button>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!loading() && !error()" class="content-grid">
+    <!-- Materials List -->
+    <div class="materials-section">
+      <h2 class="section-title">Available Materials</h2>
+      
+      <div *ngIf="materials().length === 0" class="empty-state">
+        <p>No materials available at the moment</p>
+      </div>
+
+      <div class="materials-grid">
+        <div *ngFor="let material of materials()" class="material-card">
+          <div class="material-icon">{{ material.icon }}</div>
+          
+          <div class="material-info">
+            <h3 class="material-name">{{ material.name }}</h3>
+            <p class="material-description">{{ material.description || 'No description' }}</p>
+            
+            <div class="material-details">
+              <div class="detail-item">
+                <span class="detail-label">Price:</span>
+                <span class="detail-value">${{ material.sellingPrice }}/{{ material.unit }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Available:</span>
+                <span class="detail-value available-qty">{{ material.availableQuantity }} </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="material-actions">
+            <div class="quantity-input">
+              <label for="qty-{{ material.materialId }}">Quantity ({{ material.unit }}):</label>
+              <input 
+                type="number" 
+                [id]="'qty-' + material.materialId"
+                [(ngModel)]="quantities[material.materialId]" 
+                [min]="1" 
+                [max]="material.availableQuantity"
+                [placeholder]="'Max: ' + material.availableQuantity"
+              />
+            </div>
+            <button 
+              (click)="addToCart(material)" 
+              class="btn-add-cart"
+              [disabled]="material.availableQuantity === 0"
+            >
+              {{ material.availableQuantity === 0 ? 'Out of Stock' : 'Add to Cart' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-section">
+      <div class="cart-sticky">
+        <h2 class="section-title">🛒 Your Cart</h2>
+        
+        <div *ngIf="cart().length === 0" class="empty-cart">
+          <p>Your cart is empty</p>
+        </div>
+
+        <div *ngIf="cart().length > 0" class="cart-content">
+          <div class="cart-items">
+            <div *ngFor="let item of cart()" class="cart-item">
+              <div class="cart-item-header">
+                <span class="cart-item-icon">{{ item.material.icon }}</span>
+                <span class="cart-item-name">{{ item.material.name }}</span>
+                <button (click)="removeFromCart(item.material.materialId)" class="btn-remove">×</button>
+              </div>
+              <div class="cart-item-details">
+                <p>{{ item.quantity }}× ({{ item.material.unit }} × ${{ item.material.sellingPrice }})</p>
+                <p class="cart-item-total">${{ item.totalPrice.toFixed(2) }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="cart-summary">
+            <div class="summary-row">
+              <span>Total Items:</span>
+              <span class="summary-value">{{ getTotalItems() }} {{ cart()[0]?.material!.unit }}</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total Amount:</span>
+              <span class="summary-value">${{ getTotalAmount().toFixed(2) }}</span>
+            </div>
+          </div>
+
+          <button (click)="proceedToCheckout()" class="btn-checkout">
+            Proceed to Checkout
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

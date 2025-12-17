@@ -1,0 +1,148 @@
+<div class="login-container">
+  <div class="login-background">
+    <div class="login-background-blur login-background-blur-1"></div>
+    <div class="login-background-blur login-background-blur-2"></div>
+  </div>
+
+  <mat-card class="login-card">
+    <mat-card-header class="login-header">
+      <div class="d-flex justify-content-center mb-4">
+        <div class="login-icon-container">
+          <lucide-icon [name]="Leaf" [size]="40" class="text-white"></lucide-icon>
+        </div>
+      </div>
+      <mat-card-title class="h4">Welcome to RecycleHub</mat-card-title>
+      <mat-card-subtitle>Sign in to your account to continue</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="handleLogin()" class="login-form">
+        <!-- Login Method Toggle -->
+        <div class="login-toggle">
+          <button
+            type="button"
+            [class]="'login-toggle-btn ' + (loginMethod === 'email' ? 'active' : '')"
+            (click)="toggleLoginMethod('email')"
+          >
+            Email
+          </button>
+          <button
+            type="button"
+            [class]="'login-toggle-btn ' + (loginMethod === 'username' ? 'active' : '')"
+            (click)="toggleLoginMethod('username')"
+          >
+            Username
+          </button>
+        </div>
+
+        <div class="w-100">
+          <label>{{ loginMethod === 'email' ? 'Email Address' : 'Username' }}</label>
+
+          <input
+            [class.error-border]="hasError('email')"
+            [type]="loginMethod === 'email' ? 'email' : 'text'"
+            [placeholder]="loginMethod === 'email' ? 'you@example.com' : 'yourusername'"
+            formControlName="email"
+            required
+          />
+
+          @if(hasError('email')){
+
+          <p class="error text-danger mb-0 d-flex gap-1 mt-2 align-items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-circle-alert w-4 h-4"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" x2="12" y1="8" y2="12"></line>
+              <line x1="12" x2="12.01" y1="16" y2="16"></line>
+            </svg>
+            {{ errorMessage('email') }}
+          </p>
+          }
+        </div>
+
+        <div class="w-100">
+          <label>Password</label>
+          <div class="relative">
+            <input
+              [class.error-border]="hasError('password')"
+              matInput
+              [type]="showPassword ? 'text' : 'password'"
+              placeholder="••••••••"
+              formControlName="password"
+              required
+            />
+            <button
+              type="button"
+              class="position-absolute top-50 end-0 translate-middle-y btn btn-link p-0 pe-3"
+              style="border: none; box-shadow: none"
+              (click)="togglePassword()"
+            >
+              <i class="bi passicon" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+            </button>
+          </div>
+          @if(hasError('password')){
+
+          <p class="error text-danger mb-0 d-flex gap-1 mt-2 align-items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-circle-alert w-4 h-4"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" x2="12" y1="8" y2="12"></line>
+              <line x1="12" x2="12.01" y1="16" y2="16"></line>
+            </svg>
+            {{ errorMessage('password') }}
+          </p>
+          }
+        </div>
+
+        <div class="login-options">
+          <span></span>
+          <a
+            routerLink="/forgot-password"
+            class="small text-primary text-decoration-none"
+            style="color: var(--primary-green) !important"
+            >Forgot password?</a
+          >
+        </div>
+
+        <button type="submit" class="w-100 btn-primary">Sign In</button>
+
+        <!-- <div class="login-divider"> -->
+        <div class="login-divider-text mt-2 mb-2">
+          <span>Or</span>
+        </div>
+        <!-- </div> -->
+
+        <div class="text-center">
+          <p class="small text-secondary">
+            Don't have an account?
+            <a routerLink="/register" class="text-primary-green text-decoration-none">
+              Register here</a
+            >
+          </p>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

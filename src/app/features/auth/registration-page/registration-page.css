@@ -1,0 +1,190 @@
+/* Registration Page Component Styles */
+.registration-container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #2d6a4f, #1e4d38);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  position: relative;
+}
+
+.registration-background {
+  position: absolute;
+  inset: 0;
+  opacity: 0.1;
+}
+
+.registration-blur {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  filter: blur(80px);
+}
+
+.registration-blur-1 {
+  top: 5rem;
+  left: 5rem;
+  width: 16rem;
+  height: 16rem;
+}
+
+.registration-blur-2 {
+  bottom: 5rem;
+  right: 5rem;
+  width: 24rem;
+  height: 24rem;
+}
+
+.registration-card {
+  width: 100%;
+  max-width: 42rem;
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 24px;
+  border-radius: calc(0.625rem + 4px);
+}
+
+.registration-icon-container {
+  width: 4rem;
+  height: 4rem;
+}
+
+.registration-progress-bar-bg {
+  height: 0.5rem;
+  background-color: #99a1af;
+  border-radius: 0.25rem;
+}
+
+.registration-progress-bar-fill {
+  height: 0.5rem;
+  background-color: #030213;
+  transition: width 0.3s ease-in-out;
+  border-radius: 0.25rem;
+}
+
+.registration-form-step {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  display: block;
+  font-size: 14px;
+  color: #0a0a0a;
+  margin-bottom: 8px;
+}
+input {
+  background-color: #f3f3f5;
+  width: 100%;
+  padding: 4px 12px;
+  outline: none;
+  border: 1px solid transparent;
+  border-radius: calc(0.625rem - 2px);
+}
+
+input:focus {
+  outline: 3px solid oklch(0.551 0.027 264.364);
+  outline-offset: 2px;
+}
+
+.registration-role-card {
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.registration-role-card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.role-selected {
+  border: 2px solid #2d6a4f !important;
+  background-color: rgba(45, 106, 79, 0.05) !important;
+}
+
+.registration-role-icon {
+  width: 4rem;
+  height: 4rem;
+}
+
+.next {
+  padding: 8px 12px;
+  color: #ffffff !important;
+  background-color: var(--primary-green) !important;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: calc(0.625rem - 2px);
+  gap: calc(00.25rem * 2);
+}
+.back {
+  display: flex;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: calc(0.625rem - 2px);
+  border: 1px solid #e0e0e0 !important;
+  justify-content: center;
+  gap: calc(00.25rem * 2);
+}
+.back:hover {
+  background-color: rgba(108, 117, 125, 0.1) !important;
+}
+.next:hover {
+  background-color: rgba(45, 106, 79, 0.9) !important;
+}
+
+.create {
+  padding: 8px 16px;
+  color: white !important;
+  background-color: var(--primary-green) !important;
+  font-size: 14px;
+  border-radius: calc(0.625rem - 2px);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.transition-all {
+  transition: all 0.3s;
+}
+
+.hover-shadow-lg:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.file-input::-webkit-file-upload-button {
+  display: none;
+}
+
+.file-input::file-selector-button {
+  display: none;
+}
+
+.error {
+  font-size: 0.875rem;
+}
+
+/* Red border for invalid inputs */
+input.error-border {
+  outline: 3px solid #dc3545;
+  outline-offset: 2px;
+}
+
+.passicon {
+  color: #0a0a0a;
+}
+
+mat-card {
+  box-shadow: none !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: calc(0.625rem + 4px) !important;
+}
+
+input[type='checkbox'] {
+  outline: none;
+  accent-color: black; /* changes the checkmark and the filled background when checked */
+}

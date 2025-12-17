@@ -1,0 +1,133 @@
+ @if (isChatOpen()) {
+      <div class="chatbot-container" [@slideUp]>
+        <!-- Header -->
+        <div class="chat-header">
+          <div class="header-content">
+            <div class="logo">
+              <div class="logo-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+                  <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+                </svg>
+              </div>
+              <div>
+                <h2>مساعد RecycleHub</h2>
+                <span class="status">
+                  <span class="status-dot"></span>
+                  متاح الآن
+                </span>
+              </div>
+            </div>
+            <button class="close-btn" (click)="toggleChat()" title="إغلاق">
+              ✕
+            </button>
+          </div>
+        </div>
+
+        <!-- Messages Area -->
+        <div class="chat-messages" #messagesContainer>
+          @if (messages().length === 0) {
+            <div class="welcome-message">
+              <div class="welcome-icon">👋</div>
+              <h3>مرحباً بك!</h3>
+              <p>أنا مساعدك الذكي في RecycleHub. كيف يمكنني مساعدتك اليوم؟</p>
+              
+              <div class="quick-questions">
+                <p class="quick-title">أسئلة شائعة:</p>
+                @for (q of quickQuestions(); track q.id) {
+                  <button (click)="sendQuickQuestion(q.question)" class="quick-btn">
+                    <span class="quick-icon">{{ q.icon }}</span>
+                    {{ q.question }}
+                  </button>
+                }
+              </div>
+            </div>
+          }
+
+          @for (message of messages(); track $index) {
+            <div [class]="'message ' + (message.isUser ? 'user-message' : 'bot-message')">
+              @if (!message.isUser) {
+                <div class="bot-avatar">🤖</div>
+              }
+              <div class="message-content">
+                <p [innerHTML]="formatMessage(message.text)"></p>
+                @if (message.sources && message.sources.length > 0) {
+                  <div class="sources">
+                    <small>📚 المصادر: {{ message.sources.join(', ') }}</small>
+                  </div>
+                }
+                <span class="timestamp">{{ formatTime(message.timestamp) }}</span>
+              </div>
+              @if (message.isUser) {
+                <div class="user-avatar">👤</div>
+              }
+            </div>
+          }
+
+          @if (isLoading()) {
+            <div class="message bot-message">
+              <div class="bot-avatar">🤖</div>
+              <div class="message-content loading">
+                <div class="typing-indicator">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
+            </div>
+          }
+
+          @if (errorMessage()) {
+            <div class="error-banner">
+              <span>⚠️ {{ errorMessage() }}</span>
+              <button (click)="errorMessage.set('')">✕</button>
+            </div>
+          }
+        </div>
+
+        <!-- Input Area -->
+        <div class="chat-input-container">
+          <form (submit)="sendMessage($event)" class="chat-form">
+            <input
+              type="text"
+              [(ngModel)]="userInput"
+              name="message"
+              placeholder="اكتب سؤالك هنا..."
+              [disabled]="isLoading()"
+              class="chat-input"
+              maxlength="500"
+            />
+            <button 
+              type="submit" 
+              [disabled]="!userInput.trim() || isLoading()"
+              class="send-button"
+              title="إرسال"
+            >
+              @if (isLoading()) {
+                <div class="spinner"></div>
+              } @else {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              }
+            </button>
+          </form>
+          <div class="input-hint">
+            <small>{{ userInput.length }}/500</small>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Floating Chat Button -->
+    @if (!isChatOpen()) {
+      <button class="floating-chat-btn" (click)="toggleChat()" title="افتح المساعد">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+          <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+        </svg>
+        @if (unreadCount() > 0) {
+          <span class="badge">{{ unreadCount() }}</span>
+        }
+      </button>
+    }

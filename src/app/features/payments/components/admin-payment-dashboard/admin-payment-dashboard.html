@@ -1,0 +1,314 @@
+<div class="min-h-screen bg-[#F8F9FA] py-8 pt-20 ">
+    <div class="container mx-auto px-4 max-w-7xl">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-[#212529] mb-2">Payment Requests Dashboard</h1>
+            <p class="text-gray-600">Manage and approve pending payment requests</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">Pending Requests</p>
+                        <p class="text-3xl font-bold text-yellow-600">{{ pendingCount }}</p>
+                    </div>
+                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">Approved Today</p>
+                        <p class="text-3xl font-bold text-green-600">{{ approvedTodayCount }}</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">Total Paid</p>
+                        <p class="text-3xl font-bold text-blue-600">{{ formatCurrency(totalPaidAmount) }}</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">Failed/Rejected</p>
+                        <p class="text-3xl font-bold text-red-600">{{ failedCount }}</p>
+                    </div>
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="bg-white rounded-xl border border-gray-200 p-4 mb-6">
+            <div class="flex gap-2 overflow-x-auto">
+                <button (click)="filterByStatus('Pending')" [class.bg-yellow-100]="selectedStatus === 'Pending'"
+                    [class.text-yellow-700]="selectedStatus === 'Pending'"
+                    [class.hover:bg-gray-100]="selectedStatus !== 'Pending'"
+                    [class.text-gray-700]="selectedStatus !== 'Pending'"
+                    class="px-4 py-2 rounded-lg font-medium whitespace-nowrap transition">
+                    Pending ({{ pendingCount }})
+                </button>
+                <button (click)="filterByStatus('Completed')" [class.bg-green-100]="selectedStatus === 'Completed'"
+                    [class.text-green-700]="selectedStatus === 'Completed'"
+                    [class.hover:bg-gray-100]="selectedStatus !== 'Completed'"
+                    [class.text-gray-700]="selectedStatus !== 'Completed'"
+                    class="px-4 py-2 rounded-lg font-medium whitespace-nowrap transition">
+                    Paid
+                </button>
+                <button (click)="filterByStatus('Failed')" [class.bg-red-100]="selectedStatus === 'Failed'"
+                    [class.text-red-700]="selectedStatus === 'Failed'"
+                    [class.hover:bg-gray-100]="selectedStatus !== 'Failed'"
+                    [class.text-gray-700]="selectedStatus !== 'Failed'"
+                    class="px-4 py-2 rounded-lg font-medium whitespace-nowrap transition">
+                    Failed
+                </button>
+                <button (click)="filterByStatus('All')" [class.bg-blue-100]="selectedStatus === 'All'"
+                    [class.text-blue-700]="selectedStatus === 'All'"
+                    [class.hover:bg-gray-100]="selectedStatus !== 'All'"
+                    [class.text-gray-700]="selectedStatus !== 'All'"
+                    class="px-4 py-2 rounded-lg font-medium whitespace-nowrap transition">
+                    All ({{ payments.length }})
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        @if (isLoading) {
+        <div class="text-center py-12">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#2D6A4F]"></div>
+            <p class="mt-4 text-gray-600">Loading payments...</p>
+        </div>
+        }
+
+        <!-- Error State -->
+        @if (error && !isLoading) {
+        <div class="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center justify-between">
+            <span class="text-red-800">{{ error }}</span>
+            <button (click)="loadPayments()"
+                class="bg-red-100 hover:bg-red-200 text-red-800 px-4 py-2 rounded-lg transition">
+                Retry
+            </button>
+        </div>
+        }
+
+        <!-- Payments Table -->
+        @if (!isLoading && !error) {
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Request
+                                Details</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">User</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">PayPal Email
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        @for (payment of filteredPayments; track payment.paymentId) {
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-900">{{ payment.paymentId.substring(0, 8) }}...
+                                        </p>
+                                        <p class="text-sm text-gray-500">{{ payment.description }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div>
+                                    <p class="font-medium text-gray-900">{{ payment.userName || 'Unknown' }}</p>
+                                    <p class="text-sm text-gray-500">ID: {{ payment.userId.substring(0, 8) }}...</p>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.93 4.778-4.005 7.201-9.138 7.201h-2.19a.563.563 0 0 0-.556.479l-1.187 7.527h-.506l-.24 1.516a.56.56 0 0 0 .554.647h3.882c.46 0 .85-.334.922-.788.06-.26.76-4.852.76-4.852a.932.932 0 0 1 .922-.788h.58c3.76 0 6.705-1.528 7.565-5.946.36-1.847.174-3.388-.778-4.471z" />
+                                    </svg>
+                                    <span class="text-sm text-gray-700">{{ payment.paymentMethod || 'N/A' }}</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <p class="text-lg font-bold text-green-600">{{ formatCurrency(payment.amount) }}</p>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span
+                                    [class]="'px-3 py-1 rounded-full text-sm font-medium border ' + getStatusBadgeClass(payment.status)">
+                                    {{ statusLabels[payment.status] }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <p class="text-sm text-gray-700">{{ formatDate(payment.createdAt) }}</p>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex gap-2">
+                                    @if (payment.status === 'Pending') {
+                                    <button (click)="openApprovalModal(payment)"
+                                        class="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition">
+                                        Approve & Pay
+                                    </button>
+                                    <button (click)="openRejectionModal(payment)"
+                                        class="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-sm font-medium transition">
+                                        Reject
+                                    </button>
+                                    } @else {
+                                    <button (click)="viewDetails(payment.paymentId)"
+                                        class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg text-sm font-medium transition">
+                                        View Details
+                                    </button>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                        } @empty {
+                        <tr>
+                            <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                                <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                </svg>
+                                <p>No payments found</p>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        }
+    </div>
+</div>
+
+<!-- Approval Modal -->
+@if (showApprovalModal && selectedPayment) {
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+        <h3 class="text-xl font-bold mb-4">Approve Payment</h3>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Amount to Pay</label>
+                <input type="text" [value]="formatCurrency(selectedPayment.amount)"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50" readonly>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">PayPal Email</label>
+                <input type="text" [value]="selectedPayment.paymentMethod || 'N/A'"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50" readonly>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Admin Notes (Optional)</label>
+                <textarea [(ngModel)]="adminNotes" class="w-full px-4 py-2 border border-gray-300 rounded-lg" rows="3"
+                    placeholder="Add any notes..."></textarea>
+            </div>
+        </div>
+        <div class="flex gap-3 mt-6">
+            <button (click)="closeModals()" [disabled]="isProcessing"
+                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50">
+                Cancel
+            </button>
+            <button (click)="approvePayment()" [disabled]="isProcessing"
+                class="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg disabled:opacity-50 flex items-center justify-center gap-2">
+                @if (isProcessing) {
+                <svg class="animate-spin w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                    </path>
+                </svg>
+                Processing...
+                } @else {
+                Confirm & Send Payment
+                }
+            </button>
+        </div>
+    </div>
+</div>
+}
+
+<!-- Rejection Modal -->
+@if (showRejectionModal && selectedPayment) {
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+        <h3 class="text-xl font-bold mb-4 text-red-600">Reject Payment</h3>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Payment Amount</label>
+                <input type="text" [value]="formatCurrency(selectedPayment.amount)"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50" readonly>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Reason for Rejection <span
+                        class="text-red-500">*</span></label>
+                <textarea [(ngModel)]="rejectionReason" class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                    rows="3" placeholder="Provide reason for rejection..." required></textarea>
+            </div>
+        </div>
+        <div class="flex gap-3 mt-6">
+            <button (click)="closeModals()" [disabled]="isProcessing"
+                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50">
+                Cancel
+            </button>
+            <button (click)="rejectPayment()" [disabled]="isProcessing || !rejectionReason.trim()"
+                class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg disabled:opacity-50 flex items-center justify-center gap-2">
+                @if (isProcessing) {
+                <svg class="animate-spin w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                    </path>
+                </svg>
+                Processing...
+                } @else {
+                Confirm Rejection
+                }
+            </button>
+        </div>
+    </div>
+</div>
+}

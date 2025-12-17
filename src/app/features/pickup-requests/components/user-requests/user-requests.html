@@ -1,0 +1,255 @@
+<div class="min-h-screen bg-[#F8F9FA] py-8 pt-20">
+    <div class="container mx-auto px-4 max-w-7xl">
+        <!-- Header -->
+        <div class="flex justify-between items-start mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-[#212529] mb-2">My Pickup Requests</h1>
+                <p class="text-gray-600">View and manage all your pickup requests</p>
+            </div>
+            <button (click)="createNewRequest()"
+                class="inline-flex items-center gap-2 bg-[#2D6A4F] hover:bg-[#2D6A4F]/90 text-white px-6 py-3 rounded-lg font-medium transition-all shadow-sm hover:shadow-md">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                New Request
+            </button>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow">
+                <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                        <p class="text-sm text-gray-500 mb-1">Total Requests</p>
+                        <p class="text-2xl font-bold text-[#212529] mb-2">{{ filteredRequests.length }}</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-[#2D6A4F]/10 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-[#2D6A4F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow">
+                <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                        <p class="text-sm text-gray-500 mb-1">Pending</p>
+                        <p class="text-2xl font-bold text-[#212529] mb-2">{{ getPendingCount() }}</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-[#FFA500]/10 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-[#FFA500]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow">
+                <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                        <p class="text-sm text-gray-500 mb-1">Completed</p>
+                        <p class="text-2xl font-bold text-[#212529] mb-2">{{ getCompletedCount() }}</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-[#10B981]/10 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow">
+                <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                        <p class="text-sm text-gray-500 mb-1">Total Earnings</p>
+                        <p class="text-2xl font-bold text-[#212529] mb-2">{{ getTotalEarnings() }} EGP</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-[#0077B6]/10 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-[#0077B6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters Card -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-6">
+            <div class="grid md:grid-cols-3 gap-4">
+                <!-- Search -->
+                <div class="md:col-span-2 relative">
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input type="text" id="searchInput" [(ngModel)]="searchTerm" (input)="onSearchChange()"
+                        placeholder="Search by address or notes..."
+                        class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] outline-none transition-all">
+                </div>
+
+                <!-- Status Filter -->
+                <div class="relative">
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                    </svg>
+                    <select id="statusFilter" [(ngModel)]="selectedStatus" (change)="onStatusFilterChange()"
+                        class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] outline-none transition-all appearance-none bg-white cursor-pointer">
+                        <option value="all">All Statuses</option>
+                        @for (status of availableStatuses; track status) {
+                        <option [value]="status">{{ statusLabels[status] }}</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        @if (isLoading) {
+        <div class="text-center py-16">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-[#2D6A4F]">
+            </div>
+            <p class="mt-4 text-gray-600">Loading requests...</p>
+        </div>
+        }
+
+        <!-- Error State -->
+        @if (error && !isLoading) {
+        <div class="bg-red-50 border border-red-200 rounded-xl p-6 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <svg class="w-6 h-6 text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span class="text-red-800">{{ error }}</span>
+            </div>
+            <button (click)="loadMyRequests()"
+                class="bg-red-100 hover:bg-red-200 text-red-800 px-4 py-2 rounded-lg transition font-medium">
+                Retry
+            </button>
+        </div>
+        }
+
+        <!-- Empty State -->
+        @if (!isLoading && !error && filteredRequests.length === 0) {
+        <div class="text-center py-16">
+            <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
+                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">No Requests Found</h3>
+            <p class="text-gray-500 mb-6">Create your first pickup request to get started</p>
+            <button (click)="createNewRequest()"
+                class="inline-flex items-center gap-2 bg-[#2D6A4F] hover:bg-[#2D6A4F]/90 text-white px-6 py-3 rounded-lg font-medium transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Create Request
+            </button>
+        </div>
+        }
+
+        <!-- Requests Grid -->
+        @if (!isLoading && !error && filteredRequests.length > 0) {
+        <div class="grid lg:grid-cols-2 gap-6">
+            @for (request of filteredRequests; track request.requestId) {
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all p-6">
+
+                <!-- Header with Status & Date -->
+                <div class="flex justify-between items-start mb-4">
+                    <span
+                        [class]="'px-3 py-1.5 rounded-lg text-sm font-medium border ' + getStatusBadgeClass(request.status)">
+                        {{ statusLabels[request.status] }}
+                    </span>
+                    <div class="flex items-center gap-1.5 text-sm text-gray-500">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        {{ formatDate(request.createdAt) }}
+                    </div>
+                </div>
+
+                <!-- Address -->
+                <div class="flex items-start gap-3 mb-4 p-3 bg-[#F8F9FA] rounded-lg">
+                    <svg class="w-5 h-5 text-[#2D6A4F] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <p class="text-sm text-gray-700 font-medium">{{ request.fullAddress }}</p>
+                </div>
+
+                <!-- Details Grid -->
+                <div class="grid grid-cols-2 gap-3 mb-4">
+                    <div class="flex items-center justify-between p-3 bg-[#F8F9FA] rounded-lg">
+                        <span class="text-xs text-gray-600">Pickup Date</span>
+                        <span class="text-sm font-semibold text-[#212529]">{{ formatDate(request.preferredPickupDate)
+                            }}</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-[#F8F9FA] rounded-lg">
+                        <span class="text-xs text-gray-600">Total Weight</span>
+                        <span class="text-sm font-semibold text-[#212529]">{{ request.totalEstimatedWeight }} kg</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-[#F8F9FA] rounded-lg">
+                        <span class="text-xs text-gray-600">Estimated Amount</span>
+                        <span class="text-sm font-semibold text-[#2D6A4F]">{{ formatCurrency(request.totalAmount)
+                            }}</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-[#F8F9FA] rounded-lg">
+                        <span class="text-xs text-gray-600">Materials</span>
+                        <span class="text-sm font-semibold text-[#212529]">{{ request.materials.length }} items</span>
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                @if (request.notes) {
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                    <div class="flex items-start gap-2">
+                        <svg class="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                        </svg>
+                        <p class="text-sm text-blue-800">{{ request.notes }}</p>
+                    </div>
+                </div>
+                }
+
+                <!-- Action Buttons -->
+                <div class="flex gap-2">
+                    <button (click)="viewDetails(request.requestId)"
+                        class="flex-1 bg-[#2D6A4F] hover:bg-[#2D6A4F]/90 text-white px-4 py-2.5 rounded-lg transition font-medium text-sm inline-flex items-center justify-center gap-2">
+                        View Details
+                    </button>
+
+                    @if (canEdit(request)) {
+                    <button (click)="editRequest(request.requestId)"
+                        class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2.5 rounded-lg transition text-sm font-medium">
+                        Edit
+                    </button>
+                    }
+
+                    @if (canDelete(request)) {
+                    <button (click)="deleteRequest(request)"
+                        class="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2.5 rounded-lg transition text-sm font-medium">
+                        Delete
+                    </button>
+                    }
+                </div>
+            </div>
+            }
+        </div>
+        }
+    </div>
+</div>

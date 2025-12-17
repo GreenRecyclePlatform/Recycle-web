@@ -1,0 +1,413 @@
+/* driver-sidebar.component.css */
+
+/* ========== Host (CRITICAL FIX FOR MOBILE) ========== */
+:host {
+  display: block;
+  position: relative;
+}
+
+/* Desktop: normal sidebar width */
+@media (min-width: 769px) {
+  :host {
+    width: 260px;
+    min-width: 260px;
+  }
+}
+
+/* Mobile: collapse host to allow fixed positioning */
+@media (max-width: 768px) {
+  :host {
+    width: 0;
+    min-width: 0;
+    height: 0;
+  }
+}
+
+/* ========== CSS Variables ========== */
+:host {
+  --primary-green: #2D6A4F;
+  --primary-green-dark: #1e4d38;
+  --primary-green-light: #d8f3dc;
+  --white: #FFFFFF;
+  --gray-50: #F9FAFB;
+  --gray-100: #F3F4F6;
+  --gray-200: #E5E7EB;
+  --gray-300: #D1D5DB;
+  --gray-500: #6B7280;
+  --gray-600: #4B5563;
+  --gray-700: #374151;
+  --gray-800: #1F2937;
+  --info: #3B82F6;
+  --warning: #F59E0B;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+}
+
+/* ========== Mobile Sidebar Toggle Button ========== */
+.mobile-sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 70px;
+  left: 16px;
+  z-index: 100;
+  width: 44px;
+  height: 44px;
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  color: var(--gray-600);
+}
+
+.mobile-sidebar-toggle:hover {
+  background: var(--gray-50);
+  border-color: var(--primary-green);
+  color: var(--primary-green);
+}
+
+.mobile-sidebar-toggle:active {
+  transform: scale(0.95);
+}
+
+.mobile-sidebar-toggle.open {
+  background: var(--primary-green);
+  border-color: var(--primary-green);
+  color: white;
+}
+
+/* ========== Sidebar Backdrop for Mobile ========== */
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 98;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.sidebar-backdrop.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ========== Sidebar Container ========== */
+.sidebar {
+  width: 260px;
+  background: white;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.04);
+  height: calc(100vh - 64px);
+  border-right: 1px solid var(--gray-200);
+  position: sticky;
+  top: 64px;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+/* ========== Driver Profile Card ========== */
+.driver-profile {
+  background: var(--gray-50);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  border: 1px solid var(--gray-200);
+  transition: box-shadow 0.2s ease;
+}
+
+.driver-profile:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Avatar with Initials */
+.driver-avatar {
+  width: 56px;
+  height: 56px;
+  background: var(--primary-green);
+  border-radius: 50%;
+  margin: 0 auto 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--white);
+  box-shadow: 0 2px 6px rgba(45, 106, 79, 0.2);
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+/* Avatar with Image */
+.driver-avatar-image {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  margin: 0 auto 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(45, 106, 79, 0.2);
+  border: 3px solid var(--primary-green-light);
+}
+
+.driver-avatar-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.driver-name {
+  color: var(--gray-800);
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.375rem;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.driver-role {
+  color: var(--primary-green);
+  font-size: 0.875rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* ========== Navigation Menu ========== */
+.nav-menu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  overflow-y: auto;
+  padding-bottom: 1rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem 1rem;
+  color: var(--gray-600);
+  text-decoration: none;
+  border-radius: var(--radius-lg);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  position: relative;
+  font-family: inherit;
+}
+
+.nav-item:hover {
+  background: var(--gray-100);
+  color: var(--primary-green);
+}
+
+.nav-item.active {
+  background: var(--primary-green);
+  color: var(--white);
+  font-weight: 600;
+}
+
+.nav-item.active svg,
+.nav-item.active i {
+  stroke: white;
+  color: white;
+}
+
+.nav-item i {
+  font-size: 1.25rem;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.nav-item svg {
+  flex-shrink: 0;
+}
+
+.nav-item span:not(.badge) {
+  flex: 1;
+}
+
+.nav-item .badge {
+  background: var(--info);
+  color: var(--white);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  min-width: 22px;
+  text-align: center;
+  line-height: 1;
+}
+
+/* ========== Sidebar Footer ========== */
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--gray-200);
+  flex-shrink: 0;
+}
+
+.logout-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  color: var(--gray-600);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  position: relative;
+}
+
+.logout-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logout-btn svg {
+  flex-shrink: 0;
+}
+
+.logout-arrow {
+  margin-left: auto;
+  font-size: 1.25rem;
+  transition: transform 0.2s ease;
+}
+
+.logout-btn:hover {
+  background: #FEF2F2;
+  border-color: #FCA5A5;
+  color: #DC2626;
+}
+
+.logout-btn:hover svg {
+  stroke: #DC2626;
+}
+
+.logout-btn:hover .logout-arrow {
+  transform: translateX(4px);
+}
+
+.logout-btn:active {
+  transform: scale(0.98);
+}
+
+/* ========== Scrollbar Styling ========== */
+.sidebar::-webkit-scrollbar,
+.nav-menu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track,
+.nav-menu::-webkit-scrollbar-track {
+  background: var(--gray-50);
+}
+
+.sidebar::-webkit-scrollbar-thumb,
+.nav-menu::-webkit-scrollbar-thumb {
+  background: var(--gray-300);
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover,
+.nav-menu::-webkit-scrollbar-thumb:hover {
+  background: #9CA3AF;
+}
+
+/* ========== Responsive Design ========== */
+@media (max-width: 768px) {
+  /* Show mobile controls */
+  .mobile-sidebar-toggle {
+    display: flex;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+  }
+
+  /* Fixed sidebar that slides in */
+  .sidebar {
+    position: fixed;
+    left: -260px;
+    top: 64px;
+    z-index: 99;
+    width: 260px;
+    transition: left 0.3s ease;
+    height: calc(100vh - 64px);
+    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .driver-profile {
+    padding: 1rem;
+  }
+
+  .driver-avatar,
+  .driver-avatar-image {
+    width: 48px;
+    height: 48px;
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 100%;
+    left: -100%;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .nav-item {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  .mobile-sidebar-toggle {
+    top: 65px;
+    left: 12px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* ========== Print Styles ========== */
+@media print {
+  .sidebar,
+  .mobile-sidebar-toggle,
+  .sidebar-backdrop {
+    display: none !important;
+  }
+}

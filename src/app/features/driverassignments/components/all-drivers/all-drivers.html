@@ -1,0 +1,262 @@
+<div class="all-drivers-container">
+  <div class="container-fluid px-4 py-4">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="page-title"> 🚛 Manage Drivers</h1>
+        <p class="text-muted mb-0" style="font-size: 0.95rem;">View and manage all registered drivers</p>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-primary d-flex align-items-center gap-2" (click)="refreshDrivers()">
+          <mat-icon style="font-size: 18px; width: 18px; height: 18px;">refresh</mat-icon>
+          Refresh
+        </button>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+     <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+      <mat-icon class="me-2" style="vertical-align: middle;">error</mat-icon>
+      {{ errorMessage }}
+      <button type="button" class="btn-close" (click)="errorMessage = ''" aria-label="Close"></button>
+    </div>
+
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show d-flex align-items-center shadow-sm" role="alert">
+      <mat-icon class="me-2">check_circle_outline</mat-icon>
+      <div class="flex-grow-1">{{ successMessage }}</div>
+      <button type="button" class="btn-close" (click)="successMessage = ''" aria-label="Close"></button>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteDriverModal" tabindex="-1" aria-labelledby="deleteDriverModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+          <div class="modal-header border-0 pb-0">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center px-4 pb-4">
+            <div class="mb-3">
+              <div class="delete-icon-wrapper mx-auto">
+                <mat-icon class="text-danger">warning</mat-icon>
+              </div>
+            </div>
+            <h5 class="mb-3 fw-bold">Delete Driver?</h5>
+            <p class="text-muted mb-4">
+              Are you sure you want to delete <strong>{{ driverToDelete?.name }}</strong>?
+              <br>This action cannot be undone.
+            </p>
+            <div class="d-flex gap-3 justify-content-center">
+              <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
+                Cancel
+              </button>
+              <button type="button" class="btn btn-danger px-4" (click)="confirmDelete()" data-bs-dismiss="modal">
+                <mat-icon class="me-1" style="font-size: 18px; width: 18px; height: 18px;">delete</mat-icon>
+                Delete Driver
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="text-center py-5">
+      <div class="spinner-border text-success status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-3 text-muted">Loading drivers...</p>
+    </div>
+
+    <!-- Main Content (show only when not loading) -->
+    <div *ngIf="!isLoading">
+      <!-- Statistics Cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <div class="card stat-card border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center justify-content-between p-4">
+              <div>
+                <p class="text-muted mb-2" style="font-size: 0.875rem;">Total Drivers</p>
+                <h3 class="mb-0" style="font-size: 2rem; font-weight: 600;">{{ totalDrivers }}</h3>
+              </div>
+              <div class="stat-icon-wrapper bg-info bg-opacity-10 rounded-3">
+                <mat-icon class="text-info">group</mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card stat-card border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center justify-content-between p-4">
+              <div>
+                <p class="text-muted mb-2" style="font-size: 0.875rem;">Active Drivers</p>
+                <h3 class="mb-0" style="font-size: 2rem; font-weight: 600;">{{ activeDrivers }}</h3>
+              </div>
+              <div class="stat-icon-wrapper bg-success bg-opacity-10 rounded-3">
+                <mat-icon class="text-success">local_shipping</mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card stat-card border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center justify-content-between p-4">
+              <div>
+                <p class="text-muted mb-2" style="font-size: 0.875rem;">Average Rating</p>
+                <h3 class="mb-0" style="font-size: 2rem; font-weight: 600;">{{ averageRating }}</h3>
+              </div>
+              <div class="stat-icon-wrapper bg-warning bg-opacity-10 rounded-3">
+                <mat-icon class="text-warning">star</mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search and Filter Section -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-8">
+          <div class="search-input-wrapper">
+            <span class="search-icon">
+              <mat-icon class="text-muted">search</mat-icon>
+            </span>
+            <input
+              type="text"
+              class="form-control form-control-lg search-input"
+              placeholder="Search by name, ID number, or location..."
+              [(ngModel)]="searchQuery"
+              (input)="onSearch()">
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="filter-input-wrapper">
+            <span class="filter-icon">
+              <mat-icon class="text-muted">filter_list</mat-icon>
+            </span>
+            <select
+              class="form-select form-select-lg filter-select"
+              [(ngModel)]="selectedStatus"
+              (change)="onStatusChange()">
+              <option value="All Status">All Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drivers Table -->
+      <div class="card border-0 shadow-sm drivers-table-card">
+        <div class="card-header bg-light border-0 py-4">
+          <h5 class="mb-0" style="font-weight: 600; font-size: 1.25rem;">All Drivers ({{ filteredDrivers.length }})</h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 drivers-table">
+              <thead class="table-light">
+                <tr>
+                  <th class="border-0 py-4 ps-4">Driver</th>
+                  <th class="border-0 py-4">Contact & Location</th>
+                  <th class="border-0 py-4">ID Number</th>
+                  <th class="border-0 py-4">Rating</th>
+                  <th class="border-0 py-4">Total Trips</th>
+                  <th class="border-0 py-4">Status</th>
+                  <th class="border-0 py-4 pe-4 text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let driver of filteredDrivers" class="driver-row">
+                  <!-- Driver Info with Image -->
+                  <td class="ps-4 py-4">
+                    <div class="d-flex align-items-center gap-3">
+                      <div *ngIf="driver.profileImageUrl; else avatarInitials">
+                        <img [src]="driver.profileImageUrl"
+                             alt="{{ driver.name }}"
+                             class="driver-avatar rounded-circle"
+                             style="object-fit: cover;">
+                      </div>
+                      <ng-template #avatarInitials>
+                        <div class="driver-avatar rounded-circle d-flex align-items-center justify-content-center text-white fw-semibold"
+                             [style.background-color]="driver.avatarColor">
+                          {{ driver.initials }}
+                        </div>
+                      </ng-template>
+                      <div>
+                        <div class="fw-semibold" style="font-size: 0.95rem;">{{ driver.name }}</div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <!-- Contact & Location -->
+                  <td class="py-4">
+                    <div class="d-flex flex-column gap-1">
+                      <div class="d-flex align-items-center gap-2">
+                        <mat-icon class="text-muted icon-sm">phone</mat-icon>
+                        <small class="text-muted" style="font-size: 0.875rem;">{{ driver.phone }}</small>
+                      </div>
+                      <div class="d-flex align-items-center gap-2">
+                        <mat-icon class="text-muted icon-sm">location_on</mat-icon>
+                        <small class="text-muted" style="font-size: 0.875rem;">{{ driver.location }}</small>
+                      </div>
+                    </div>
+                  </td>
+
+                  <!-- ID Number -->
+                  <td class="py-4">
+                    <span class="text-muted" style="font-size: 0.875rem;">{{ driver.idNumber || 'N/A' }}</span>
+                  </td>
+
+                  <!-- Rating -->
+                  <td class="py-4">
+                    <div class="d-flex align-items-center gap-1">
+                      <mat-icon class="text-warning icon-md">star</mat-icon>
+                      <span class="fw-semibold">{{ driver.rating }}</span>
+                      <small class="text-muted">({{ driver.pickups.total }})</small>
+                    </div>
+                  </td>
+
+                  <!-- Total Trips -->
+                  <td class="py-4">
+                    <div>
+                      <div style="font-size: 0.875rem;"><strong>{{ driver.pickups.total }}</strong> trips</div>
+                    </div>
+                  </td>
+
+                  <!-- Status -->
+                  <td class="py-4">
+                    <span class="badge rounded-pill px-12 py-2"
+                          [ngClass]="(driver.status)">
+                      {{ driver.status === 'active' ? 'Available' : 'Not Available' }}
+                    </span>
+                  </td>
+
+                  <!-- Actions  -->
+                  <td class="pe-3 py-4 text-center">
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1 mx-auto"
+                      (click)="onDeleteDriver(driver)"
+                      title="Delete Driver">
+                      <mat-icon style="font-size: 18px; width: 18px; height: 18px;">delete</mat-icon>
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Empty State -->
+            <div *ngIf="filteredDrivers.length === 0" class="text-center py-5">
+              <mat-icon class="text-muted empty-state-icon">search_off</mat-icon>
+              <h5 class="mt-3">No drivers found</h5>
+              <p class="text-muted">Try adjusting your search or filter criteria</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

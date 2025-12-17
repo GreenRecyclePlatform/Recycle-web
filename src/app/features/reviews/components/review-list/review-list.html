@@ -1,0 +1,254 @@
+<app-navbar></app-navbar>
+<div class="d-flex">
+  <!-- <app-user-sidebar></app-user-sidebar> -->
+
+  <div class="container-fluid py-5 flex-grow-1">
+    <div class="container-fluid mt-4">
+      <div class="review-list-container">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="header-wrapper">
+            <div class="header-text">
+              <h2 class="page-title">My Reviews</h2>
+              <p class="page-subtitle">View and manage your driver reviews</p>
+            </div>
+            <button class="btn-add-review" (click)="navigateToAddReview()">
+              <lucide-icon name="plus-circle" [size]="18"></lucide-icon>
+              <span>Add Review</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Success Message -->
+        @if (successMessage) {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <i class="bi bi-check-circle-fill me-2"></i>
+          {{ successMessage }}
+          <button type="button" class="btn-close" (click)="successMessage = ''"></button>
+        </div>
+        }
+
+        <!-- Loading State -->
+        @if (loading) {
+        <div class="loading-container">
+          <div class="spinner-border text-primary-green" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="loading-text">Loading your reviews...</p>
+        </div>
+        }
+
+        <!-- Error State -->
+        @if (error && !loading) {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          {{ error }}
+          <button type="button" class="btn-close" (click)="error = ''"></button>
+        </div>
+        }
+
+        <!-- Reviews Content -->
+        @if (!loading && !error) {
+          <!-- Empty State -->
+          @if (reviews.length === 0) {
+          <div class="empty-state">
+            <div class="empty-icon-wrapper">
+              <i class="bi bi-star-fill"></i>
+            </div>
+            <h3 class="empty-title">No Reviews Yet</h3>
+            <p class="empty-description">You haven't written any reviews yet. Start sharing your experience!</p>
+            <button class="btn-primary-large" (click)="navigateToAddReview()">
+              <lucide-icon name="plus-circle" [size]="20"></lucide-icon>
+              <span>Write Your First Review</span>
+            </button>
+          </div>
+          }
+
+          <!-- Review Cards Grid -->
+          @if (reviews.length > 0) {
+          <div class="reviews-grid">
+            @for (review of reviews; track review.reviewId) {
+            <div class="review-card-enhanced">
+              <!-- View Mode -->
+              @if (!isEditing(review.reviewId)) {
+              <div class="card-header-section">
+                <div class="driver-section">
+                  <div class="driver-avatar-enhanced">
+                    <span>{{ review.driverName.charAt(0) }}</span>
+                  </div>
+                  <div class="driver-info-text">
+                    <h5 class="driver-name">{{ review.driverName }}</h5>
+                    <div class="review-meta">
+                      <span class="meta-item">
+                        <i class="bi bi-calendar-check"></i>
+                        {{ formatDate(review.createdAt) }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-actions">
+                  <button class="action-btn action-edit" (click)="startEdit(review)" title="Edit review">
+                    <!-- Edit -->
+                    <lucide-icon name="edit-2" [size]="16">Edit</lucide-icon>
+                  </button>
+                  <button
+                    class="action-btn action-delete"
+                    (click)="onDeleteReview(review.reviewId)"
+                    title="Delete review"
+                  >
+                    <lucide-icon name="trash-2" [size]="20">Delete</lucide-icon>
+                  </button>
+                </div>
+              </div>
+
+              <div class="card-divider"></div>
+
+              <div class="rating-section">
+                <div class="stars-container">
+                  @for (filled of getStarArray(review.rating); track $index) {
+                  <i
+                    class="star-icon"
+                    [class.bi-star-fill]="filled"
+                    [class.bi-star]="!filled"
+                    [class.filled]="filled"
+                  ></i>
+                  }
+                </div>
+                <div class="rating-details">
+                  <span class="rating-score">{{ review.rating }}.0</span>
+                  <span class="rating-label">{{ getRatingDescription(review.rating) }}</span>
+                </div>
+              </div>
+
+              <div class="comment-section">
+                <p class="review-text">{{ review.comment }}</p>
+              </div>
+
+              <div class="card-footer-section">
+                <div class="request-badge">
+                  <i class="bi bi-receipt"></i>
+                  <span>Request #{{ review.requestId.substring(0, 8) }}</span>
+                </div>
+                @if (review.updatedAt) {
+                <div class="edited-badge">
+                  <i class="bi bi-pencil-square"></i>
+                  <span>Edited</span>
+                </div>
+                }
+              </div>
+              }
+
+              <!-- Edit Mode -->
+              @if (isEditing(review.reviewId)) {
+              <form [formGroup]="editForm" (ngSubmit)="onUpdateReview(review.reviewId)" class="edit-form-enhanced">
+                <div class="edit-header-section">
+                  <div class="edit-icon">
+                    <i class="bi bi-pencil-square"></i>
+                  </div>
+                  <div class="edit-title-section">
+                    <h5 class="edit-title">Edit Your Review</h5>
+                    <p class="edit-subtitle">Updating review for {{ review.driverName }}</p>
+                  </div>
+                </div>
+
+                <!-- Rating Input -->
+                <div class="form-group-enhanced">
+                  <label class="form-label-enhanced">
+                    <i class="bi bi-star-fill label-icon"></i>
+                    <span>Rating</span>
+                    <span class="required-star">*</span>
+                  </label>
+                  <div class="rating-input-container">
+                    <div class="star-buttons">
+                      @for (star of [1,2,3,4,5]; track star) {
+                      <button
+                        type="button"
+                        class="star-button"
+                        [class.active]="star <= editForm.value.rating"
+                        (click)="onRatingChange(star)"
+                      >
+                        <i class="bi bi-star-fill"></i>
+                      </button>
+                      }
+                    </div>
+                    @if (editForm.value.rating > 0) {
+                    <div class="rating-preview">
+                      <span class="preview-score">{{ editForm.value.rating }}.0</span>
+                      <span class="preview-label">{{ getRatingDescription(editForm.value.rating) }}</span>
+                    </div>
+                    }
+                  </div>
+                  @if (ratingControl?.touched && ratingControl?.errors?.['required']) {
+                  <div class="error-text">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <span>Please select a rating</span>
+                  </div>
+                  }
+                </div>
+
+                <!-- Comment Input -->
+                <div class="form-group-enhanced">
+                  <label for="editComment" class="form-label-enhanced">
+                    <i class="bi bi-chat-text label-icon"></i>
+                    <span>Your Review</span>
+                    <span class="required-star">*</span>
+                  </label>
+                  <textarea
+                    id="editComment"
+                    formControlName="comment"
+                    class="form-textarea-enhanced"
+                    rows="5"
+                    placeholder="Share your experience with this driver..."
+                    maxlength="500"
+                  ></textarea>
+                  <div class="textarea-footer">
+                    @if (commentControl?.touched && commentControl?.errors) {
+                    <div class="error-text">
+                      <i class="bi bi-exclamation-circle"></i>
+                      @if (commentControl?.errors?.['required']) {
+                      <span>Comment is required</span>
+                      } @if (commentControl?.errors?.['minlength']) {
+                      <span>Minimum 10 characters required</span>
+                      }
+                    </div>
+                    }
+                    <span class="char-counter">{{ getCharacterCount() }}/500</span>
+                  </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="form-actions-enhanced">
+                  <button
+                    type="submit"
+                    class="btn-submit-enhanced"
+                    [disabled]="updating || editForm.invalid"
+                  >
+                    @if (!updating) {
+                    <lucide-icon name="check-circle" [size]="18"></lucide-icon>
+                    <span>Save Changes</span>
+                    } @if (updating) {
+                    <span class="spinner-border spinner-border-sm"></span>
+                    <span>Saving...</span>
+                    }
+                  </button>
+                  <button
+                    type="button"
+                    class="btn-cancel-enhanced"
+                    (click)="cancelEdit()"
+                    [disabled]="updating"
+                  >
+                    <lucide-icon name="x" [size]="18"></lucide-icon>
+                    <span>Cancel</span>
+                  </button>
+                </div>
+              </form>
+              }
+            </div>
+            }
+          </div>
+          }
+        }
+      </div>
+    </div>
+  </div>
+</div>

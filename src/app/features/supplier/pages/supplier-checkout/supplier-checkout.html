@@ -1,0 +1,89 @@
+<app-navbar></app-navbar>
+
+<div class="checkout-container mt-5">
+  <div class="checkout-content">
+    <!-- Header -->
+    <div class="checkout-header">
+      <h1>🛒 Checkout</h1>
+      <p>Complete your purchase</p>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="error()" class="alert alert-error">
+      {{ error() }}
+    </div>
+
+    <!-- Order Summary -->
+    <div class="order-summary">
+      <h2>Order Summary</h2>
+      <div class="summary-items">
+        <div *ngFor="let item of cart()" class="summary-item">
+          <div class="item-info">
+            <span class="item-icon">{{ item.material.icon }}</span>
+            <div>
+              <p class="item-name">{{ item.material.name }}</p>
+              <p class="item-details">{{ item.quantity }}×( {{ item.material.unit }} × ${{ item.material.sellingPrice }})</p>
+            </div>
+          </div>
+          <span class="item-price">${{ item.totalPrice.toFixed(2) }}</span>
+        </div>
+      </div>
+
+      <div class="summary-total">
+        <span>Total Amount:</span>
+        <span class="total-amount">${{ getTotalAmount().toFixed(2) }}</span>
+      </div>
+    </div>
+
+    <!-- Step 1: Create Order -->
+    <div *ngIf="!orderId()" class="payment-step">
+      <h2>Step 1: Create Order</h2>
+      <button 
+        (click)="createOrder()" 
+        [disabled]="loading()"
+        class="btn-primary"
+      >
+        {{ loading() ? 'Creating Order...' : 'Create Order' }}
+      </button>
+    </div>
+
+    <!-- Step 2: Payment -->
+    <div *ngIf="orderId() && clientSecret()" class="payment-step">
+      <h2>Step 2: Payment Details</h2>
+      <div class="payment-form">
+        <label for="card-element">Credit or Debit Card</label>
+        <div id="card-element" class="card-element"></div>
+        
+        <button 
+          (click)="processPayment()" 
+          [disabled]="loading()"
+          class="btn-primary btn-pay"
+        >
+          {{ loading() ? 'Processing...' : 'Pay $' + getTotalAmount().toFixed(2) }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Cancel Button -->
+    <button (click)="cancelCheckout()" class="btn-cancel">
+      Cancel
+    </button>
+  </div>
+
+  <!-- ✅ Success Modal -->
+  <div *ngIf="showSuccessModal()" class="modal-overlay" (click)="closeSuccessModal()">
+    <div class="success-modal" (click)="$event.stopPropagation()">
+      <div class="success-icon">
+        <div class="checkmark-circle">
+          <div class="checkmark"></div>
+        </div>
+      </div>
+      <h2 class="success-title">Payment Successful! 🎉</h2>
+      <p class="success-message">Your order has been placed successfully.</p>
+      <p class="success-details">Order ID: <strong>{{ orderId() }}</strong></p>
+      <button class="btn-success" (click)="closeSuccessModal()">
+        View My Orders
+      </button>
+    </div>
+  </div>
+</div>

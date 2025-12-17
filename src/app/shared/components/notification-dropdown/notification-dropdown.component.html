@@ -1,0 +1,70 @@
+<div class="notification-dropdown">
+  <!-- Header -->
+  <div class="dropdown-header">
+    <h3>
+      Notifications
+      <span class="notification-count" *ngIf="totalCount > 0">({{ totalCount }})</span>
+    </h3>
+    <div class="header-actions">
+      <button 
+        class="filter-btn" 
+        [class.active]="showUnreadOnly"
+        (click)="toggleFilter()"
+        [disabled]="loading"
+        title="Toggle unread only">
+        <i class="fas fa-filter"></i>
+      </button>
+      <button 
+        class="mark-all-btn" 
+        (click)="markAllAsRead()"
+        *ngIf="notifications.length > 0"
+        [disabled]="loading"
+        title="Mark all as read">
+        <i class="fas fa-check-double"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div class="error-message" *ngIf="error && !loading">
+    <i class="fas fa-exclamation-triangle"></i>
+    <p>{{ error }}</p>
+    <button class="btn-retry" (click)="retry()">
+      <i class="fas fa-redo"></i> Retry
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading notifications...</p>
+  </div>
+
+  <!-- Notifications List -->
+  <div class="notifications-list" *ngIf="!loading && !error">
+    <!-- Empty State -->
+    <div *ngIf="displayedNotifications.length === 0" class="empty-state">
+      <i class="fas fa-bell-slash"></i>
+      <p>No notifications</p>
+      <small>You're all caught up!</small>
+    </div>
+
+    <!-- Notification Items -->
+    <app-notification-item
+      *ngFor="let notification of displayedNotifications; trackBy: trackByNotificationId"
+      [notification]="notification"
+      (read)="markAsRead($event)"
+      (delete)="deleteNotification($event)">
+    </app-notification-item>
+  </div>
+
+  <!-- Footer with Show All button -->
+  <div class="dropdown-footer" *ngIf="hasMore && !loading && !error">
+    <button 
+      class="view-all-btn" 
+      (click)="showAllNotifications()">
+      Show All {{ totalCount }} Notifications
+      <i class="fas fa-chevron-down"></i>
+    </button>
+  </div>
+</div>

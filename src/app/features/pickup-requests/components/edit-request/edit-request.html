@@ -1,0 +1,180 @@
+<div class="min-h-screen bg-[#F8F9FA] py-8">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <!-- Header -->
+        <div class="mb-8">
+            <button (click)="cancel()"
+                class="text-gray-600 hover:text-gray-900 flex items-center gap-2 mb-3 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+                Back to Request Details
+            </button>
+            <h1 class="text-3xl font-bold text-[#212529] mb-2">Edit Pickup Request</h1>
+            <p class="text-gray-600">Update your pickup request details</p>
+        </div>
+
+        <!-- Loading State -->
+        @if (isLoading) {
+        <div class="text-center py-16">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-[#2D6A4F]">
+            </div>
+            <p class="mt-4 text-gray-600">Loading request details...</p>
+        </div>
+        }
+
+        <!-- Error Alert -->
+        @if (error) {
+        <div class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex items-start gap-3">
+            <svg class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p class="text-red-800">{{ error }}</p>
+        </div>
+        }
+
+        @if (!isLoading && existingRequest) {
+        <!-- Info Banner -->
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 flex items-start gap-3">
+            <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+                <p class="text-blue-800 font-medium mb-1">Important Note</p>
+                <p class="text-blue-700 text-sm">You can only edit the address, pickup date, and notes. Materials cannot
+                    be changed after request creation.</p>
+            </div>
+        </div>
+
+        <form [formGroup]="requestForm" (ngSubmit)="onSubmit()">
+            <div class="space-y-6">
+                <!-- Current Request Summary -->
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                    <h2 class="text-xl font-semibold text-[#212529] mb-4">Current Request Summary</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-600 mb-1">Total Materials</p>
+                            <p class="text-2xl font-bold text-[#2D6A4F]">{{ existingRequest.materials.length }}</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-600 mb-1">Total Weight</p>
+                            <p class="text-2xl font-bold text-[#2D6A4F]">{{ existingRequest.totalEstimatedWeight }} kg
+                            </p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg col-span-2">
+                            <p class="text-sm text-gray-600 mb-1">Estimated Amount</p>
+                            <p class="text-2xl font-bold text-[#2D6A4F]">{{ formatCurrency(existingRequest.totalAmount)
+                                }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address Selection -->
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-gray-200">
+                        <h2 class="text-xl font-semibold text-[#212529] flex items-center gap-2">
+                            <svg class="w-6 h-6 text-[#2D6A4F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            Pickup Address
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        <label for="addressId" class="block text-sm font-medium text-gray-700 mb-2">
+                            Select Address<span class="text-red-500">*</span>
+                        </label>
+                        <select id="addressId" formControlName="addressId"
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] outline-none transition-all"
+                            [class.border-red-500]="requestForm.get('addressId')?.invalid && requestForm.get('addressId')?.touched">
+                            <option value="">-- Select Address --</option>
+                            <option *ngFor="let address of addresses" [value]="address.id">
+                                {{ address.street }}, {{ address.city }}, {{ address.governorate }}
+                            </option>
+                        </select>
+                        <p *ngIf="requestForm.get('addressId')?.invalid && requestForm.get('addressId')?.touched"
+                            class="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Please select an address
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Pickup Schedule -->
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-gray-200">
+                        <h2 class="text-xl font-semibold text-[#212529] flex items-center gap-2">
+                            <svg class="w-6 h-6 text-[#0077B6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            Pickup Date
+                        </h2>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <div>
+                            <label for="preferredPickupDate" class="block text-sm font-medium text-gray-700 mb-2">
+                                Preferred Date <span class="text-red-500">*</span>
+                            </label>
+                            <input type="date" id="preferredPickupDate" formControlName="preferredPickupDate"
+                                [min]="getMinDate()"
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] outline-none transition-all"
+                                [class.border-red-500]="requestForm.get('preferredPickupDate')?.invalid && requestForm.get('preferredPickupDate')?.touched">
+                            <p *ngIf="requestForm.get('preferredPickupDate')?.invalid && requestForm.get('preferredPickupDate')?.touched"
+                                class="text-red-500 text-sm mt-1.5 flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Please select a valid date
+                            </p>
+                        </div>
+                        <div>
+                            <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">
+                                Additional Notes (Optional)
+                            </label>
+                            <textarea id="notes" formControlName="notes" rows="3"
+                                placeholder="Any additional details you want the driver to know..."
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D6A4F]/20 focus:border-[#2D6A4F] outline-none transition-all resize-none"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-4 mt-8">
+                <button type="button" (click)="cancel()"
+                    class="flex-1 bg-white hover:bg-gray-50 text-gray-700 px-6 py-3 rounded-lg transition font-semibold border border-gray-300">
+                    Cancel
+                </button>
+                <button type="submit" [disabled]="isSubmitting || requestForm.invalid"
+                    class="flex-1 bg-[#2D6A4F] hover:bg-[#2D6A4F]/90 text-white px-6 py-3 rounded-lg transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2">
+                    @if (!isSubmitting) {
+                    <span>Update Request</span>
+                    }
+                    @if (isSubmitting) {
+                    <span class="flex items-center gap-2">
+                        <svg class="animate-spin w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                            </circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
+                        </svg>
+                        Updating...
+                    </span>
+                    }
+                </button>
+            </div>
+        </form>
+        }
+    </div>
+</div>

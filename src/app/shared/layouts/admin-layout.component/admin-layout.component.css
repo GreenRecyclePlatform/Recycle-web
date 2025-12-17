@@ -1,0 +1,426 @@
+/* ===================================
+   ADMIN LAYOUT - PROFESSIONAL DESIGN
+   =================================== */
+
+.admin-layout {
+  min-height: 100vh;
+  background-color: #F8F9FA;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.admin-container {
+  display: flex;
+  flex: 1;
+  min-height: calc(100vh - 64px);
+}
+
+/* ===================================
+   MOBILE SIDEBAR TOGGLE BUTTON
+   =================================== */
+
+.mobile-sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 70px;
+  left: 16px;
+  z-index: 100;
+  width: 44px;
+  height: 44px;
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  color: #4B5563;
+}
+
+.mobile-sidebar-toggle:hover {
+  background: #F9FAFB;
+  border-color: #2D6A4F;
+  color: #2D6A4F;
+}
+
+.mobile-sidebar-toggle:active {
+  transform: scale(0.95);
+}
+
+.mobile-sidebar-toggle.open {
+  background: #2D6A4F;
+  border-color: #2D6A4F;
+  color: white;
+}
+
+/* ===================================
+   SIDEBAR BACKDROP FOR MOBILE
+   =================================== */
+
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 98;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.sidebar-backdrop.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ===================================
+   SIDEBAR - CLEAN & PROFESSIONAL
+   =================================== */
+
+.sidebar {
+  width: 260px;
+  background: white;
+  border-right: 1px solid #E5E7EB;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 64px;
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+  flex-shrink: 0;
+  padding: 1.5rem;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.04);
+}
+
+/* ===================================
+   ADMIN PROFILE CARD - PROFESSIONAL
+   =================================== */
+
+.admin-profile-card {
+  margin-bottom: 2rem;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  transition: box-shadow 0.2s ease;
+}
+
+.admin-profile-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.admin-profile {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.admin-avatar {
+  width: 56px;
+  height: 56px;
+  background: #2D6A4F;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  box-shadow: 0 2px 6px rgba(45, 106, 79, 0.2);
+}
+
+.admin-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-name {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.375rem;
+  color: #1F2937;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-badge {
+  display: inline-block;
+  background: #E0F2FE;
+  color: #075985;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.375rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ===================================
+   NAVIGATION - CLEAN & SIMPLE
+   =================================== */
+
+.sidebar-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  overflow-y: auto;
+  padding-bottom: 1rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem 1rem;
+  color: #4B5563;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.nav-item svg {
+  flex-shrink: 0;
+}
+
+.nav-item:hover {
+  background: #F3F4F6;
+  color: #2D6A4F;
+}
+
+.nav-item.active {
+  background: #2D6A4F;
+  color: white;
+  font-weight: 600;
+}
+
+.nav-item.active svg {
+  stroke: white;
+}
+
+/* ===================================
+   SIDEBAR FOOTER - PROFESSIONAL
+   =================================== */
+
+.sidebar-footer {
+  padding-top: 1rem;
+  border-top: 1px solid #E5E7EB;
+  flex-shrink: 0;
+}
+
+.logout-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 0.5rem;
+  color: #4B5563;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.logout-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logout-btn svg {
+  flex-shrink: 0;
+}
+
+.logout-arrow {
+  margin-left: auto;
+  font-size: 1.25rem;
+  transition: transform 0.2s ease;
+}
+
+.logout-btn:hover {
+  background: #FEF2F2;
+  border-color: #FCA5A5;
+  color: #DC2626;
+}
+
+.logout-btn:hover svg {
+  stroke: #DC2626;
+}
+
+.logout-btn:hover .logout-arrow {
+  transform: translateX(4px);
+}
+
+.logout-btn:active {
+  transform: scale(0.98);
+}
+
+.copyright {
+  text-align: center;
+  color: #9CA3AF;
+  font-size: 0.75rem;
+  margin-top: 1rem;
+  margin-bottom: 0;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+}
+
+.copyright-icon {
+  font-size: 1rem;
+}
+
+/* ===================================
+   MAIN CONTENT AREA
+   =================================== */
+
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-x: hidden;
+  min-width: 0;
+  background-color: #F8F9FA;
+}
+
+/* ===================================
+   SCROLLBAR STYLING - MINIMAL
+   =================================== */
+
+.sidebar::-webkit-scrollbar,
+.sidebar-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track,
+.sidebar-nav::-webkit-scrollbar-track {
+  background: #F9FAFB;
+}
+
+.sidebar::-webkit-scrollbar-thumb,
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover,
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: #9CA3AF;
+}
+
+/* ===================================
+   RESPONSIVE DESIGN
+   =================================== */
+
+@media (max-width: 768px) {
+  /* Show mobile toggle button */
+  .mobile-sidebar-toggle {
+    display: flex;
+  }
+
+  /* Show backdrop when sidebar is open */
+  .sidebar-backdrop {
+    display: block;
+  }
+
+  /* Sidebar mobile behavior */
+  .sidebar {
+    position: fixed;
+    left: -260px;
+    top: 64px;
+    z-index: 99;
+    transition: left 0.3s ease;
+    height: calc(100vh - 64px);
+    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .main-content {
+    padding: 1rem;
+    padding-top: 5rem; /* Add space for mobile toggle button */
+  }
+
+  .admin-container {
+    min-height: calc(100vh - 64px);
+  }
+
+  .admin-profile {
+    padding: 1rem;
+  }
+
+  .admin-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 100%;
+    left: -100%;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .main-content {
+    padding: 0.75rem;
+    padding-top: 4.5rem;
+  }
+
+  .nav-item {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  .mobile-sidebar-toggle {
+    top: 65px;
+    left: 12px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* ===================================
+   PRINT STYLES
+   =================================== */
+
+@media print {
+  .sidebar,
+  app-navbar,
+  .mobile-sidebar-toggle,
+  .sidebar-backdrop {
+    display: none !important;
+  }
+
+  .main-content {
+    padding: 0;
+  }
+
+  .admin-container {
+    display: block;
+  }
+}

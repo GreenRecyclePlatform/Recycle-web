@@ -1,0 +1,50 @@
+<section id="materials" class="materials-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Material Price List</h2>
+      <p class="section-subtitle">Competitive rates for all recyclable materials</p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+      <p>⏳ Loading materials...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error" class="error-state">
+      <p>❌ {{ error }}</p>
+    </div>
+
+    <!-- Materials Grid -->
+    <div class="price-grid" *ngIf="!loading && !error && materials.length > 0">
+      <div class="price-card" *ngFor="let material of materials; let i = index">
+        <div class="price-image-container">
+          <!-- Debug: Show the actual URL (remove this after debugging) -->
+          <div style="font-size: 10px; padding: 5px; background: #f0f0f0; word-break: break-all;">
+            URL: {{ material.imageUrl || 'NO IMAGE URL' }}
+          </div>
+          <img [src]="material.imageUrl"
+               [alt]="material.name"
+               class="price-image"
+               (error)="onImageError($event)">
+        </div>
+        <div class="price-content">
+          <div class="price-icon">{{ material.icon }}</div>
+          <h3 class="price-name">{{ material.name }}</h3>
+          <p class="price-value">₹{{ material.buyingPrice }}/kg</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Materials State -->
+    <div *ngIf="!loading && !error && materials.length === 0" class="empty-state">
+      <p>No materials available at the moment.</p>
+    </div>
+
+    <div class="cta-container" *ngIf="!loading && !error && materials.length > 0">
+      <button class="btn btn-cta" (click)="startRecycling()">
+        Start Recycling Now
+      </button>
+    </div>
+  </div>
+</section>
