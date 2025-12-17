@@ -12,55 +12,10 @@ import { UserLayoutComponent } from '../../shared/layouts/user-layout/user-layou
 //import { ManageWithdrawals } from './components/manage-withdrawals/manage-withdrawals';
 
 const routes: Routes = [
-
-    // path: '',
-    // component: UserLayoutComponent, // wrap all user routes with user layout
-    // canActivate: [authGuard],
-    // children: [
-    //     {
-    //         path: '',
-    //         redirectTo: 'history',
-    //         pathMatch: 'full'
-    //     },
-    //     {
-    //         path: 'history',
-    //         component: PaymentHistory,
-    //         data: { roles: ['User', 'Driver'] }
-    //     },
-    //     {
-    //         path: 'details/:id',
-    //         component: PaymentDetails,
-    //         data: { roles: ['User', 'Driver'] }
-    //     },
-    //     // {
-    //     //     path: 'withdraw',
-    //     //     component: WithdrawEarnings,
-    //     //     data: { roles: ['User', 'Driver'] }
-    //     // },
-    //     // Admin routes
-    //     {
-    //         path: 'admin/dashboard',
-    //         component: AdminPaymentDashboardComponent,
-    //         canActivate: [roleGuard],
-    //         data: { roles: ['Admin'] }
-    //     },
-    //     // {
-    //     //     path: 'admin/manage-withdrawals',
-    //     //     component: ManageWithdrawals,
-    //     //     canActivate: [roleGuard],
-    //     //     data: { roles: ['Admin'] }
-    //     // },
-    //     {
-    //         path: 'admin/details/:id',
-    //         component: PaymentDetails,
-    //         canActivate: [roleGuard],
-    //         data: { roles: ['Admin'] }
-    //     }
-    //]
     {
         path: '',
         component: UserLayoutComponent, // ✅ Wrap with layout
-        canActivate: [authGuard],
+        //canActivate: [authGuard],
         children: [
             {
                 path: '',
