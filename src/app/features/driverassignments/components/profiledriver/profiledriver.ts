@@ -321,7 +321,7 @@ export class Profiledriver implements OnInit {
   private calculateEarnings(totalTrips: number): string {
     const earningsPerTrip = 200;
     const total = totalTrips * earningsPerTrip;
-    return `₹${total.toLocaleString('en-US')}`;
+    return `EGP${total.toLocaleString('en-US')}`;
   }
 
   private uploadImage(file: File): void {
