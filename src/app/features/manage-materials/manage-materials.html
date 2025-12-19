@@ -200,7 +200,7 @@
           <div class="row mb-3">
             <div class="col-md-6">
               <label class="form-label">
-                Customer Price (₹/kg) *
+                Customer Price (EGP/kg) *
                 <span class="price-hint">💰 What you pay customers</span>
               </label>
               <input
@@ -217,7 +217,7 @@
             </div>
             <div class="col-md-6">
               <label class="form-label">
-                Wholesale Price (₹/kg) *
+                Wholesale Price (EGP/kg) *
                 <span class="price-hint">🏭 What plants pay you</span>
               </label>
               <input
@@ -237,7 +237,7 @@
           <!-- Profit Margin Display -->
           <div class="profit-info-box" *ngIf="materialForm.buyingPrice > 0 && materialForm.sellingPrice > 0">
             <div class="profit-label">📊 Profit Margin:</div>
-            <div class="profit-value">₹{{ calculateProfitMargin() }}/kg</div>
+            <div class="profit-value">EGP{{ calculateProfitMargin() }}/kg</div>
           </div>
 
           <div class="form-check form-switch mb-3">
