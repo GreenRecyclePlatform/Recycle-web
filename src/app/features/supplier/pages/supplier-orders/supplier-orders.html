@@ -38,7 +38,7 @@
       <div class="stat-icon">💰</div>
       <div class="stat-info">
         <p class="stat-label">Total Spent</p>
-        <p class="stat-value">${{ getTotalCompletedAmount().toFixed(2) }}</p>
+        <p class="stat-value">EGP{{ getTotalCompletedAmount().toFixed(2) }}</p>
       </div>
     </div>
   </div>
@@ -85,16 +85,16 @@
             <span class="item-icon">{{ item.materialIcon }}</span>
             <div class="item-details">
               <p class="item-name">{{ item.materialName }}</p>
-              <p class="item-quantity">{{ item.quantity }} kg × ${{ item.pricePerKg }}</p>
+              <p class="item-quantity">{{ item.quantity }} kg × EGP{{ item.pricePerKg }}</p>
             </div>
-            <span class="item-total">${{ item.totalPrice.toFixed(2) }}</span>
+            <span class="item-total">EGP{{ item.totalPrice.toFixed(2) }}</span>
           </div>
         </div>
 
         <div class="order-footer">
           <div class="order-total">
             <span>Total:</span>
-            <span class="total-amount">${{ order.totalAmount.toFixed(2) }}</span>
+            <span class="total-amount">EGP{{ order.totalAmount.toFixed(2) }}</span>
           </div>
           <button (click)="viewOrderDetails(order)" class="btn-details">
             View Details
@@ -144,16 +144,16 @@
               <span class="item-icon">{{ item.materialIcon }}</span>
               <div class="item-info">
                 <p class="item-name">{{ item.materialName }}</p>
-                <p class="item-details">{{ item.quantity }} kg × ${{ item.pricePerKg }}/kg</p>
+                <p class="item-details">{{ item.quantity }} kg × EGP{{ item.pricePerKg }}/kg</p>
               </div>
-              <span class="item-price">${{ item.totalPrice.toFixed(2) }}</span>
+              <span class="item-price">EGP{{ item.totalPrice.toFixed(2) }}</span>
             </div>
           </div>
         </div>
 
         <div class="detail-total">
           <span>Total Amount:</span>
-          <span class="total-amount">${{ selectedOrder()!.totalAmount.toFixed(2) }}</span>
+          <span class="total-amount">EGP{{ selectedOrder()!.totalAmount.toFixed(2) }}</span>
         </div>
       </div>
     </div>
