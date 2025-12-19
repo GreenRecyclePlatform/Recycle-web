@@ -96,7 +96,7 @@
               </div>
               <div class="cart-item-details">
                 <p>{{ item.quantity }}× ({{ item.material.unit }} × ${{ item.material.sellingPrice }})</p>
-                <p class="cart-item-total">${{ item.totalPrice.toFixed(2) }}</p>
+                <p class="cart-item-total">EGP{{ item.totalPrice.toFixed(2) }}</p>
               </div>
             </div>
           </div>
@@ -108,7 +108,7 @@
             </div>
             <div class="summary-row total">
               <span>Total Amount:</span>
-              <span class="summary-value">${{ getTotalAmount().toFixed(2) }}</span>
+              <span class="summary-value">EGP{{ getTotalAmount().toFixed(2) }}</span>
             </div>
           </div>
 
