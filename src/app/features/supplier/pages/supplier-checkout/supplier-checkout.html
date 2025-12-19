@@ -22,16 +22,16 @@
             <span class="item-icon">{{ item.material.icon }}</span>
             <div>
               <p class="item-name">{{ item.material.name }}</p>
-              <p class="item-details">{{ item.quantity }}×( {{ item.material.unit }} × ${{ item.material.sellingPrice }})</p>
+              <p class="item-details">{{ item.quantity }}×( {{ item.material.unit }} × EGP{{ item.material.sellingPrice }})</p>
             </div>
           </div>
-          <span class="item-price">${{ item.totalPrice.toFixed(2) }}</span>
+          <span class="item-price">EGP{{ item.totalPrice.toFixed(2) }}</span>
         </div>
       </div>
 
       <div class="summary-total">
         <span>Total Amount:</span>
-        <span class="total-amount">${{ getTotalAmount().toFixed(2) }}</span>
+        <span class="total-amount">EGP{{ getTotalAmount().toFixed(2) }}</span>
       </div>
     </div>
 
@@ -59,7 +59,7 @@
           [disabled]="loading()"
           class="btn-primary btn-pay"
         >
-          {{ loading() ? 'Processing...' : 'Pay $' + getTotalAmount().toFixed(2) }}
+          {{ loading() ? 'Processing...' : 'Pay EGP' + getTotalAmount().toFixed(2) }}
         </button>
       </div>
     </div>
